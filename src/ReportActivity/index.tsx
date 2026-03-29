@@ -96,11 +96,12 @@ export default function ReportActivity() {
                     break
                 }
             }
+            console.log("reportype: ", reporttype, "studentid: ", tableIds[2], tableIds[2] + 1, "disciplineid: ", tableIds[1], tableIds[1] + 1, "groupid: ", tableIds[0], tableIds[0] + 1)
             connection?.invoke("GenerateReport", {
                 reporttype,
-                studentid: [tableIds[2]],
-                disciplineid: [tableIds[1]],
-                groupid: [tableIds[0]]
+                studentIds: null,
+                disciplineIds: [tableIds[1]],
+                groupIds: [tableIds[0]]
             })
         }
         else if (tableIds.length > 2) {
@@ -108,8 +109,8 @@ export default function ReportActivity() {
             reloadStudents()
             reloadDisciplines()
         } else if(tableIds.length > 1){
-            reloadDisciplines()
             reloadStudents()
+            reloadDisciplines()
         } else if (tableIds.length > 0){
             reloadDisciplines()
         } else if (tableIds.length == 0) {
@@ -150,9 +151,10 @@ export default function ReportActivity() {
             // if (link == null && tableIds.length > 3) {
             //     setIsLoading(true)
             // }
-            connection.on("ReportReady", (data, link) => {
+            connection.on("ReportReady", (data, link, sperm) => {
                 setTable(data)
                 console.log(data)
+                console.log(sperm)
                 if(link != null){
                     setIsTableReady(true)
                     console.log(link)
@@ -162,9 +164,6 @@ export default function ReportActivity() {
                 
 
             })
-        }
-
-        if (connection) {
             connection.on("ReportProgress", (data, pisun, yaitsa) => {
                 console.log(data, pisun, yaitsa)
                 setReportProgress(pisun)
@@ -172,7 +171,6 @@ export default function ReportActivity() {
 
             })
         }
-
 
 
     if(isTableReady && connection) {
@@ -195,7 +193,7 @@ export default function ReportActivity() {
                     <StudentTopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
                     <div className="flex gap-6.25">
                         <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false}/>
-                        <ReportGenerator />
+                        <ReportGenerator  />
                     </div>
                 </div>
                 }   

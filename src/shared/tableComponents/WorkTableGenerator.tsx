@@ -131,7 +131,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
         </table>
     );
   };
-  useEffect(() => {
+    useEffect(() => {
         renderTable(1)    
             
     })
