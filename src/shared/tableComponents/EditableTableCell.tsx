@@ -4,7 +4,7 @@ import Button from "../components/Button";
 interface PropsInterface{
     isEditMode?: boolean;
     className?: string;
-    cellType: "student" | "work" | "date";
+    cellType: "student" | "work" | "date" | "reportInfo";
     workLink?: string | null;
     cellDateType?: "Лек" | "Прак" | null;
     cellData?: string;
@@ -16,6 +16,13 @@ interface PropsInterface{
 export default function EditableTableCell({isEditMode = false, className = "valuev", cellType = "student", /*workLink = null,*/ cellData = "inCell", cellDateType = null, onClick}: PropsInterface){
     // Проверка, что за ячейка у нас, соответственно, какие данные в ней будут
     switch (cellType) {
+        case "reportInfo":
+            return (
+                <td className={className} onClick={onClick}>
+                    <p>{cellData}</p>
+                </td>
+            )
+
         case "student":      
             return  (
                 isEditMode ? 

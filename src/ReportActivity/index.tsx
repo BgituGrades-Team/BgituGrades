@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom"
 import LeftNavBar from "../shared/components/LeftNavBar"
 import { useEffect, useState } from "react"
-import type {  DisciplineInterface, GroupInterface, StudentInterface, WorkTableSample } from "../shared/types/fromRequests"
+import type {  DisciplineInterface, GroupInterface, ReportTableSample, StudentInterface } from "../shared/types/fromRequests"
 import { getDisciplines, getDisciplinesByGroup, getGroups, getStudents } from "../shared/utils/apiRequests"
 import { HubConnection } from "@microsoft/signalr"
 import TableGeneratorSkeleton from "../shared/components/skeletons/TableGeneratorSkeleton"
@@ -11,6 +11,10 @@ import StudentTopNavBar from "../shared/components/StudentTopNavBar"
 import ReportGenerator from "../shared/tableComponents/ReportGenerator"
 import { setupSignalRReportsConnection } from "../shared/utils/signalRService"
 import Loading from "../shared/components/SVG/Loading"
+
+interface tableFromRequest {
+    rows: ReportTableSample
+}
 
 export default function ReportActivity() {
     const [searchParams] = useSearchParams()
@@ -22,7 +26,7 @@ export default function ReportActivity() {
     const [connection, setConnection] = useState<null | HubConnection>(null)
     const [reportProgress, setReportProgress] = useState<number | null>(null)
     const [reportDescription, setReportDescription] = useState<string | null>(null)
-    const [/*table*/, setTable] = useState<WorkTableSample>()
+    const [table, setTable] = useState<tableFromRequest>()
     const [isTableReady, setIsTableReady] = useState(false)
     const [/*link*/, setLink] = useState<string | null>(null)
 
@@ -43,6 +47,7 @@ export default function ReportActivity() {
 
 
     useEffect(() => {
+        console.log(tableIds)
         const reloadDisciplines = async () => {
             const res: DisciplineInterface[] | undefined = await getDisciplinesByGroup(tableIds[0])
             if(res) {
@@ -70,13 +75,14 @@ export default function ReportActivity() {
                 respStudents = await getStudents(Number(groupId))
             }
 
-            if(respGroups){
+            if(respGroups && groups.length == 0){
                 setGroups(respGroups)
             }
-            if(respDisciplines) {
+            if(respDisciplines && disciplines.length == 0) {
+
                 setDisciplines(respDisciplines)
             }
-            if(respStudents){
+            if(respStudents && students.length == 0){
                 setStudents(respStudents)
             }
             setIsLoading(false)
@@ -84,7 +90,6 @@ export default function ReportActivity() {
 
         // Проверка, есть ли в query параметрах и дисциплина и группа и студент
         if(tableIds.length > 3){
-            console.log(tableIds)
             let reporttype
             switch (tableIds[3]){
                 case 0 : {
@@ -104,6 +109,7 @@ export default function ReportActivity() {
                 groupIds: [tableIds[0]]
             })
         }
+
         else if (tableIds.length > 2) {
             console.log(tableIds)
             reloadStudents()
@@ -115,6 +121,7 @@ export default function ReportActivity() {
             reloadDisciplines()
         } else if (tableIds.length == 0) {
             getParams()
+            
         }
 
         // Проверка, есть ли ключ в query параметрах
@@ -123,6 +130,7 @@ export default function ReportActivity() {
             localStorage.setItem("api_key", key)
         }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [connection, searchParams, tableIds])
 
 
@@ -136,36 +144,29 @@ export default function ReportActivity() {
         const reporttype = searchParams.get("reporttype")
         if((groupid != 'null' && disciplineid != 'null' && studentid != 'null' && reporttype != 'null') && disciplineid && groupid && studentid && reporttype) {
             setTableIds([Number(groupid), Number(disciplineid), Number(studentid), Number(reporttype)])
-
         }
         else if((groupid != 'null' && disciplineid != 'null' && studentid != 'null') && disciplineid && groupid && studentid){
             setTableIds([Number(groupid), Number(disciplineid), Number(studentid)])
         } else  if((groupid != 'null' && disciplineid != 'null' ) && disciplineid && groupid){
-            setTableIds([Number(groupid), Number(disciplineid), Number(studentid)])
+            setTableIds([Number(groupid), Number(disciplineid)])
         }  else if (groupid && groupid != 'null'){
             setTableIds([Number(groupid)])
         }
-
     }
         if (connection) {
             // if (link == null && tableIds.length > 3) {
             //     setIsLoading(true)
             // }
-            connection.on("ReportReady", (data, link, sperm) => {
-                setTable(data)
-                console.log(data)
-                console.log(sperm)
+            connection.on("ReportReady", (_, link, sperm) => {
+                setTable(sperm)
                 if(link != null){
                     setIsTableReady(true)
                     console.log(link)
                     setLink(link)
 
                 }
-                
-
             })
-            connection.on("ReportProgress", (data, pisun, yaitsa) => {
-                console.log(data, pisun, yaitsa)
+            connection.on("ReportProgress", (_, pisun, yaitsa) => {
                 setReportProgress(pisun)
                 setReportDescription(yaitsa)
 
@@ -173,7 +174,8 @@ export default function ReportActivity() {
         }
 
 
-    if(isTableReady && connection) {
+    if(isTableReady && connection && table) {
+        console.log("Даю таблицу")
         return (
             <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
                 {
@@ -193,7 +195,7 @@ export default function ReportActivity() {
                     <StudentTopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
                     <div className="flex gap-6.25">
                         <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false}/>
-                        <ReportGenerator  />
+                        <ReportGenerator table={table.rows} isEditMode={false} connection={connection}  />
                     </div>
                 </div>
                 }   
@@ -202,6 +204,7 @@ export default function ReportActivity() {
     }
 
     if(connection) {
+        console.log("возвращаю кал")
         return (
             <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
                 {

@@ -90,6 +90,6 @@ export type WorkTableSample = [
 export type ReportTableSample = [
     {
         isGroupHeader: boolean;
-        cells: [];
+        cells: [string];
     }
 ]
