@@ -49,9 +49,10 @@ export const getDisciplines = async () => {
  * @param groupId Идентификатор группы
  * @returns Массив дисциплин для этой группы
  */
-export const getDisciplinesByGroup = async (groupId: number) => {
+export const getDisciplinesByGroups = async (groupId: number[]) => {
     try {
-        const result: Response<DisciplineInterface[]> = await instance.get(`/api/discipline?groupid=${groupId}`)
+        const result: Response<DisciplineInterface[]> = await instance.get(`/api/discipline?groupids=${groupId.join(",")}`)
+        console.log(groupId.join(","))
         return result.data
     } catch (error) {
         console.log(error)
@@ -79,7 +80,7 @@ export const getStudentLink = async (groupId:number, disciplineId: number) => {
  */
 export const getStudents = async (groupId: number) => {
     try {
-        const result: Response<StudentInterface[]> = await instance.get(`/api/student?groupid=${groupId}`)
+        const result: Response<StudentInterface[]> = await instance.get(`/api/student?groupids=${groupId}`)
         return result.data
     } catch (error) {
         console.log(error)

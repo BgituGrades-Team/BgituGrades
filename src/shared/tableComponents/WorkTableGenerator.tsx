@@ -91,7 +91,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                 const cells = [];
                 const works = student.marks;
                 // ФИО Студента
-                cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={student.name} className="min-w-56.25 h-12.5 p-1.25 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allahs" + String(idx)} />)
+                cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={student.name} className="min-w-56.25 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allahs" + String(idx)} />)
                 // Посещения по датам
                 works.forEach((_work: WorkInterface, index: number) => {
                     cells.push(<EmptyTableCell connection={connection} changeMarkState={changeMarkState} cellType={tableType} studentId={student.studentId} className="min-w-12.5 h-12.5 " key={String(idx) + " " + String(index)} />);

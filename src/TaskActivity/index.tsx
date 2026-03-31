@@ -4,7 +4,7 @@ import TopNavBar from "../shared/components/TopNavBar"
 import WorkTableGenerator from "../shared/tableComponents/WorkTableGenerator"
 import { useEffect, useState } from "react"
 import type { WorkTableSample, DisciplineInterface, GroupInterface } from "../shared/types/fromRequests"
-import { getDisciplines, getDisciplinesByGroup, getGroups } from "../shared/utils/apiRequests"
+import { getDisciplines, getDisciplinesByGroups, getGroups } from "../shared/utils/apiRequests"
 import { HubConnection } from "@microsoft/signalr"
 import TableGeneratorSkeleton from "../shared/components/skeletons/TableGeneratorSkeleton"
 import LeftNavBarSkeleton from "../shared/components/skeletons/LeftNavBarSkeleton"
@@ -41,7 +41,7 @@ export default function TaskActivity() {
 
     useEffect(() => {
         const reloadDisciplines = async () => {
-            const res: DisciplineInterface[] | undefined = await getDisciplinesByGroup(tableIds[0])
+            const res: DisciplineInterface[] | undefined = await getDisciplinesByGroups([tableIds[0]])
             if(res) {
                 setDisciplines(res)
                 console.log(res)
@@ -112,7 +112,7 @@ export default function TaskActivity() {
 
     if(isTableReady && connection) {
         return (
-            <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
+            <div className="w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
                 {
                     // Пришлось сделать так, чтобы не было блика при смене роута
                     isLoading ? 
@@ -137,7 +137,7 @@ export default function TaskActivity() {
 
     if(connection){
         return (
-            <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
+            <div className="w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
                 {
                     isLoading ? 
                     <div className="w-[90%] animate-pulse flex flex-col gap-6.25">
@@ -160,7 +160,7 @@ export default function TaskActivity() {
         )
     }
     return (
-        <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
+        <div className="w-full min-h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
             <div className="w-[90%] animate-pulse flex flex-col gap-6.25">
                 <TopNavBarSkeleton />
                 <div className="flex gap-6.25">

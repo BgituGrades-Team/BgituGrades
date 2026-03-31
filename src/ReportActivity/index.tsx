@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom"
 import LeftNavBar from "../shared/components/LeftNavBar"
 import { useEffect, useState } from "react"
 import type {  DisciplineInterface, GroupInterface, ReportTableSample, StudentInterface } from "../shared/types/fromRequests"
-import { getDisciplines, getDisciplinesByGroup, getGroups, getStudents } from "../shared/utils/apiRequests"
+import { getDisciplines, getDisciplinesByGroups, getGroups, getStudents } from "../shared/utils/apiRequests"
 import { HubConnection } from "@microsoft/signalr"
 import TableGeneratorSkeleton from "../shared/components/skeletons/TableGeneratorSkeleton"
 import TopNavBarSkeleton from "../shared/components/skeletons/TopNavBarSkeleton"
@@ -19,7 +19,7 @@ interface tableFromRequest {
 export default function ReportActivity() {
     const [searchParams] = useSearchParams()
     const [isLoading, setIsLoading] = useState(true)
-    const [tableIds, setTableIds] = useState<number[]>([])
+    const [tableIds, setTableIds] = useState<number[][]>([])
     const [groups, setGroups] = useState<GroupInterface[]>([])
     const [disciplines, setDisciplines] = useState<DisciplineInterface[]>([])
     const [students, setStudents] = useState<StudentInterface[]>([])
@@ -47,16 +47,16 @@ export default function ReportActivity() {
 
 
     useEffect(() => {
-        console.log(tableIds)
+        //console.log(tableIds)
         const reloadDisciplines = async () => {
-            const res: DisciplineInterface[] | undefined = await getDisciplinesByGroup(tableIds[0])
+            const res: DisciplineInterface[] | undefined = await getDisciplinesByGroups(tableIds[0]) // Исправить
             if(res) {
                 setDisciplines(res)
             }
         }
 
         const reloadStudents= async () => {
-            const res: StudentInterface[] | undefined = await getStudents(tableIds[0])
+            const res: StudentInterface[] | undefined = await getStudents(tableIds[0][0]) // Исправить
             if(res) {
                 setStudents(res)
             }
@@ -91,7 +91,7 @@ export default function ReportActivity() {
         // Проверка, есть ли в query параметрах и дисциплина и группа и студент
         if(tableIds.length > 3){
             let reporttype
-            switch (tableIds[3]){
+            switch (tableIds[3][0]){
                 case 0 : {
                     reporttype = "PRESENCE"
                     break
@@ -101,10 +101,10 @@ export default function ReportActivity() {
                     break
                 }
             }
-            console.log("reportype: ", reporttype, "studentid: ", tableIds[2], tableIds[2] + 1, "disciplineid: ", tableIds[1], tableIds[1] + 1, "groupid: ", tableIds[0], tableIds[0] + 1)
+            console.log("reportype: ", reporttype, "studentid: ", tableIds[2][0], tableIds[2][0] + 1, "disciplineid: ", tableIds[1][0], tableIds[1][0] + 1, "groupid: ", tableIds[0][0], tableIds[0][0] + 1)
             connection?.invoke("GenerateReport", {
                 reporttype,
-                studentIds: null,
+                studentIds: [tableIds[2]],
                 disciplineIds: [tableIds[1]],
                 groupIds: [tableIds[0]]
             })
@@ -138,19 +138,19 @@ export default function ReportActivity() {
 
     // Поиск таблицы, если все query параметра заполены
     const handleSearch = () => {
-        const groupid = searchParams.get("groupid")
-        const disciplineid = searchParams.get("disciplineid")
-        const studentid = searchParams.get("studentid")
-        const reporttype = searchParams.get("reporttype")
-        if((groupid != 'null' && disciplineid != 'null' && studentid != 'null' && reporttype != 'null') && disciplineid && groupid && studentid && reporttype) {
-            setTableIds([Number(groupid), Number(disciplineid), Number(studentid), Number(reporttype)])
+        const groupid = searchParams.get("groupid")?.split(",")
+        const disciplineid = searchParams.get("disciplineid")?.split(",")
+        const studentid = searchParams.get("studentid")?.split(",")
+        const reporttype = searchParams.get("reporttype")?.split(",")
+        if((groupid?.length != 0 && disciplineid?.length != 0 && studentid?.length != 0 && reporttype?.length != 0) && disciplineid && groupid && studentid && reporttype) {
+            setTableIds([groupid.map(val => Number(val)), disciplineid.map(val => Number(val)), studentid.map(val => Number(val)), reporttype.map(val => Number(val))])
         }
-        else if((groupid != 'null' && disciplineid != 'null' && studentid != 'null') && disciplineid && groupid && studentid){
-            setTableIds([Number(groupid), Number(disciplineid), Number(studentid)])
-        } else  if((groupid != 'null' && disciplineid != 'null' ) && disciplineid && groupid){
-            setTableIds([Number(groupid), Number(disciplineid)])
-        }  else if (groupid && groupid != 'null'){
-            setTableIds([Number(groupid)])
+        else if((groupid?.length != 0 && disciplineid?.length != 0 && studentid?.length != 0) && disciplineid && groupid && studentid){
+            setTableIds([groupid.map(val => Number(val)), disciplineid.map(val => Number(val)), studentid.map(val => Number(val))])
+        } else  if((groupid?.length != 0 && disciplineid?.length != 0 ) && disciplineid && groupid){
+            setTableIds([groupid.map(val => Number(val)), disciplineid.map(val => Number(val))])
+        }  else if (groupid && groupid?.length != 0){
+            setTableIds([groupid.map(val => Number(val))])
         }
     }
         if (connection) {
@@ -175,9 +175,8 @@ export default function ReportActivity() {
 
 
     if(isTableReady && connection && table) {
-        console.log("Даю таблицу")
         return (
-            <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
+            <div className="w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
                 {
                 // Пришлось сделать так, чтобы не было блика при смене роута
                 isLoading ? 
@@ -204,9 +203,8 @@ export default function ReportActivity() {
     }
 
     if(connection) {
-        console.log("возвращаю кал")
         return (
-            <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
+            <div className="w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
                 {
                 // Пришлось сделать так, чтобы не было блика при смене роута
                 isLoading ? 

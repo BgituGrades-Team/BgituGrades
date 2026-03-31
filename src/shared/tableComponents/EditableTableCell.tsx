@@ -19,7 +19,7 @@ export default function EditableTableCell({isEditMode = false, className = "valu
         case "reportInfo":
             return (
                 <td className={className} onClick={onClick}>
-                    <p>{cellData}</p>
+                    <p className="pl-1.5 pr-1.5" >{cellData}</p>
                 </td>
             )
 
@@ -30,7 +30,7 @@ export default function EditableTableCell({isEditMode = false, className = "valu
                     <Button />
                 </td> :
                 <td className={className} onClick={onClick}>
-                    <p>{cellData}</p>
+                    <p className="pl-1.5 pr-1.5" >{cellData}</p>
                 </td>)
         case "work":
             return (
@@ -39,7 +39,7 @@ export default function EditableTableCell({isEditMode = false, className = "valu
                     <Button></Button>
                 </td> : 
                 <td className={className} onClick={onClick}>
-                    <p>{cellData}</p>
+                    <p className="pl-1.5 pr-1.5">{cellData}</p>
                 </td>) 
         case "date":
             return  (

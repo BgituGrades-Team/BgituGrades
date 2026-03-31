@@ -88,7 +88,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
                     const cells = [];
                     const dates = student.presences
                     // ФИО Студента
-                    cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={student.name} className="min-w-56.25 h-12.5 p-1.25 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allah" + String(idx)} />)
+                    cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={student.name} className="min-w-56.25 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allah" + String(idx)} />)
                     // Посещения по датам
                     dates.forEach((date: PresenceInterface, index: number) => {
                         cells.push(<EmptyTableCell connection={connection} changePresenceState={changePresenceState} cellType={tableType} presence={date.isPresent} studentId={student.studentId} date={date.date} classId={date.classId} className="min-w-12.5 h-12.5 " key={String(idx) + " " + String(index)} />);
