@@ -13,9 +13,21 @@ interface PropsInterface{
     handleSearch: () => void;
 }
 
+/**
+ * 
+ * @param item Массив групп/дисциплин/студентов
+ * @returns Идентификаторы элементов массива в виде строки через запятую
+ */
 function mapAndJoinById(item: GroupInterface[] | DisciplineInterface[] | StudentInterface[] | []): string {
     return item.map(elem => elem.id).join(",")
 }
+
+/**
+ * 
+ * @param item Массив индентификаторов в виде строк
+ * @param id Идентификатор для проверки
+ * @returns Есть ли id в item
+ */
 function checkIfIdInParam(item: string[] | undefined, id: number): boolean {
     if (item) {
         return item.map(elem => Number(elem)).includes(id)
@@ -120,9 +132,9 @@ export default function MultipleInput({textChildren="Группа", helpText="Н
                     <ComboboxInput
                         className="w-58 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 "
                         aria-label="Assignee"
-                        displayValue={(val: [GroupInterface] | [DisciplineInterface] | [ReportTypeInterface]) => val?.map(elem => elem.name).join(", ")}
+                        /*displayValue={(val: [GroupInterface] | [DisciplineInterface] | [ReportTypeInterface]) => val?.map(elem => elem.name).join(", ")}*/
                         onChange={(event) => setQuery(event.target.value)}
-                        placeholder={helpText} />
+                        placeholder={selectedValue.length == 0 ? helpText : "Выбрано: " + selectedValue.length} />
                         <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">                            
                             <Arrow onClick={handleClick} className="h-6 w-6 absolute top-2.5 right-2.5"/>
                         </ComboboxButton>

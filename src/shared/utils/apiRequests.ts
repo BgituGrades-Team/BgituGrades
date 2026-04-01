@@ -77,9 +77,9 @@ export const getStudentLink = async (groupId:number, disciplineId: number) => {
  * @param groupId Идентификатор группы
  * @returns Массив студентов в этой группе
  */
-export const getStudents = async (groupId: number) => {
+export const getStudents = async (groupId: number[]) => {
     try {
-        const result: Response<StudentInterface[]> = await instance.get(`/api/student?groupids=${groupId}`)
+        const result: Response<StudentInterface[]> = await instance.get(`/api/student?groupids=${groupId.join(",")}`)
         return result.data
     } catch (error) {
         console.log(error)
@@ -123,4 +123,20 @@ export const addWork = async (name: string, issuedDate: string, description: str
     } catch (error) {
         console.log(error)
     }
+}
+
+export const downloadFile = async (link: string):  Promise<string | undefined> => {
+    try {
+        const res: Response<Blob> = await axios({
+            url: link+"?key="+localStorage.getItem("api_key"),
+            method: 'GET',
+            responseType: 'blob',
+        })
+        console.log(res)
+        const url = window.URL.createObjectURL(new Blob([res.data]))
+        return url
+    } catch (error) {
+        console.log(error)
+    }
+
 }

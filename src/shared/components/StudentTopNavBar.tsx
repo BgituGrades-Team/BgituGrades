@@ -7,12 +7,12 @@ interface PropsInterface {
     groups: GroupInterface[];
     disciplines: DisciplineInterface[];
     students: StudentInterface[];
-    
+    link: string;
     handleSearch: () => void;
 }
 
 
-export default function StudentTopNavBar({groups, disciplines, handleSearch, students}: PropsInterface){
+export default function StudentTopNavBar({groups, disciplines, handleSearch, students, link}: PropsInterface){
     const reportTypes = [{id: 0, name: "По посещению"}, {id: 1, name:"По успеваемости"}] // Типы отчетов
     return (
        <div className="h-25 mt-13.75 flex justify-between pl-3.75 items-end">
@@ -25,7 +25,9 @@ export default function StudentTopNavBar({groups, disciplines, handleSearch, stu
                 <Input handleSearch={handleSearch} inputType="endDate" array={groups} textChildren="Конец периода" helpText="Окончание периода..."/>
             </div> 
             <div className="flex gap-6.25">
+                <a href={link} download={"report.xlsx"}>
                 <Button children="Скачать в Excel"/>
+                </a>
             </div>
        </div> 
     )

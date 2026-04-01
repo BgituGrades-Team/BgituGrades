@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom"
 import LeftNavBar from "../shared/components/LeftNavBar"
 import { useEffect, useState } from "react"
 import type {  DisciplineInterface, GroupInterface, ReportTableSample, StudentInterface } from "../shared/types/fromRequests"
-import { getDisciplines, getDisciplinesByGroups, getGroups, getStudents } from "../shared/utils/apiRequests"
+import { downloadFile, getDisciplines, getDisciplinesByGroups, getGroups, getStudents } from "../shared/utils/apiRequests"
 import { HubConnection } from "@microsoft/signalr"
 import TableGeneratorSkeleton from "../shared/components/skeletons/TableGeneratorSkeleton"
 import TopNavBarSkeleton from "../shared/components/skeletons/TopNavBarSkeleton"
@@ -28,7 +28,8 @@ export default function ReportActivity() {
     const [reportDescription, setReportDescription] = useState<string | null>(null)
     const [table, setTable] = useState<tableFromRequest>()
     const [isTableReady, setIsTableReady] = useState(false)
-    const [/*link*/, setLink] = useState<string | null>(null)
+    const [link, setLink] = useState<string | null>(null)
+    const [downloadLink, setDownloadLink] = useState<string | null>(null)
 
 
 
@@ -45,9 +46,21 @@ export default function ReportActivity() {
         }
     }, [connection])
 
+    useEffect(() => {
+        const getDownloadLink = async (link: string) => {
+            const res: string | undefined = await downloadFile(link)
+            if (res) {
+                setDownloadLink(res)
+                //setLink(null)
+            }
+        }
+        if (link) {
+            getDownloadLink(link)
+        }
+    }, [link])
+
 
     useEffect(() => {
-        //console.log(tableIds)
         const reloadDisciplines = async () => {
             const res: DisciplineInterface[] | undefined = await getDisciplinesByGroups(tableIds[0]) // Исправить
             if(res) {
@@ -56,12 +69,13 @@ export default function ReportActivity() {
         }
 
         const reloadStudents= async () => {
-            const res: StudentInterface[] | undefined = await getStudents(tableIds[0][0]) // Исправить
+            const res: StudentInterface[] | undefined = await getStudents(tableIds[0]) // Исправить
             if(res) {
                 setStudents(res)
             }
         }
-
+        
+    
 
         // Все группы и дисциалины для полей ввода
         const getParams = async () => {
@@ -70,9 +84,9 @@ export default function ReportActivity() {
             
             let respStudents: StudentInterface[] | undefined 
 
-            const groupId = searchParams.get("groupid")
+            const groupId = searchParams.get("groupid")?.split(",")
             if(groupId != undefined){
-                respStudents = await getStudents(Number(groupId))
+                respStudents = await getStudents(groupId.map(elem => Number(elem)))
             }
 
             if(respGroups && groups.length == 0){
@@ -132,9 +146,6 @@ export default function ReportActivity() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [connection, searchParams, tableIds])
 
-
-
-
     // Поиск таблицы, если все query параметра заполены
     const handleSearch = () => {
         const groupid = searchParams.get("groupid")?.split(",")
@@ -160,7 +171,6 @@ export default function ReportActivity() {
                 setTable(sperm)
                 if(link != null){
                     setIsTableReady(true)
-                    console.log(link)
                     setLink(link)
 
                 }
@@ -175,7 +185,7 @@ export default function ReportActivity() {
 
     if(isTableReady && connection && table) {
         return (
-            <div className="w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
+            <div className="w-full min-h-[92.5vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
                 {
                 // Пришлось сделать так, чтобы не было блика при смене роута
                 isLoading ? 
@@ -190,7 +200,7 @@ export default function ReportActivity() {
                     </div>
                 </div> :
                 <div className="w-[90%] flex flex-col gap-6.25">
-                    <StudentTopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
+                    <StudentTopNavBar link={downloadLink != null ? downloadLink : ""} handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
                     <div className="flex gap-6.25">
                         <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false}/>
                         <ReportGenerator table={table.rows} isEditMode={false} connection={connection}  />
@@ -203,7 +213,7 @@ export default function ReportActivity() {
 
     if(connection) {
         return (
-            <div className="w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
+            <div className="w-full min-h-[92.5vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
                 {
                 // Пришлось сделать так, чтобы не было блика при смене роута
                 isLoading ? 
@@ -219,7 +229,7 @@ export default function ReportActivity() {
                         </div>
                     </div> :
                     <div className="w-[90%] flex flex-col gap-6.25">
-                        <StudentTopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
+                        <StudentTopNavBar link={downloadLink != null ? downloadLink : ""} handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false}/>
                         </div>
@@ -230,7 +240,7 @@ export default function ReportActivity() {
     }
 
     return (
-        <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
+        <div className="w-full h-[92.5vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
             <div className="w-[90%]  flex blur-md bg-bgLight dark:bg-bgModalD flex-col gap-6.25">
                 <TopNavBarSkeleton />
                 <div className="flex gap-6.25">
@@ -242,5 +252,3 @@ export default function ReportActivity() {
         </div>
         )
 }
-
-
