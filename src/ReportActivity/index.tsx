@@ -85,7 +85,7 @@ export default function ReportActivity() {
             let respStudents: StudentInterface[] | undefined 
 
             const groupId = searchParams.get("groupid")?.split(",")
-            if(groupId != undefined){
+            if(groupId != undefined ){
                 respStudents = await getStudents(groupId.map(elem => Number(elem)))
             }
 

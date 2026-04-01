@@ -62,6 +62,14 @@ export interface WorkInterface {
     value: null | string
 }
 
+
+export interface KeyInterface {
+    key: string;
+    role: string;
+    ownerName: string;
+    expiryDate: string;
+}
+
  
 /**
  * Интерфейс таблицы посещений

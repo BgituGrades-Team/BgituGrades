@@ -20,10 +20,10 @@ function TopNavBar({groups, disciplines, handleSearch, tableIds}: PropsInterface
 
     // Нажатие на кнопку создать ссылку
     const createStudentLink = async () => {
-        const res: StudentLinkInterface | undefined = await getStudentLink(tableIds[0], tableIds[1]);
+        const res: StudentLinkInterface | undefined = await getStudentLink(tableIds[0]);
         console.log(res)
         if(res) {
-            setLink(res.link)
+            setLink(res.link.replace("maxim.", ""))
             setIsOpen(true);
         }
     };

@@ -28,8 +28,8 @@ export default function Loading({progress, description}: PropsInterface) {
                     <path d="M7.25.75A.75.75 0 018 0a8 8 0 018 8 .75.75 0 01-1.5 0A6.5 6.5 0 008 1.5a.75.75 0 01-.75-.75z"></path> </g> 
                 </g>
             </svg>
-            <p className="z-10 ">{error ? "пизда" : progress+"%"}</p>
-            <p className="z-10 ">{error ? "Не рабоатет" : description}</p>
+            <p className="z-10 ">{error ? "Ошибка" : progress+"%"}</p>
+            <p className="z-10 ">{error ? "Отчет не найден" : description}</p>
             
         </div>
     )

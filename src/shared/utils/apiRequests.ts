@@ -1,5 +1,6 @@
 import axios from 'axios';
-import type { DisciplineInterface, GroupInterface, StudentInterface, StudentLinkInterface } from '../types/fromRequests';
+import type { DisciplineInterface, GroupInterface, KeyInterface, StudentInterface, StudentLinkInterface } from '../types/fromRequests';
+
 // Наш бекендер ебень
 axios.defaults.baseURL = import.meta.env.VITE_DOTENV_API_URL
 const instance = axios.create({
@@ -64,9 +65,9 @@ export const getDisciplinesByGroups = async (groupId: number[]) => {
  * @param disciplineId Идентификатор дисциплины
  * @returns Ссылка для студентов
  */
-export const getStudentLink = async (groupId:number, disciplineId: number) => {
+export const getStudentLink = async (groupId: number) => {
     try {
-        const result: Response<StudentLinkInterface> = await instance.get(`/api/key/shared?groupid=${groupId}&disciplineid=${disciplineId}`)
+        const result: Response<StudentLinkInterface> = await instance.get(`/api/key/shared?groupid=${groupId}`)
         return result.data
     } catch (error){
         console.log(error)
@@ -85,6 +86,52 @@ export const getStudents = async (groupId: number[]) => {
         console.log(error)
     }
 }
+
+
+
+/**
+ * Получение ключей
+ * @returns Все созданные ключи
+ */
+
+export const getAllKeys = async () => {
+    try{
+        const result: Response<KeyInterface[]> = await instance.get(`api/key/all`)
+        return result.data
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+export const addKey = async (role: string, groupId: number) => {
+    try {
+        const params = {
+            role:  role,
+            groupId: groupId
+        }
+        await instance.post(`api/key`, params)
+        console.log("pizda noviy cluch")
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+/**
+ * Удаление ключа по его имени
+ * @param key Сам непосредственно ключ
+ * @returns id:0, если получилось
+ */
+export const deleteKeyByName = async (key: string) => {
+    try {
+        const res  = await instance.delete(`api/key?deleteKey=${key}`)
+        return(res)
+        console.log("pizda cluchu")
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 /**
  * Добавление студента в группу
@@ -140,3 +187,6 @@ export const downloadFile = async (link: string):  Promise<string | undefined> =
     }
 
 }
+
+
+

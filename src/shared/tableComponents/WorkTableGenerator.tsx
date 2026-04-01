@@ -123,10 +123,10 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
             if (works.length == 0) {
                 cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
             }
-            rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"alloe"}>{cells}</tr>)
+            rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD  even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"alloe"}>{cells}</tr>)
         }
     return (
-        <table className="block border-separate border-spacing-0.5 w overflow-auto" key={tableIndex}>
+        <table className="block border-separate border-spacing-0.5 max-w-full max-h-142.5 overflow-auto" key={tableIndex}>
             <tbody>{rows}</tbody>
         </table>
     );

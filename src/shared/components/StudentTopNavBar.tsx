@@ -14,15 +14,15 @@ interface PropsInterface {
 
 export default function StudentTopNavBar({groups, disciplines, handleSearch, students, link}: PropsInterface){
     const reportTypes = [{id: 0, name: "По посещению"}, {id: 1, name:"По успеваемости"}] // Типы отчетов
+    //янв - июнь 2024: это 2; сент - дек 2025: это 1; для периода
     return (
        <div className="h-25 mt-13.75 flex justify-between pl-3.75 items-end">
             <div className="flex gap-6.25 items-end">
+                <Input handleSearch={handleSearch} inputType="startDate" array={groups} textChildren="Семестр" helpText="Период..."/>  
                 <MultipleInput handleSearch={handleSearch} inputType="group" array={groups} textChildren="Группа" helpText="Название группы..."/>
                 <MultipleInput handleSearch={handleSearch} inputType="discipline" array={disciplines} textChildren="Дисциплина" helpText="Название дисциплины..."/>
                 <MultipleInput handleSearch={handleSearch} inputType="student" array={students} textChildren="Студент" helpText="Имя студента..."/>
                 <Input handleSearch={handleSearch} inputType="type" array={reportTypes} textChildren="Тип отчетности" helpText="Тип отчетности..."/>
-                <Input handleSearch={handleSearch} inputType="startDate" array={groups} textChildren="Начало периода" helpText="Начало периода..."/>
-                <Input handleSearch={handleSearch} inputType="endDate" array={groups} textChildren="Конец периода" helpText="Окончание периода..."/>
             </div> 
             <div className="flex gap-6.25">
                 <a href={link} download={"report.xlsx"}>
