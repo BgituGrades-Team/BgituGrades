@@ -52,7 +52,6 @@ export const getDisciplines = async () => {
 export const getDisciplinesByGroups = async (groupId: number[]) => {
     try {
         const result: Response<DisciplineInterface[]> = await instance.get(`/api/discipline?groupids=${groupId.join(",")}`)
-        console.log(groupId.join(","))
         return result.data
     } catch (error) {
         console.log(error)

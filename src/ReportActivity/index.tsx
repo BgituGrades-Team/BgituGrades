@@ -101,12 +101,11 @@ export default function ReportActivity() {
                     break
                 }
             }
-            console.log("reportype: ", reporttype, "studentid: ", tableIds[2][0], tableIds[2][0] + 1, "disciplineid: ", tableIds[1][0], tableIds[1][0] + 1, "groupid: ", tableIds[0][0], tableIds[0][0] + 1)
             connection?.invoke("GenerateReport", {
                 reporttype,
-                studentIds: [tableIds[2]],
-                disciplineIds: [tableIds[1]],
-                groupIds: [tableIds[0]]
+                studentIds: tableIds[2],
+                disciplineIds: tableIds[1],
+                groupIds: tableIds[0]
             })
         }
 

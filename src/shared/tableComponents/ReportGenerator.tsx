@@ -33,7 +33,6 @@ export default function ReportGenerator({/*tableType="report", isEditMode,*/ tab
             })
             
         }
-        console.log(rows)
     return (
         <table className="block border-separate border-spacing-0.5 w overflow-auto max-h-142.5" key={tableIndex}>
             <tbody>{rows}</tbody>

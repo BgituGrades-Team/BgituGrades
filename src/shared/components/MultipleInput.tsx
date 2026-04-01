@@ -88,16 +88,16 @@ export default function MultipleInput({textChildren="Группа", helpText="Н
                 }
             }
             if(groupId && inputType != "group") { // Добавил проверки, так как параметры начинали дублироваться
-                params.append("groupid", mapAndJoinById(e))
+                params.append("groupid", groupId ? groupId.join(",") : mapAndJoinById(e))
             }
             if (disciplineId && inputType != "discipline") {
-                params.append("disciplineid", mapAndJoinById(e))
+                params.append("disciplineid", disciplineId ? disciplineId.join(",") : mapAndJoinById(e))
             }           
             if (studentId && inputType != "student") {
-                params.append("studentid", mapAndJoinById(e))
+                params.append("studentid", studentId ? studentId.join(",") : mapAndJoinById(e))
             }
             if(reportType && inputType != "type"){
-                params.append("reporttype", mapAndJoinById(e))
+                params.append("reporttype", reportType ? reportType.join(",") : mapAndJoinById(e))
             }
             setSearchParams(params)
            
