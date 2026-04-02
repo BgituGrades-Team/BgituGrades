@@ -103,7 +103,7 @@ export const getAllKeys = async () => {
     }
 }
 
-export const addKey = async (role: string, groupId: number) => {
+export const addKey = async (role: string, groupId?: number | null) => {
     try {
         const params = {
             role:  role,

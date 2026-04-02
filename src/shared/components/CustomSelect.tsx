@@ -4,6 +4,7 @@ import { useEffect, useState, type ChangeEvent } from "react";
 import type { PresenceInterface } from "../types/fromRequests";
 
 interface PropsInterface {
+    adminSelect? : boolean;
     selectData: string[];
     backgroundColor?: string;
     presence?: "ABSENTVALID" | "ABSENTINVALID" | "PRESENT"
@@ -12,8 +13,9 @@ interface PropsInterface {
     date?: string;
     changePresenceState?: (presenceState: string, studentId: number, classId: number, date: string) => void;
     changeMarkState?: (markState: string, studentId: number, workId: number, date: string, value: string, isOverdue: boolean) => void;
-    connection?: HubConnection
-    disabled?: boolean
+    connection?: HubConnection;
+    disabled?: boolean;
+    onInputChange?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface DataInterface {
@@ -22,7 +24,7 @@ interface DataInterface {
     presences: PresenceInterface[]
 }
 
-export default function CustomSelect({selectData = ["П", "Н", "У"], presence = "PRESENT", changePresenceState, studentId, classId, date, connection, disabled = false}: PropsInterface){ 
+export default function CustomSelect({selectData = ["П", "Н", "У"], presence = "PRESENT", changePresenceState, studentId, classId, date, connection, disabled = false, adminSelect = false, onInputChange}: PropsInterface){ 
     const [selectedValue, setSelectedValue] = useState<string>(presence == "PRESENT" ? "П" : (presence == "ABSENTINVALID" ? "Н" : "У"))
     // Божественное откровение
     const [pIdor, setPIdor] = useState<boolean>(presence == "PRESENT" ? true : false)
@@ -57,6 +59,7 @@ export default function CustomSelect({selectData = ["П", "Н", "У"], presence 
     // Долгий процесс изменения состояния посещения в одну букву
     const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setSelectedValue(e.target.value)
+        onInputChange?.(e.target.value)
         setPIdor(e.target.value == "П")
         if (changePresenceState){
             let presenceToSet = ""
@@ -76,18 +79,41 @@ export default function CustomSelect({selectData = ["П", "Н", "У"], presence 
             if (presenceToSet && studentId && classId && date) {
                 changePresenceState(presenceToSet, studentId, classId, date)
             }
+        
+                
+        
         }
     }
-    
-    return (
-        <Select disabled={disabled} onChange={handleChange} value={selectedValue} className={`block w-full h-full appearance-none
-        focus:not-data-focus:outline-none text-tLight dark:text-tLightD text-[15px]
-        text-center ${(pIdor ? "opacity-0 " : "opacity-100 ") + takeColor(selectedValue)} `}>
-            {selectData.map((val) => (
-                <option className="bg-bgDark dark:bg-bgDarkD" key={val}>
-                    {val}
-                </option>
-            ))}
-        </Select>
-    )
+    if(adminSelect){
+        //setSelectedValue("Выберите роль")
+
+        return (
+            <div>
+                <p className="text-[28px] font-bold text-tLight dark:text-tLightD">Роль</p>
+                <Select disabled={disabled} onChange={handleChange} value={selectedValue} className={` w-full h-11 rounded-lg z-10 appearance-none
+                bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD text-[15px]
+                text-left p-2.5 `}>
+                    {selectData.map((val) => (
+                        
+                        <option className="bg-bgDark dark:bg-bgDarkD w-auto" key={val}>
+                            {val}
+                        </option>
+                    ))}
+                </Select>
+            </div>
+      )
+    } else {
+        return (
+            <Select disabled={disabled} onChange={handleChange} value={selectedValue} className={`block w-full h-full z-10 appearance-none
+            focus:not-data-focus:outline-none text-tLight dark:text-tLightD text-[15px]
+            text-center ${(pIdor ? "opacity-0 " : "opacity-100 ") + takeColor(selectedValue)} `}>
+                
+                {selectData.map((val) => (
+                    <option className="bg-bgDark dark:bg-bgDarkD" key={val}>
+                        {val}
+                    </option>
+                ))}
+            </Select>
+        )
+    }
 }

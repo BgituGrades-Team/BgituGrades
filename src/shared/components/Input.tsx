@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Arrow from "./SVG/Arrow"
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, ComboboxButton } from '@headlessui/react'
 import { useSearchParams } from "react-router-dom";
@@ -10,13 +10,15 @@ interface PropsInterface{
     array: GroupInterface[] | DisciplineInterface[] | StudentInterface[] | ReportTypeInterface[] ; // Массивы возможных значений в инпуте
     inputType: "group" | "discipline" | "student" | "type" | "startDate" | "endDate"
     onChange?: () => void;
-    handleSearch: () => void;
+    onInputChange? : React.Dispatch<React.SetStateAction<number>>;
+    handleSearch?: () => void;
+    className?: string;
 }
 
 
 
 
-export default function Input({textChildren="Группа", helpText="Название группы", array, inputType, handleSearch}: PropsInterface){
+export default function Input({textChildren="Группа", helpText="Название группы", array, inputType, handleSearch, className, onInputChange}: PropsInterface){
     const [selectedValue, setSelectedValue] = useState<GroupInterface | DisciplineInterface | StudentInterface | ReportTypeInterface | null>(null)
     const [query, setQuery] = useState(``)
     const [searchParams, setSearchParams] = useSearchParams()
@@ -41,7 +43,9 @@ export default function Input({textChildren="Группа", helpText="Назва
         setSelectedValue(elementToSet)
 
         // Callback на проверку, есть ли оба элемента в query и вывод таблицы
-        handleSearch()
+        if(handleSearch){
+            handleSearch()
+        }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams])
@@ -62,6 +66,7 @@ export default function Input({textChildren="Группа", helpText="Назва
             switch(inputType){
                 case "group" : {
                     params.append("groupid", String(e.id))
+                    onInputChange?.(e.id)
                     break
                 }
                 case "discipline" : {
@@ -79,6 +84,7 @@ export default function Input({textChildren="Группа", helpText="Назва
             }
             if(groupId && inputType != "group") { // Добавил проверки, так как параметры начинали дублироваться
                 params.append("groupid", groupId ? groupId : String(e.id))
+                
             }
             if (disciplineId && inputType != "discipline") {
                 params.append("disciplineid", disciplineId ? disciplineId : String(e.id))
@@ -90,7 +96,9 @@ export default function Input({textChildren="Группа", helpText="Назва
                 params.append("reporttype", reportType ? reportType : String(e.id))
             }
             setSearchParams(params)
-           
+         
+            
+            
         }
     }
 
@@ -106,10 +114,10 @@ export default function Input({textChildren="Группа", helpText="Назва
     return(
          <div className="flex flex-col gap-2.5">
             <p className="text-[28px] font-bold text-tLight dark:text-tLightD">{textChildren}</p>
-            <div className="relative">
+            <div className="relative ">
                 <Combobox value={selectedValue}  onChange={handleChange} onClose={() => setQuery(``)}>
                     <ComboboxInput
-                        className="w-58 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 "
+                        className={"w-58 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 " + className}
                         aria-label="Assignee"
                         displayValue={(val: GroupInterface | DisciplineInterface | ReportTypeInterface) => val?.name}
                         onChange={(event) => setQuery(event.target.value)}
@@ -117,7 +125,7 @@ export default function Input({textChildren="Группа", helpText="Назва
                         <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
                             <Arrow onClick={handleClick} className="h-6 w-6 absolute top-2.5 right-2.5"/>
                         </ComboboxButton>
-                    <ComboboxOptions  anchor="bottom" className="w-65 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg">
+                    <ComboboxOptions  anchor="bottom"  className={"w-(--input-width) z-10 absolute left-0 max-h-105 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg " }>
                         {filterValues.map((val) => (
                             <ComboboxOption key={val.id} id={String(val.id)}  value={val} className="bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD p-2.5">
                                 {val.name}
