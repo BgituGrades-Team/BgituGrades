@@ -13,6 +13,7 @@ interface PropsInterface{
     handleSearch: () => void;
 }
 
+
 /**
  * 
  * @param item Массив групп/дисциплин/студентов
@@ -42,6 +43,13 @@ export default function MultipleInput({textChildren="Группа", helpText="Н
     const [selectedValue, setSelectedValue] = useState<GroupInterface[] | DisciplineInterface[] | StudentInterface[] | ReportTypeInterface[] | [] >([])
     const [query, setQuery] = useState(``)
     const [searchParams, setSearchParams] = useSearchParams()
+    const isSelected = (item: GroupInterface | DisciplineInterface | StudentInterface ) => {
+        return selectedValue.some(selected => selected.id == item.id)
+
+    }
+
+
+
 
     useEffect(() => {
         // Поиск query параметров
@@ -84,6 +92,7 @@ export default function MultipleInput({textChildren="Группа", helpText="Н
             switch(inputType){
                 case "group" : {
                     params.append("groupid", mapAndJoinById(e))
+
                     break
                 }
                 case "discipline" : {
@@ -92,10 +101,12 @@ export default function MultipleInput({textChildren="Группа", helpText="Н
                 }
                 case "student" : {
                     params.append("studentid", mapAndJoinById(e))
+
                     break
                 }
                 case "type" : {
                     params.append("reporttype", mapAndJoinById(e))
+                    
                     break
                 }
             }
@@ -110,9 +121,10 @@ export default function MultipleInput({textChildren="Группа", helpText="Н
             }
             if(reportType && inputType != "type"){
                 params.append("reporttype", reportType ? reportType.join(",") : mapAndJoinById(e))
+                
             }
             setSearchParams(params)
-           
+
         }
     }
 
@@ -129,7 +141,7 @@ export default function MultipleInput({textChildren="Группа", helpText="Н
             <p className="text-[28px] font-bold text-tLight dark:text-tLightD">{textChildren}</p>
             <div className="relative">
                 <Combobox value={selectedValue}  onChange={handleChange} onClose={() => setQuery(``)} multiple>
-                    <ComboboxInput
+                    <ComboboxInput      
                         className="w-58 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 "
                         aria-label="Assignee"
                         /*displayValue={(val: [GroupInterface] | [DisciplineInterface] | [ReportTypeInterface]) => val?.map(elem => elem.name).join(", ")}*/
@@ -139,8 +151,17 @@ export default function MultipleInput({textChildren="Группа", helpText="Н
                             <Arrow onClick={handleClick} className="h-6 w-6 absolute top-2.5 right-2.5"/>
                         </ComboboxButton>
                     <ComboboxOptions  anchor="bottom" className="w-65 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg">
+                        {/* <ComboboxOption key="all" id="all"  value="All" className="bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD p-2.5">
+                                <input className="w-3.5 h-3.5 mr-2.5" title="checkStatus" checked={isSelected("all")}  onChange={() => {}} onClick={(e) => {e.stopPropagation()}} type="checkbox" key="all"/>
+                                Выбрать все
+                        </ComboboxOption>
+                        <ComboboxOption key="checked" id="checked"  value="Checked" className="bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD p-2.5">
+                                <input className="w-3.5 h-3.5 mr-2.5" title="checkStatus" checked={isSelected("checked")}  onChange={() => {}} onClick={(e) => {e.stopPropagation()}} type="checkbox" key="checked"/>
+                                Показать выбранные
+                        </ComboboxOption> */}
                         {filterValues.map((val) => (
                             <ComboboxOption key={val.id} id={String(val.id)}  value={val} className="bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD p-2.5">
+                                <input className="w-3.5 h-3.5 mr-2.5" title="checkStatus" checked={isSelected(val)}  onChange={() => {}} onClick={(e) => {e.stopPropagation()}} type="checkbox" key={val.id}/>
                                 {val.name}
                             </ComboboxOption>
                         ))}
