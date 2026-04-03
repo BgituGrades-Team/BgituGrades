@@ -119,7 +119,8 @@ export default function ReportActivity() {
                 reporttype,
                 studentIds: tableIds[2],
                 disciplineIds: tableIds[1],
-                groupIds: tableIds[0]
+                groupIds: tableIds[0],
+                /*isReverse: true | false*/
             })
         }
 

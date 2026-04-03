@@ -41,7 +41,8 @@ export default function ReportGenerator({/*tableType="report", isEditMode,*/ tab
   };
     useEffect(() => {
         renderTable(1)    
-    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [table])
     return (
         <div key={1} className="w-full">
             {renderTable(1)}

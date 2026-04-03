@@ -115,7 +115,7 @@ export default function Input({textChildren="Группа", helpText="Назва
          <div className="flex flex-col gap-2.5">
             <p className="text-[28px] font-bold text-tLight dark:text-tLightD">{textChildren}</p>
             <div className="relative ">
-                <Combobox value={selectedValue}  onChange={handleChange} onClose={() => setQuery(``)}>
+                <Combobox value={selectedValue} virtual={{options: filterValues}} onChange={handleChange} onClose={() => setQuery(``)}>
                     <ComboboxInput
                         className={"w-58 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 " + className}
                         aria-label="Assignee"
@@ -125,12 +125,18 @@ export default function Input({textChildren="Группа", helpText="Назва
                         <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
                             <Arrow onClick={handleClick} className="h-6 w-6 absolute top-2.5 right-2.5"/>
                         </ComboboxButton>
-                    <ComboboxOptions  anchor="bottom"  className={"w-(--input-width) z-10 absolute left-0 max-h-105 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg " }>
-                        {filterValues.map((val) => (
+                    <ComboboxOptions  anchor="bottom"  className={"w-(--input-width) z-10 absolute left-0 max-h-105 border border-bgDark dark:border-bgModalD bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg " }>
+                        {({option: val}) => (
                             <ComboboxOption key={val.id} id={String(val.id)}  value={val} className="bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD p-2.5">
                                 {val.name}
                             </ComboboxOption>
-                        ))}
+                        )}
+                        
+                        {/* {filterValues.map((val) => (
+                            <ComboboxOption key={val.id} id={String(val.id)}  value={val} className="bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD p-2.5">
+                                {val.name}
+                            </ComboboxOption>
+                        ))} */}
                     </ComboboxOptions>
                 </Combobox>
             </div>
