@@ -1,3 +1,4 @@
+import type React from "react";
 import type { DisciplineInterface, GroupInterface, StudentInterface } from "./fromRequests";
 
 

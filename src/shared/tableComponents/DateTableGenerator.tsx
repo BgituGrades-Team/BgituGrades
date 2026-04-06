@@ -125,7 +125,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     useEffect(() => {
         renderTable(1)    
             
-    })
+    }, [table])
     return (
         <div key={1} className="w-full">
             {renderTable(1)}

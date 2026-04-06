@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import Arrow from "./SVG/Arrow"
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, ComboboxButton } from '@headlessui/react'
 import { useSearchParams } from "react-router-dom";
-import type { DisciplineInterface, GroupInterface, ReportTypeInterface, StudentInterface } from "../types/fromRequests";
+import type { PeriodsInterface } from "../types/fromRequests";
 
 interface PropsInterface{
     textChildren?: string;
     helpText?: string;
-    array: GroupInterface[] | DisciplineInterface[] | StudentInterface[] | ReportTypeInterface[] ; // Массивы возможных значений в инпуте
-    inputType: "group" | "discipline" | "student" | "type" | "startDate" | "endDate"
+    array: PeriodsInterface[] ; // Массивы возможных значений в инпуте
     onChange?: () => void;
     onInputChange? : React.Dispatch<React.SetStateAction<number>>;
     handleSearch?: () => void;
@@ -18,25 +17,20 @@ interface PropsInterface{
 
 
 
-export default function Input({textChildren="Группа", helpText="Название группы", array, inputType, handleSearch, className, onInputChange}: PropsInterface){
-    const [selectedValue, setSelectedValue] = useState<GroupInterface | DisciplineInterface | StudentInterface | ReportTypeInterface | null>(null)
+export default function PeriodsInput({textChildren="Группа", helpText="Название группы", array, handleSearch, className}: PropsInterface){
+    const [selectedValue, setSelectedValue] = useState<PeriodsInterface | null>(null)
     const [query, setQuery] = useState(``)
     const [searchParams, setSearchParams] = useSearchParams()
 
     useEffect(() => {
         // Поиск query параметров
-        const disciplineId = searchParams.get("disciplineid")
-        const groupId = searchParams.get("groupid")
-        const studentId = searchParams.get("studentid")
-        const reportTypeId = searchParams.get("reporttype")
+        const periodSem = searchParams.get("periodsem")
+        const periodYear = searchParams.get("periodyear")
 
         // Установка выбранного параметра после перезапуска страницы
-        let elementToSet: GroupInterface | DisciplineInterface | StudentInterface | ReportTypeInterface | null = null;
-        array.forEach(element => {
-            if ((element.id == Number(groupId) && inputType == "group") ||
-               (element.id == Number(disciplineId) && inputType == "discipline") ||
-               (element.id == Number(studentId) && inputType == "student") ||
-               (element.id == Number(reportTypeId) && inputType == "type" && reportTypeId != undefined) ) { // Каждый доступный тип инпута
+        let elementToSet: PeriodsInterface | null = null;
+        array.map(element => {
+            if ((element.semester == Number(periodSem) && element.year == Number(periodYear)) ) { // Каждый доступный тип инпута
                 elementToSet = element
             }
         });
@@ -54,7 +48,7 @@ export default function Input({textChildren="Группа", helpText="Назва
     }
 
     // Изменение выбранного элемента и добавление идентификатора в query параметры
-    const handleChange = (e: GroupInterface | DisciplineInterface | StudentInterface | null) => {
+    const handleChange = (e: PeriodsInterface | null) => {
         setSelectedValue(e)
 
         if (e){
@@ -63,47 +57,22 @@ export default function Input({textChildren="Группа", helpText="Назва
             const disciplineId = searchParams.get("disciplineid")
             const studentId = searchParams.get("studentid")
             const reportType = searchParams.get("reporttype")
-            const periodSem = searchParams.get("periodsem")
-            const periodYear = searchParams.get("periodyear")
-            switch(inputType){
-                case "group" : {
-                    params.append("groupid", String(e.id))
-                    onInputChange?.(e.id)
-                    break
-                }
-                case "discipline" : {
-                    params.append("disciplineid", String(e.id))
-                    break
-                }
-                case "student" : {
-                    params.append("studentid", String(e.id))
-                    break
-                }
-                case "type" : {
-                    params.append("reporttype", String(e.id))
-                    break
-                }
-            }
-            if(periodSem) { // Добавил проверки, так как параметры начинали дублироваться
-                params.append("periodsem", periodSem)
+            params.append("periodsem", String(e.semester))
+            params.append("periodyear", String(e.year))
+               if(groupId ) { // Добавил проверки, так как параметры начинали дублироваться
+                params.append("groupid", groupId)
                 
             }
-            if (periodYear) {
-                params.append("periodyear", periodYear)
-            }     
-            if(groupId && inputType != "group") { // Добавил проверки, так как параметры начинали дублироваться
-                params.append("groupid", groupId ? groupId : String(e.id))
-                
-            }
-            if (disciplineId && inputType != "discipline") {
-                params.append("disciplineid", disciplineId ? disciplineId : String(e.id))
+            if (disciplineId ) {
+                params.append("disciplineid", disciplineId)
             }           
-            if (studentId && inputType != "student") {
-                params.append("studentid", studentId ? studentId : String(e.id))
+            if (studentId ) {
+                params.append("studentid", studentId)
             }
-            if(reportType && inputType != "type"){
-                params.append("reporttype", reportType ? reportType : String(e.id))
+            if(reportType){
+                params.append("reporttype", reportType)
             }
+
             setSearchParams(params)
          
             
@@ -116,7 +85,7 @@ export default function Input({textChildren="Группа", helpText="Назва
         query === ``
             ? array
             : array.filter((val) => {
-                return val.name.toLowerCase().includes(query.toLowerCase())
+                return val.semester + val.year
             })
             
 
@@ -128,7 +97,7 @@ export default function Input({textChildren="Группа", helpText="Назва
                     <ComboboxInput
                         className={"w-58 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 " + className}
                         aria-label="Assignee"
-                        displayValue={(val: GroupInterface | DisciplineInterface | ReportTypeInterface) => val?.name}
+                        displayValue={(val: PeriodsInterface) => `${val?.semester}-й Семестр ${val?.year}год`}
                         onChange={(event) => setQuery(event.target.value)}
                         placeholder={helpText} />
                         <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
@@ -136,8 +105,8 @@ export default function Input({textChildren="Группа", helpText="Назва
                         </ComboboxButton>
                     <ComboboxOptions  anchor="bottom"  className={"w-(--input-width) z-10 absolute left-0 max-h-105 border border-bgDark dark:border-bgModalD bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg " }>
                         {({option: val}) => (
-                            <ComboboxOption key={val.id} id={String(val.id)}  value={val} className="bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD p-2.5">
-                                {val.name}
+                            <ComboboxOption key={val.year} id={String(val.year)}  value={val} className="bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD p-2.5">
+                                {val.semester}-й Семестр {val.year}год
                             </ComboboxOption>
                         )}
                         

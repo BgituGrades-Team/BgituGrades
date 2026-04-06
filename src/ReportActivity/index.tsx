@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router-dom"
 import LeftNavBar from "../shared/components/LeftNavBar"
 import { useEffect, useState } from "react"
-import type {  DisciplineInterface, GroupInterface, ReportTableSample, StudentInterface } from "../shared/types/fromRequests"
-import { downloadFile, getDisciplines, getDisciplinesByGroups, getGroups, getStudents } from "../shared/utils/apiRequests"
+import type {  DisciplineInterface, GroupInterface, PeriodsInterface, ReportTableSample, StudentInterface } from "../shared/types/fromRequests"
+import { downloadFile, getAllPeriods, getDisciplines, getDisciplinesByGroups, getGroups, getStudents } from "../shared/utils/apiRequests"
 import { HubConnection } from "@microsoft/signalr"
 import TableGeneratorSkeleton from "../shared/components/skeletons/TableGeneratorSkeleton"
 import TopNavBarSkeleton from "../shared/components/skeletons/TopNavBarSkeleton"
@@ -32,10 +32,11 @@ export default function ReportActivity() {
     const [link, setLink] = useState<string | null>(null)
     const [downloadLink, setDownloadLink] = useState<string | null>(null)
     const [reverseSearchArray, setReverseSearchArray] = useState([false, false, false]);
-
+    const [periods, setPeriods] = useState<PeriodsInterface[]>([])
     const [selectedDisciplines, setSelectedDisciplines] = useState<DisciplineInterface[]>([])
     const [selectedGroups, setSelectedGroups] = useState<GroupInterface[]>([])
     const [selectedStudents, setSelectedStudents] = useState<StudentInterface[]>([])
+    //const [selectedPeriod] = useState<PeriodsInterface>()
     
     const pipeBomb: pipeBombInterface = {
         "disciplines": [selectedDisciplines, setSelectedDisciplines],
@@ -89,10 +90,15 @@ export default function ReportActivity() {
         const getParams = async () => {
             const respGroups: GroupInterface[] | undefined = await getGroups()
             const respDisciplines: DisciplineInterface[] | undefined = await getDisciplines()
-            
+            const respPeriods: PeriodsInterface[] | undefined = await getAllPeriods()
             let respStudents: StudentInterface[] | undefined 
 
             const groupId = searchParams.get("groupid")?.split(",")
+
+            if(periods.length == 0 && respPeriods){
+                setPeriods(respPeriods)
+            }
+
             if(groupId != undefined ){
                 respStudents = await getStudents(groupId.map(elem => Number(elem)))
             }
@@ -132,6 +138,7 @@ export default function ReportActivity() {
             //     groupIds: selectedGroups,
             // })
             connection?.invoke("GenerateReport", {
+                periods,
                 reporttype,
                 studentIds: selectedStudents.map(val => val.id),
                 disciplineIds: selectedDisciplines.map(val => val.id),
@@ -216,6 +223,7 @@ export default function ReportActivity() {
                     <StudentTopNavBar
                         link={downloadLink != null ? downloadLink : ""}
                         handleSearch={handleSearch}
+                        periods={periods}
                         groups={groups}
                         disciplines={disciplines}
                         students={students}
@@ -251,7 +259,7 @@ export default function ReportActivity() {
                         </div>
                     </div> :
                     <div className="w-[90%] flex flex-col gap-6.25">
-                        <StudentTopNavBar pipeBomb={pipeBomb} link={downloadLink != null ? downloadLink : ""} handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
+                        <StudentTopNavBar pipeBomb={pipeBomb} link={downloadLink != null ? downloadLink : ""} handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students} periods={periods}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false}/>
                         </div>

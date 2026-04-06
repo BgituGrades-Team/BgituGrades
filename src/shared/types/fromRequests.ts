@@ -74,6 +74,11 @@ export interface KeyInterface {
     expiryDate: string;
 }
 
+
+export interface PeriodsInterface {
+    semester: number;
+    year: number;
+}
  
 /**
  * Интерфейс таблицы посещений
@@ -105,3 +110,7 @@ export type ReportTableSample = [
         cells: [string];
     }
 ]
+
+
+
+

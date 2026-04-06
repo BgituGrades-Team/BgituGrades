@@ -33,6 +33,8 @@ export default function WorkModal({isOpen, close, isEditMode}: PropsInterface) {
         const gorupId = searchParams.get("groupid")
         const disciplineId = searchParams.get("disciplineid")
         await addWork(name, date, description, undefined, Number(disciplineId), Number(gorupId)) // Нужно будет убрать undefined, когда обновится API
+        close()
+        window.location.reload()
     }
 
     return (

@@ -1,5 +1,6 @@
 import axios from 'axios';
-import type { DisciplineInterface, GroupInterface, KeyInterface, StudentInterface, StudentLinkInterface } from '../types/fromRequests';
+import type { DisciplineInterface, GroupInterface, KeyInterface, PeriodsInterface, StudentInterface, StudentLinkInterface } from '../types/fromRequests';
+
 
 // Наш бекендер ебень
 axios.defaults.baseURL = import.meta.env.VITE_DOTENV_API_URL
@@ -189,5 +190,13 @@ export const downloadFile = async (link: string):  Promise<string | undefined> =
 
 }
 
-
+export const getAllPeriods = async () => {
+    try {
+        const res: Response<PeriodsInterface[]> = await instance.get(`api/migrations/periods/all`)
+        console.log(res.data);
+        return res.data;
+    } catch(error) {
+        console.log(error)
+    }
+}
 
