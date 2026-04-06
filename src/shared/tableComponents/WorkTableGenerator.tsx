@@ -65,65 +65,101 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
     const renderTable = (tableIndex:number) => {
         const rows = [];
         let cells = [];
-
+        const tableCellsClasses = {
+            short: "min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center",
+            long: "min-w-56.25 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD"
+        }
+        const rowClassName = "odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD"
         // ОБЯЗАТЕЛЬНО СДЕЛАТЬ НОВУЮ МОДАЛКУ ДЛЯ ОЦЕНКИ СТУДЕНТУ
         if(table && table.length > 0){
             // Угловая ячейка
             const works = table[0].marks
-            cells.push(<FirstTableCell topTitle="Работы" botTitle="ФИО" className="min-w-56.25 h-12.5" key={"Allah"} />)
             console.log(works)
             // Первая строка
-            works.forEach((work: WorkInterface, workIndex: number) => {
-                cells.push(<EditableTableCell onClick={openWorkModal} cellType="work" cellData={work.name} className="min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center " key={"Allah" + String(workIndex)} />)
-                // Если элемент последний, добавляем доп ячейку с плюсиком
-                if (workIndex == works.length-1){
-                    cells.push(<EditableTableCell onClick={openWorkModal} cellType="work" cellData="" className="min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center " key={"Allahi" + String(workIndex)} />)
-                }
-            })
-            // Заглушка, елси работ еще не добавлено
-            if (works.length == 0) {
-                cells.push(<EditableTableCell onClick={openWorkModal} cellType="work" cellData="" className="min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center " key={"Allahi" + "0"} />)
-            }
-            rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"allah2"}>{cells}</tr>)
+            cells = [
+                // Разделенная ячейка
+                <FirstTableCell
+                    topTitle="Работы"
+                    botTitle="ФИО"
+                    className="min-w-56.25 h-12.5"
+                    key={"Allah"} />,
+                // Разбираем массив работ на массив ячеек
+                ...works.map((work, i) => (
+                    <EditableTableCell
+                        onClick={openWorkModal}
+                        cellType="work"
+                        cellData={work.name}
+                        className={tableCellsClasses.short}
+                        key={`Work-${i}`} />
+                )),
+                // Кнопка добавления работы
+                <EditableTableCell
+                    onClick={openWorkModal}
+                    cellType="work"
+                    cellData="+"
+                    className={tableCellsClasses.short}
+                    key={`WorkAdd`} />
+
+            ]
+            rows.push(<tr className={rowClassName} key={"FirstRow"}>{cells}</tr>)
             
             // Остальные строки
             table.forEach((student: WorkTableSample[0], idx:number) => {
-                const cells = [];
+                let cells = [];
                 const works = student.marks;
-                // ФИО Студента
-                cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={student.name} className="min-w-56.25 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allahs" + String(idx)} />)
-                // Посещения по датам
-                works.forEach((_work: WorkInterface, index: number) => {
-                    cells.push(<EmptyTableCell connection={connection} changeMarkState={changeMarkState} cellType={tableType} studentId={student.studentId} className="min-w-12.5 h-12.5 " key={String(idx) + " " + String(index)} />);
-                    if(index == works.length-1){
-                        // Заглушка
-                        cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
-                    }
-                })
-                // Заглушка, елси работ еще не добавлено
-                if (works.length == 0) {
-                    cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
-                }
-                rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={idx}>{cells}</tr>)
-
+                cells = [
+                    // Студент
+                    <EditableTableCell
+                        onClick={openStudentModal}
+                        cellType="student"
+                        cellData={student.name}
+                        className={tableCellsClasses.long}
+                        key={`Student-${idx}`} />,
+                    // Разбираем массив работ на массив ячеек
+                    ...works.map((_work: WorkInterface, i) => (
+                        <EmptyTableCell
+                            connection={connection}
+                            changeMarkState={changeMarkState}
+                            cellType={tableType}
+                            studentId={student.studentId}
+                            className="min-w-12.5 h-12.5 "
+                            key={`Work-string-${idx}-col-${i}`} />
+                    )),
+                    // Заглушка
+                    <EmptyTableCell
+                        disabled={true}
+                        cellType={tableType}
+                        className="min-w-12.5 h-12.5 "
+                        key={`WorkPlaceholder-${idx}`} />
+                ]
+                rows.push(<tr className={rowClassName} key={`Row-${idx}`}>{cells}</tr>)
             })
-            
-            cells = []
-            // Пустая строка для добавления студента
-            cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={''} className="min-w-56.25 h-12.5 p-1.25 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allah last"} />)
-                // Заглушки
-                works.forEach((date: WorkInterface, index: number) => {
-                    cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={String(date.name) + " " + String(index)} />);
-                    if(index == works.length-1){
-                        // Заглушка
-                        cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
-                    }
-            });
-            // Заглушка, елси работ еще не добавлено
-            if (works.length == 0) {
-                cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
-            }
-            rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD  even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"alloe"}>{cells}</tr>)
+            // Последняя строка
+            cells = [
+                // Кнопка добавления студента
+                <EditableTableCell
+                    onClick={openStudentModal}
+                    cellType="student"
+                    cellData={'+'}
+                    className={tableCellsClasses.long + " text-center"}
+                    key={"StudentAdd"} />,
+                // Разбираем массив работ на массив ячеек
+                ...works.map((date: WorkInterface, i) => (
+                    <EmptyTableCell
+                        disabled={true}
+                        cellType={tableType}
+                        className="min-w-12.5 h-12.5 "
+                        key={String(date.name) + " " + String(i)} />
+                )),
+                // Заглушка
+                <EmptyTableCell
+                    disabled={true} 
+                    cellType={tableType}
+                    className="min-w-12.5 h-12.5 "
+                    key={"WorkPlaceholder2"} />
+
+            ]
+            rows.push(<tr className={rowClassName} key={"LastRow"}>{cells}</tr>)
         }
     return (
         <table className="block border-separate border-spacing-0.5 max-w-full max-h-142.5 overflow-auto" key={tableIndex}>

@@ -11,6 +11,8 @@ import StudentTopNavBar from "../shared/components/StudentTopNavBar"
 import ReportGenerator from "../shared/tableComponents/ReportGenerator"
 import { setupSignalRReportsConnection } from "../shared/utils/signalRService"
 import Loading from "../shared/components/SVG/Loading"
+import { ReverseSearchContext,} from "../shared/utils/contexts"
+import type { pipeBombInterface } from "../shared/types/interfaces"
 
 interface tableFromRequest {
     rows: ReportTableSample
@@ -19,7 +21,6 @@ interface tableFromRequest {
 export default function ReportActivity() {
     const [searchParams] = useSearchParams()
     const [isLoading, setIsLoading] = useState(true)
-    const [tableIds, setTableIds] = useState<number[][]>([])
     const [groups, setGroups] = useState<GroupInterface[]>([])
     const [disciplines, setDisciplines] = useState<DisciplineInterface[]>([])
     const [students, setStudents] = useState<StudentInterface[]>([])
@@ -30,8 +31,17 @@ export default function ReportActivity() {
     const [isTableReady, setIsTableReady] = useState(false)
     const [link, setLink] = useState<string | null>(null)
     const [downloadLink, setDownloadLink] = useState<string | null>(null)
+    const [reverseSearchArray, setReverseSearchArray] = useState([false, false, false]);
 
-
+    const [selectedDisciplines, setSelectedDisciplines] = useState<DisciplineInterface[]>([])
+    const [selectedGroups, setSelectedGroups] = useState<GroupInterface[]>([])
+    const [selectedStudents, setSelectedStudents] = useState<StudentInterface[]>([])
+    
+    const pipeBomb: pipeBombInterface = {
+        "disciplines": [selectedDisciplines, setSelectedDisciplines],
+        "groups": [selectedGroups, setSelectedGroups],
+        "students": [selectedStudents, setSelectedStudents]
+    }   
 
     useEffect(() => {
         // Подключаем сигнал
@@ -62,20 +72,18 @@ export default function ReportActivity() {
 
     useEffect(() => {
         const reloadDisciplines = async () => {
-            const res: DisciplineInterface[] | undefined = await getDisciplinesByGroups(tableIds[0]) // Исправить
+            const res: DisciplineInterface[] | undefined = await getDisciplinesByGroups(selectedGroups.map(val => val.id)) // Исправить
             if(res) {
                 setDisciplines(res)
             }
         }
 
-        const reloadStudents= async () => {
-            const res: StudentInterface[] | undefined = await getStudents(tableIds[0]) // Исправить
+        const reloadStudents = async () => {
+            const res: StudentInterface[] | undefined = await getStudents(selectedGroups.map(val => val.id)) // Исправить
             if(res) {
                 setStudents(res)
             }
         }
-        
-    
 
         // Все группы и дисциалины для полей ввода
         const getParams = async () => {
@@ -103,9 +111,11 @@ export default function ReportActivity() {
         }
 
         // Проверка, есть ли в query параметрах и дисциплина и группа и студент
-        if(tableIds.length > 3){
+        if((selectedDisciplines.length != 0 && selectedGroups.length != 0 && selectedStudents.length != 0)){
             let reporttype
-            switch (tableIds[3][0]){
+            const params = searchParams.get(`reporttype`)
+            console.log(params)
+            switch (Number(params)){
                 case 0 : {
                     reporttype = "PRESENCE"
                     break
@@ -115,27 +125,28 @@ export default function ReportActivity() {
                     break
                 }
             }
+            // console.log({
+            //     reporttype,
+            //     studentIds: selectedStudents,
+            //     disciplineIds: selectedDisciplines,
+            //     groupIds: selectedGroups,
+            // })
             connection?.invoke("GenerateReport", {
                 reporttype,
-                studentIds: tableIds[2],
-                disciplineIds: tableIds[1],
-                groupIds: tableIds[0],
-                /*isReverse: true | false*/
+                studentIds: selectedStudents.map(val => val.id),
+                disciplineIds: selectedDisciplines.map(val => val.id),
+                groupIds: selectedGroups.map(val => val.id),
+                // Группа, дисциплина, студент
+                isReverse: reverseSearchArray
             })
         }
-
-        else if (tableIds.length > 2) {
-            console.log(tableIds)
+        else if((selectedDisciplines.length != 0 && selectedGroups.length != 0)){
             reloadStudents()
             reloadDisciplines()
-        } else if(tableIds.length > 1){
-            reloadStudents()
+        } else if ((selectedGroups.length != 0)){
             reloadDisciplines()
-        } else if (tableIds.length > 0){
-            reloadDisciplines()
-        } else if (tableIds.length == 0) {
+        } else {
             getParams()
-            
         }
 
         // Проверка, есть ли ключ в query параметрах
@@ -145,24 +156,24 @@ export default function ReportActivity() {
         }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [connection, searchParams, tableIds])
+    }, [connection, searchParams, selectedDisciplines, selectedGroups, selectedStudents])
 
     // Поиск таблицы, если все query параметра заполены
     const handleSearch = () => {
-        const groupid = searchParams.get("groupid")?.split(",")
-        const disciplineid = searchParams.get("disciplineid")?.split(",")
-        const studentid = searchParams.get("studentid")?.split(",")
-        const reporttype = searchParams.get("reporttype")?.split(",")
-        if((groupid?.length != 0 && disciplineid?.length != 0 && studentid?.length != 0 && reporttype?.length != 0) && disciplineid && groupid && studentid && reporttype) {
-            setTableIds([groupid.map(val => Number(val)), disciplineid.map(val => Number(val)), studentid.map(val => Number(val)), reporttype.map(val => Number(val))])
-        }
-        else if((groupid?.length != 0 && disciplineid?.length != 0 && studentid?.length != 0) && disciplineid && groupid && studentid){
-            setTableIds([groupid.map(val => Number(val)), disciplineid.map(val => Number(val)), studentid.map(val => Number(val))])
-        } else  if((groupid?.length != 0 && disciplineid?.length != 0 ) && disciplineid && groupid){
-            setTableIds([groupid.map(val => Number(val)), disciplineid.map(val => Number(val))])
-        }  else if (groupid && groupid?.length != 0){
-            setTableIds([groupid.map(val => Number(val))])
-        }
+        // const groupid = searchParams.get("groupid")?.split(",")
+        // const disciplineid = searchParams.get("disciplineid")?.split(",")
+        // const studentid = searchParams.get("studentid")?.split(",")
+        // const reporttype = searchParams.get("reporttype")?.split(",")
+        // if((groupid?.length != 0 && disciplineid?.length != 0 && studentid?.length != 0 && reporttype?.length != 0) && disciplineid && groupid && studentid && reporttype) {
+        //     setTableIds([groupid.map(val => Number(val)), disciplineid.map(val => Number(val)), studentid.map(val => Number(val)), reporttype.map(val => Number(val))])
+        // }
+        // else if((groupid?.length != 0 && disciplineid?.length != 0 && studentid?.length != 0) && disciplineid && groupid && studentid){
+        //     setTableIds([groupid.map(val => Number(val)), disciplineid.map(val => Number(val)), studentid.map(val => Number(val))])
+        // } else  if((groupid?.length != 0 && disciplineid?.length != 0 ) && disciplineid && groupid){
+        //     setTableIds([groupid.map(val => Number(val)), disciplineid.map(val => Number(val))])
+        // }  else if (groupid && groupid?.length != 0){
+        //     setTableIds([groupid.map(val => Number(val))])
+        // }
     }
         if (connection) {
             // if (link == null && tableIds.length > 3) {
@@ -186,6 +197,7 @@ export default function ReportActivity() {
 
     if(isTableReady && connection && table) {
         return (
+            <ReverseSearchContext value={{reverseSearchArray, setReverseSearchArray}}>
             <div className="w-full min-h-[92.5vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
                 {
                 // Пришлось сделать так, чтобы не было блика при смене роута
@@ -201,7 +213,14 @@ export default function ReportActivity() {
                     </div>
                 </div> :
                 <div className="w-[90%] flex flex-col gap-6.25">
-                    <StudentTopNavBar link={downloadLink != null ? downloadLink : ""} handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
+                    <StudentTopNavBar
+                        link={downloadLink != null ? downloadLink : ""}
+                        handleSearch={handleSearch}
+                        groups={groups}
+                        disciplines={disciplines}
+                        students={students}
+                        pipeBomb={pipeBomb}
+                        />
                     <div className="flex gap-6.25">
                         <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false}/>
                         <ReportGenerator table={table.rows} isEditMode={false} connection={connection}  />
@@ -209,11 +228,13 @@ export default function ReportActivity() {
                 </div>
                 }   
             </div>
+            </ReverseSearchContext>
         )
     }
 
     if(connection) {
         return (
+            <ReverseSearchContext value={{reverseSearchArray, setReverseSearchArray}}>
             <div className="w-full min-h-[92.5vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
                 {
                 // Пришлось сделать так, чтобы не было блика при смене роута
@@ -230,13 +251,14 @@ export default function ReportActivity() {
                         </div>
                     </div> :
                     <div className="w-[90%] flex flex-col gap-6.25">
-                        <StudentTopNavBar link={downloadLink != null ? downloadLink : ""} handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
+                        <StudentTopNavBar pipeBomb={pipeBomb} link={downloadLink != null ? downloadLink : ""} handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false}/>
                         </div>
                     </div>
                 }   
             </div>
+            </ReverseSearchContext>
         )
     }
 

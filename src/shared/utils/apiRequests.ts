@@ -74,13 +74,14 @@ export const getStudentLink = async (groupId: number) => {
     }
 }
 /**
- * Получение дисциплин для группы
+ * Получение студентов для группы
  * @param groupId Идентификатор группы
  * @returns Массив студентов в этой группе
  */
 export const getStudents = async (groupId: number[]) => {
     try {
         const result: Response<StudentInterface[]> = await instance.get(`/api/student?groupids=${groupId.join(",")}`)
+        console.log(result)
         return result.data
     } catch (error) {
         console.log(error)
@@ -118,7 +119,7 @@ export const addKey = async (role: string, groupId?: number | null) => {
 
 
 /**
- * Удаление ключа по его имени
+ * Удаление ключа по его имени`
  * @param key Сам непосредственно ключ
  * @returns id:0, если получилось
  */

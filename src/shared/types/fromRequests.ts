@@ -1,4 +1,7 @@
 
+
+
+
 /**
  * Интерфейс группы
  */
@@ -17,11 +20,14 @@ export interface StudentLinkInterface {
     link: string;
 }
 
+export interface BaseInputInterface {
+    id: number;
+}
+
 /**
  * Интерфейс дисциплины
  */
-export interface DisciplineInterface {
-    id: number;
+export interface DisciplineInterface extends BaseInputInterface {
     name: string;
 }
 
@@ -29,16 +35,14 @@ export interface DisciplineInterface {
  * Интерфейс со студентами
  */
 
-export interface StudentInterface {
-    id: number;
+export interface StudentInterface extends BaseInputInterface {
     name: string;
     groupId: number;
 }
 
 
 
-export interface ReportTypeInterface {
-    id: number
+export interface ReportTypeInterface extends BaseInputInterface {
     name: "По посещению" | "По успеваемости";
 }
 
