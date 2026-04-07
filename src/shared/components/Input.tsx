@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Arrow from "./SVG/Arrow"
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, ComboboxButton } from '@headlessui/react'
 import { useSearchParams } from "react-router-dom";
-import type { DisciplineInterface, GroupInterface, ReportTypeInterface, StudentInterface } from "../types/fromRequests";
+import type { DisciplineInterface, GroupInterface, ReportTypeInterface, StudentInterface, DateTableSample } from "../types/fromRequests";
+import { type SetStateAction } from 'react';
 
 interface PropsInterface{
     textChildren?: string;
@@ -13,12 +14,13 @@ interface PropsInterface{
     onInputChange? : React.Dispatch<React.SetStateAction<number>>;
     handleSearch?: () => void;
     className?: string;
+    onUpdate?: React.Dispatch<SetStateAction<DateTableSample | undefined>> 
 }
 
 
 
 
-export default function Input({textChildren="Группа", helpText="Название группы", array, inputType, handleSearch, className, onInputChange}: PropsInterface){
+export default function Input({textChildren="Группа", helpText="Название группы", array, inputType, handleSearch, className, onInputChange, onUpdate}: PropsInterface){
     const [selectedValue, setSelectedValue] = useState<GroupInterface | DisciplineInterface | StudentInterface | ReportTypeInterface | null>(null)
     const [query, setQuery] = useState(``)
     const [searchParams, setSearchParams] = useSearchParams()
@@ -105,7 +107,7 @@ export default function Input({textChildren="Группа", helpText="Назва
                 params.append("reporttype", reportType ? reportType : String(e.id))
             }
             setSearchParams(params)
-         
+            onUpdate!(undefined)
             
             
         }

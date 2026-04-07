@@ -44,7 +44,7 @@ export default function StudentModal({isOpen, close, isEditMode}: PropsInterface
                 <ModalInput onChange={handleChange} value={name}>ФИО</ModalInput>
                 <div className="mt-4 flex gap-7.5">
                     <Button
-                        className="inline-flex items-center gap-2 rounded-md bg-primary dark:bg-primaryD px-3 py-1.5 text-sm/6 font-semibold text-tDark shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"
+                        className="inline-flex items-center gap-2 rounded-md bg-primary dark:bg-primaryD px-3 py-1.5 text-sm/6 font-semibold text-tLightD shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"
                         onClick={saveOrAdd}
                     >
                         Сохранить

@@ -18,7 +18,7 @@ function VisitActivity() {
     const [groups, setGroups] = useState<GroupInterface[]>([])
     const [disciplines, setDisciplines] = useState<DisciplineInterface[]>([])
     const [tableIds, setTableIds] = useState<number[]>([])
-    const [table, setTable] = useState<DateTableSample>()
+    const [table, setTable] = useState<DateTableSample | undefined>()
     const [isTableReady, setIsTableReady] = useState(false)
 
     const [connection, setConnection] = useState<null | HubConnection>(null)
@@ -80,6 +80,22 @@ function VisitActivity() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tableIds])
 
+    //функция онуляющая состояние таблицы при изменении инпута с дисциплиной, дабы пометки посещаемости нне кочевали меж таблицами
+    //проходит от index до input через topNavbar как крестоносец с одной целью форматнуть таблицу
+    //появился баг с пропажей таблицы при повторном выборе
+    //причин так делать не имеется надеюсь не критично
+    const handleInputChange = () => {
+        setTable(undefined)
+        if (connection) {
+            connection.on("ReceivePresences", (data) => {
+                setTable(data)
+                setIsTableReady(true)
+            })
+        }
+        console.log("srabotalo")
+    }
+
+
 
     // Поиск таблицы, если оба query параметра заполены
     const handleSearch = () => {
@@ -96,7 +112,6 @@ function VisitActivity() {
     // Делаем слушатели событий из сигнала, если подключение активно
     if (connection) {
         connection.on("ReceivePresences", (data) => {
-            console.log(data)
             setTable(data)
             setIsTableReady(true)
         })
@@ -118,7 +133,7 @@ function VisitActivity() {
                 </div> :
 
                 <div className="w-[90%] flex flex-col gap-6.25">
-                    <TopNavBar handleSearch={handleSearch} disciplines={disciplines} groups={groups} tableIds={tableIds}/>
+                    <TopNavBar handleSearch={handleSearch} disciplines={disciplines} onUpdate={setTable} groups={groups} tableIds={tableIds}/>
                     <div className="flex gap-6.25">
                         <LeftNavBar visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
                         <DateTableGenerator table={table} isEditMode={isEditMode} tableType="date" connection={connection}/>
@@ -141,7 +156,7 @@ function VisitActivity() {
                     </div>
                 </div> :
                 <div className="w-[90%] flex flex-col gap-6.25">
-                    <TopNavBar handleSearch={handleSearch} disciplines={disciplines} groups={groups} tableIds={tableIds}/>
+                    <TopNavBar handleSearch={handleSearch} disciplines={disciplines} onUpdate={() => handleInputChange} groups={groups} tableIds={tableIds}/>
                     <div className="flex gap-6.25">
                         <LeftNavBar visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
                         <DateTableGenerator isEditMode={isEditMode} tableType="date" connection={connection}/>

@@ -34,7 +34,6 @@ export default function CustomSelect({selectData = ["П", "Н", "У"], presence 
         setPIdor(presence == "PRESENT" ? true : false)
     }, [presence])
     const handleUpdate = (data: DataInterface) => {
-        console.log(data)
         if (Number(data.presences[0].classId) == classId && Number(data.studentId) == studentId && data.presences[0].date == date) {
             setSelectedValue(data.presences[0].isPresent == "PRESENT" ? "П" : data.presences[0].isPresent == "ABSENTINVALID" ? "Н" : "У")
             setPIdor(data.presences[0].isPresent == "PRESENT" ? true : false)

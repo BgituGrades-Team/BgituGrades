@@ -8,7 +8,7 @@ interface PropsInterface{
 
 
 
-export default function TableGeneratorSkeleton({className = "bg-bgModal animate-bounce dark:bg-bgLightD border-bgModal w-full h-142.5 rounded-lg"}: PropsInterface){
+export default function TableGeneratorSkeleton({className = "bg-bgModal animate-spin dark:bg-bgLightD border-bgModal w-full h-142.5 rounded-lg"}: PropsInterface){
     return (
         <div className={className}></div>
     );

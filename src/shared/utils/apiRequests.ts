@@ -112,7 +112,7 @@ export const addKey = async (role: string, groupId?: number | null) => {
             groupId: groupId
         }
         await instance.post(`api/key`, params)
-        console.log("pizda noviy cluch")
+        console.log("Success! New key has been added!")
     } catch (error) {
         console.log(error)
     }
@@ -200,3 +200,20 @@ export const getAllPeriods = async () => {
     }
 }
 
+
+
+export const transerPresenceDate = async(classId: number, groupId: number, disciplineId: number, oldDate: string, newDate: string) =>{
+    try {
+        const params = {
+            "id": classId,
+            "originalDate": oldDate,
+            "newDate": newDate,
+            "disciplineid": disciplineId,
+            "groupid": groupId
+        }
+        await instance.put("api/transfer", params)
+        console.log("Success! New date has been changed!")
+    } catch(error) {
+        console.log(error)
+    }
+}

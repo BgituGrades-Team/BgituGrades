@@ -2,19 +2,21 @@ import Button from "./Button"
 import Input from "./Input"
 import Image from "../../assets/alt.png"
 import { getStudentLink } from "../utils/apiRequests";
-import type { DisciplineInterface, GroupInterface, StudentLinkInterface } from "../types/fromRequests";
+import type { DateTableSample, DisciplineInterface, GroupInterface, StudentLinkInterface } from "../types/fromRequests";
 import { useState } from "react";
 import StudentLinkModal from "../modals/StudentLinkModal";
+import { type SetStateAction } from 'react';
 
 interface PropsInterface {
     groups: GroupInterface[];
     disciplines: DisciplineInterface[];
     handleSearch: () => void;
     tableIds:  number[];
+    onUpdate: React.Dispatch<SetStateAction<DateTableSample | undefined>> 
 }
 
 
-function TopNavBar({groups, disciplines, handleSearch, tableIds}: PropsInterface){
+function TopNavBar({groups, disciplines, handleSearch, tableIds, onUpdate}: PropsInterface){
     const [link, setLink] = useState<string>()
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
@@ -36,8 +38,8 @@ function TopNavBar({groups, disciplines, handleSearch, tableIds}: PropsInterface
        <div className="h-25 mt-13.75 flex justify-between pl-3.75 items-end">
             <div className="flex gap-6.25 items-end">
                 <img className="mr-3.25" src={Image} alt="img" />
-                <Input handleSearch={handleSearch} inputType="group" array={groups} textChildren="Группа" helpText="Название группы..."/>
-                <Input handleSearch={handleSearch} inputType="discipline" array={disciplines} textChildren="Дисциплина" helpText="Название дисциплины..."/>
+                <Input handleSearch={handleSearch}  inputType="group" array={groups} textChildren="Группа" helpText="Название группы..."/>
+                <Input handleSearch={handleSearch} onUpdate={onUpdate} inputType="discipline" array={disciplines} textChildren="Дисциплина" helpText="Название дисциплины..."/>
             </div> 
             <div className="flex gap-6.25">
                 <Button children="Создать ссылку" onClick={createStudentLink}/>
