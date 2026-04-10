@@ -29,7 +29,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     const [classId, setClassId] = useState<number | undefined>()
     const [classType, setClassType] = useState<string>("")
     const [date, setDate] = useState<string>("")
-    
+    const [studentId, setStudentId] = useState<number | undefined>()
     // Вывод информации при получении данных, УДАЛИТЬ НА ПРОДЕ
     //connection.on("ReceivePresence", (data) => console.log(data))
     //connection.on("ReceiveMarks", (data) => console.log(data))
@@ -50,7 +50,8 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     const closeTransferModal = () => {
         setTransferModal(false)
     }
-    const openStudentModal = () => {
+    const openStudentModal = (studentId: number) => {
+        setStudentId(studentId)
         setStudentModal(true)
     }
     const closeStudentModal = () => {
@@ -203,7 +204,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
                     cells = [
                         // Студент
                         <EditableTableCell
-                            onClick={openStudentModal}
+                            onClick={() => openStudentModal(student.studentId)}
                             cellType="student"
                             cellData={student.name}
                             className={tableCellsClasses.long}
@@ -231,31 +232,31 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
                     rows.push(<tr className={rowClassName} key={`Row-${idx}`}>{cells}</tr>)
                 })
                 // Последняя строка
-                cells = [
-                    // Кнопка добавления студента
-                    <EditableTableCell
-                        onClick={openStudentModal}
-                        cellType="student"
-                        cellData={'+'}
-                        className={tableCellsClasses.long + " text-center"}
-                        key={"StudentAdd"} />,
-                    // Разбираем массив дат на массив ячеек
-                    ...dates.map((date: PresenceInterface, i) => (
-                        <EmptyTableCell
-                            disabled={true}
-                            cellType={tableType}
-                            className="min-w-12.5 h-12.5 "
-                            key={String(date.classType) + " " + String(i)} />
-                    )),
-                    // Заглушка
-                    <EmptyTableCell
-                        disabled={true} 
-                        cellType={tableType}
-                        className="min-w-12.5 h-12.5 "
-                        key={"DatePlaceholder2"} />
+                // cells = [
+                //     // Кнопка добавления студента
+                //     <EditableTableCell
+                //         onClick={openStudentModal}
+                //         cellType="student"
+                //         cellData={'+'}
+                //         className={tableCellsClasses.long + " text-center"}
+                //         key={"StudentAdd"} />,
+                //     // Разбираем массив дат на массив ячеек
+                //     ...dates.map((date: PresenceInterface, i) => (
+                //         <EmptyTableCell
+                //             disabled={true}
+                //             cellType={tableType}
+                //             className="min-w-12.5 h-12.5 "
+                //             key={String(date.classType) + " " + String(i)} />
+                //     )),
+                //     // Заглушка
+                //     <EmptyTableCell
+                //         disabled={true} 
+                //         cellType={tableType}
+                //         className="min-w-12.5 h-12.5 "
+                //         key={"DatePlaceholder2"} />
     
-                ]
-                rows.push(<tr className={rowClassName} key={"LastRow"}>{cells}</tr>)
+                // ]
+                // rows.push(<tr className={rowClassName} key={"LastRow"}>{cells}</tr>)
             }
         return (
             <table className="block border-separate border-spacing-0.5 max-w-full max-h-142.5 overflow-auto" key={tableIndex}>
@@ -270,7 +271,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     return (
         <div key={1} className="w-full">
             {renderTable(1)}
-            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode}/>
+            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={studentId}/>
             <DateModal isOpen={dateModal} close={closeDateModal} isEditMode={isEditMode}/>
             <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={date} />
         </div>

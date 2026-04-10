@@ -211,9 +211,25 @@ export const transerPresenceDate = async(classId: number, groupId: number, disci
             "disciplineid": disciplineId,
             "groupid": groupId
         }
-        await instance.put("api/transfer", params)
+        await instance.post("api/transfer", params)
         console.log("Success! New date has been changed!")
     } catch(error) {
         console.log(error)
     }
 }
+
+export const updateStudent = async (studentId: number, name: string, groupId: number) => {
+   const params ={
+            "id": studentId,
+            "name": name,
+            "groupid": groupId
+        }
+    try {
+        await instance.put("api/student", params)
+        console.log("Success! Student's name has been updated!")
+    } catch(error) {
+        console.log(error, params)
+    }
+}
+
+

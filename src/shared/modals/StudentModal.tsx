@@ -3,16 +3,17 @@ import ModalInput from './ModalInput';
 import Cross from '../components/SVG/Cross';
 import { useState, type ChangeEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { addNewStudent } from '../utils/apiRequests';
+import { updateStudent } from '../utils/apiRequests';
 
 interface PropsInterface{
     isOpen: boolean;
     close: () => void;
     isEditMode: boolean;
+    studentId: number | undefined;
 }    
 
 
-export default function StudentModal({isOpen, close, isEditMode}: PropsInterface) {
+export default function StudentModal({isOpen, close, isEditMode, studentId}: PropsInterface) {
     const [searchParams,] = useSearchParams()
     const [name, setName] = useState<string>("")
 
@@ -21,10 +22,12 @@ export default function StudentModal({isOpen, close, isEditMode}: PropsInterface
     }
 
 
-    const saveOrAdd = async () => {
+    const updateAndSave = async () => {
         const groupId = searchParams.get('groupid')
-        if (groupId) {
-            await addNewStudent(Number(groupId), name)
+        console.log(studentId, name, groupId)
+        if (groupId && studentId) {
+            console.log(studentId, name, groupId)
+            await updateStudent(studentId, name, Number(groupId))
         }
     }
 
@@ -45,7 +48,7 @@ export default function StudentModal({isOpen, close, isEditMode}: PropsInterface
                 <div className="mt-4 flex gap-7.5">
                     <Button
                         className="inline-flex items-center gap-2 rounded-md bg-primary dark:bg-primaryD px-3 py-1.5 text-sm/6 font-semibold text-tLightD shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"
-                        onClick={saveOrAdd}
+                        onClick={updateAndSave}
                     >
                         Сохранить
                     </Button>
