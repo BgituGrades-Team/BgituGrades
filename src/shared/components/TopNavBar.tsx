@@ -12,7 +12,7 @@ interface PropsInterface {
     disciplines: DisciplineInterface[];
     handleSearch: () => void;
     tableIds:  number[];
-    onUpdate: React.Dispatch<SetStateAction<DateTableSample | undefined>> 
+    onUpdate?: React.Dispatch<SetStateAction<DateTableSample | undefined>> 
 }
 
 

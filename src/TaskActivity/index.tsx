@@ -85,7 +85,16 @@ export default function TaskActivity() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tableIds])
 
-
+    // const handleInputChange = () => {
+    //     setTable(undefined)
+    //     if (connection) {
+    //         connection.on("ReceivePresences", (data) => {
+    //             setTable(data)
+    //             setIsTableReady(true)
+    //         })
+    //     }
+    //     console.log("srabotalo")
+    // }
 
 
     // Поиск таблицы, если оба query параметра заполены
