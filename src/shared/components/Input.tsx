@@ -107,7 +107,7 @@ export default function Input({textChildren="Группа", helpText="Назва
                 params.append("reporttype", reportType ? reportType : String(e.id))
             }
             setSearchParams(params)
-            onUpdate!(undefined)
+            onUpdate?.(undefined)
             
             
         }

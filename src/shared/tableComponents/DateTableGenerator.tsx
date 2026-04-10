@@ -7,7 +7,7 @@ import { HubConnection } from "@microsoft/signalr";
 import { useSearchParams } from "react-router-dom";
 import DateModal from "../modals/DateModal";
 import type { PresenceInterface, DateTableSample } from "../types/fromRequests";
-import TransferNodal from "../modals/TransferModal";
+import TransferModal from "../modals/TransferModal";
 
 
 
@@ -26,7 +26,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     const [searchParams] = useSearchParams()
     const [dateModal, setDateModal] = useState<boolean>(false)
     const [transferModal, setTransferModal] = useState<boolean>(false)
-    const [classId, setClassId] = useState<number>()
+    const [classId, setClassId] = useState<number | undefined>()
     const [classType, setClassType] = useState<string>("")
     const [date, setDate] = useState<string>("")
     
@@ -272,7 +272,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
             {renderTable(1)}
             <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode}/>
             <DateModal isOpen={dateModal} close={closeDateModal} isEditMode={isEditMode}/>
-            <TransferNodal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={date} />
+            <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={date} />
         </div>
     );
 }
