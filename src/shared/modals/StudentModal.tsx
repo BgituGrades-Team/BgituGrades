@@ -13,7 +13,7 @@ interface PropsInterface{
 }    
 
 
-export default function StudentModal({isOpen, close, isEditMode, studentId}: PropsInterface) {
+export default function StudentModal({isOpen, close, isEditMode, studentId = undefined}: PropsInterface) {
     const [searchParams,] = useSearchParams()
     const [name, setName] = useState<string>("")
 
