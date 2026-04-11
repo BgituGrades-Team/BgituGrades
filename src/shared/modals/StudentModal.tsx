@@ -9,7 +9,7 @@ interface PropsInterface{
     isOpen: boolean;
     close: () => void;
     isEditMode: boolean;
-    studentId: number | undefined;
+    studentId?: number | undefined;
 }    
 
 

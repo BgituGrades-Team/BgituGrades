@@ -8,6 +8,7 @@ import { useSearchParams } from "react-router-dom";
 import DateModal from "../modals/DateModal";
 import type { PresenceInterface, DateTableSample } from "../types/fromRequests";
 import TransferModal from "../modals/TransferModal";
+import { checkTranserPresenceDate } from "../utils/apiRequests";
 
 
 
@@ -30,6 +31,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     const [classType, setClassType] = useState<string>("")
     const [date, setDate] = useState<string>("")
     const [studentId, setStudentId] = useState<number | undefined>()
+    const [statusCode, setStatusCode] = useState<number | undefined>()
     // Вывод информации при получении данных, УДАЛИТЬ НА ПРОДЕ
     //connection.on("ReceivePresence", (data) => console.log(data))
     //connection.on("ReceiveMarks", (data) => console.log(data))
@@ -41,11 +43,19 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     const closeDateModal = () => {
         setDateModal(false)
     }
-    const openTransferModal = (date: PresenceInterface) => {
+    const openTransferModal = async (date: PresenceInterface) => {
         setClassId(date.classId)
         setDate(date.date)
         setClassType(date.classType)
-        setTransferModal(true)
+        if(classId){
+            const res = await checkTranserPresenceDate(classId)
+            console.log(res)
+            setStatusCode(res)
+
+             setTransferModal(true)
+        }
+       
+       
     }
     const closeTransferModal = () => {
         setTransferModal(false)
@@ -273,7 +283,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
             {renderTable(1)}
             <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={studentId}/>
             <DateModal isOpen={dateModal} close={closeDateModal} isEditMode={isEditMode}/>
-            <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={date} />
+            <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={date} statusCode={statusCode} />
         </div>
     );
 }

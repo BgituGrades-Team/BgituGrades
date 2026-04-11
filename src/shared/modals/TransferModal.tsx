@@ -2,7 +2,7 @@ import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/re
 import Button from '../components/Button';
 import { useState } from "react";
 import Cross from "../components/SVG/Cross"
-import {transerPresenceDate} from "../utils/apiRequests"
+import {createTranserPresenceDate, updateTranserPresenceDate} from "../utils/apiRequests"
 
 interface PropsInterface{
     isOpen: boolean;
@@ -12,11 +12,12 @@ interface PropsInterface{
     classType: string
     groupId: number;
     disciplineId: number;
+    statusCode: number | undefined;
 }
 
 
 
-export default function TransferNodal({oldDate, groupId, disciplineId, classId, isOpen, close}: PropsInterface){
+export default function TransferNodal({oldDate, groupId, disciplineId, classId, isOpen, statusCode,  close}: PropsInterface){
     const [newDate, setNewDate] = useState<string>('')
 
 
@@ -26,7 +27,9 @@ export default function TransferNodal({oldDate, groupId, disciplineId, classId, 
     }
 
     const transferDate = async () => {
-        if(classId) { await transerPresenceDate(classId, groupId, disciplineId, oldDate, newDate);}
+        if(classId && statusCode == 200) { await updateTranserPresenceDate(classId, newDate) }
+        if(classId && statusCode == 404) { await createTranserPresenceDate(classId, groupId, disciplineId, oldDate, newDate);}
+     
         close()
         //window.location.reload()
     }
@@ -54,7 +57,7 @@ export default function TransferNodal({oldDate, groupId, disciplineId, classId, 
                                         value={oldDate}
                                         readOnly={true}
                                         name="oldDateinput" 
-                                        className="bg-bgLight dark:bg-bgLightD text-tLight dark:text-tLightD text-[20px] p-[10px] rounded-[8px]" 
+                                        className="bg-bgLight dark:bg-bgLightD text-tLight dark:text-tLightD text-[20px] p-2.5 rounded-lg" 
                                         placeholder="date"></input>    
                                 </div>
                                     <div className="flex flex-col gap-2.5">
@@ -63,7 +66,7 @@ export default function TransferNodal({oldDate, groupId, disciplineId, classId, 
                                         type="date" 
                                         name="newDateinput" 
                                         onChange={() => handleChange} 
-                                        className="bg-bgLight dark:bg-bgLightD text-tLight dark:text-tLightD text-[20px] p-[10px] rounded-[8px]" 
+                                        className="bg-bgLight dark:bg-bgLightD text-tLight dark:text-tLightD text-[20px] p-2.5 rounded-lg" 
                                         placeholder="date"></input>    
                                 </div>
                             </div>

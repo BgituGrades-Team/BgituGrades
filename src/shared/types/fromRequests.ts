@@ -1,5 +1,8 @@
 
-
+export interface ErrorInterface{
+    status: number;
+    statusText: string;
+}
 
 
 /**

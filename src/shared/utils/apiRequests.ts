@@ -200,19 +200,42 @@ export const getAllPeriods = async () => {
     }
 }
 
+export const checkTranserPresenceDate = async(classId: number) =>{
+    try {
+        const res = await instance.get(`api/transfer?classId=${classId}`)
+        console.log("Success! Prescence has been got!")
+        return res.status
+    } catch(error) {
+            console.log(error)
+
+    }
+}
 
 
-export const transerPresenceDate = async(classId: number, groupId: number, disciplineId: number, oldDate: string, newDate: string) =>{
+export const createTranserPresenceDate = async(classId: number, groupId: number, disciplineId: number, oldDate: string, newDate: string) =>{
     try {
         const params = {
-            "id": classId,
             "originalDate": oldDate,
             "newDate": newDate,
+             "classId": classId,
             "disciplineid": disciplineId,
             "groupid": groupId
         }
         await instance.post("api/transfer", params)
-        console.log("Success! New date has been changed!")
+        console.log("Success! Date has been created!")
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+export const updateTranserPresenceDate = async(classId: number, newDate: string) =>{
+    try {
+        const params = {
+             "classId": classId,
+            "newDate": newDate
+        }
+        await instance.put("api/transfer", params)
+        console.log("Success! Date has been created!")
     } catch(error) {
         console.log(error)
     }
