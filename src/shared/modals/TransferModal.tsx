@@ -1,6 +1,6 @@
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import Button from '../components/Button';
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import Cross from "../components/SVG/Cross"
 import {createTranserPresenceDate, updateTranserPresenceDate} from "../utils/apiRequests"
 
@@ -13,21 +13,22 @@ interface PropsInterface{
     groupId: number;
     disciplineId: number;
     statusCode: number | undefined;
+    transferId?: number | undefined;
 }
 
 
 
-export default function TransferNodal({oldDate, groupId, disciplineId, classId, isOpen, statusCode,  close}: PropsInterface){
+export default function TransferNodal({oldDate, groupId, disciplineId, classId, isOpen, statusCode, transferId,  close}: PropsInterface){
     const [newDate, setNewDate] = useState<string>('')
 
 
-    const handleChange = (e: string) => {
-        setNewDate(e)
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setNewDate(e.currentTarget.value)
         console.log(newDate)
     }
 
     const transferDate = async () => {
-        if(classId && statusCode == 200) { await updateTranserPresenceDate(classId, newDate) }
+        if(transferId && statusCode == 200) { await updateTranserPresenceDate(transferId, newDate) }
         if(classId && statusCode == 404) { await createTranserPresenceDate(classId, groupId, disciplineId, oldDate, newDate);}
      
         close()
@@ -65,7 +66,7 @@ export default function TransferNodal({oldDate, groupId, disciplineId, classId, 
                                     <input 
                                         type="date" 
                                         name="newDateinput" 
-                                        onChange={() => handleChange} 
+                                        onChange={handleChange} 
                                         className="bg-bgLight dark:bg-bgLightD text-tLight dark:text-tLightD text-[20px] p-2.5 rounded-lg" 
                                         placeholder="date"></input>    
                                 </div>

@@ -32,6 +32,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     const [date, setDate] = useState<string>("")
     const [studentId, setStudentId] = useState<number | undefined>()
     const [statusCode, setStatusCode] = useState<number | undefined>()
+    const [transferId, setTransferId] = useState<number | undefined>()
     // Вывод информации при получении данных, УДАЛИТЬ НА ПРОДЕ
     //connection.on("ReceivePresence", (data) => console.log(data))
     //connection.on("ReceiveMarks", (data) => console.log(data))
@@ -50,7 +51,11 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
         if(classId){
             const res = await checkTranserPresenceDate(classId)
             console.log(res)
-            setStatusCode(res)
+            if(typeof res != 'number' && typeof res != "undefined"){
+                setStatusCode(res[0])
+                setTransferId(res[1].id)
+            }
+            
 
              setTransferModal(true)
         }
@@ -69,14 +74,14 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     }
 
     const changePresenceState = (presenceState: string, studentId: number, classId: number, date: string) => {
-        console.log(
-            "ya blya rabotayu",
-            presenceState,
-            studentId,
-            classId,
-            date,
-            searchParams.get('disciplineid')
-        )
+        // console.log(
+        //     "ya blya rabotayu",
+        //     presenceState,
+        //     studentId,
+        //     classId,
+        //     date,
+        //     searchParams.get('disciplineid')
+        // )
         connection.invoke("UpdatePresenceGrade", { 
             studentId,
             classId,
@@ -175,7 +180,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
             if(table && table.length > 0){
                 // Угловая ячейка
                 const dates = table[0].presences
-                console.log(dates)
+                //console.log(dates)
                
                 // Первая строка
                 cells = [
@@ -283,7 +288,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
             {renderTable(1)}
             <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={studentId}/>
             <DateModal isOpen={dateModal} close={closeDateModal} isEditMode={isEditMode}/>
-            <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={date} statusCode={statusCode} />
+            <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={date} statusCode={statusCode} transferId={transferId} />
         </div>
     );
 }

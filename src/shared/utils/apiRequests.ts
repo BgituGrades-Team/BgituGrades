@@ -29,6 +29,8 @@ export const getGroups = async () => {
         return result.data
     } catch (error) {
         console.log(error)
+        
+            
     }
 }
 
@@ -203,11 +205,18 @@ export const getAllPeriods = async () => {
 export const checkTranserPresenceDate = async(classId: number) =>{
     try {
         const res = await instance.get(`api/transfer?classId=${classId}`)
-        console.log("Success! Prescence has been got!")
-        return res.status
+        console.log("Success! Prescence transfer has been got!")
+        return [res.status, res.data]
     } catch(error) {
             console.log(error)
-
+            if(error instanceof Error){
+            const errorText = error.message
+            if(errorText.includes('404')){
+                return (404)
+            } else {
+                return(455)
+            }
+        }
     }
 }
 
@@ -218,9 +227,10 @@ export const createTranserPresenceDate = async(classId: number, groupId: number,
             "originalDate": oldDate,
             "newDate": newDate,
              "classId": classId,
-            "disciplineid": disciplineId,
-            "groupid": groupId
+            "disciplineId": disciplineId,
+            "groupId": groupId
         }
+        console.log(params)
         await instance.post("api/transfer", params)
         console.log("Success! Date has been created!")
     } catch(error) {
@@ -228,14 +238,15 @@ export const createTranserPresenceDate = async(classId: number, groupId: number,
     }
 }
 
-export const updateTranserPresenceDate = async(classId: number, newDate: string) =>{
+export const updateTranserPresenceDate = async(transferId: number, newDate: string) =>{
     try {
         const params = {
-             "classId": classId,
+            "id": transferId,
             "newDate": newDate
         }
+        console.log(params)
         await instance.put("api/transfer", params)
-        console.log("Success! Date has been created!")
+        console.log("Success! Date has been updated!")
     } catch(error) {
         console.log(error)
     }
