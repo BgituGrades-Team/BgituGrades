@@ -4,11 +4,13 @@ import Header from '../Header/Header'
 import RouteManager from './Routes'
 import { ThemeContext } from '../shared/utils/contexts'
 import { AuthContext } from '../shared/utils/contexts'
+import RoutesModal from '../shared/modals/RoutesModal'
 
 
 function App() {
   const [theme, setTheme] = useState<string>("dark")
   const [authState, setAuthState] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
 
   useEffect(() => {
@@ -25,6 +27,12 @@ function App() {
     setAuthState(false);
   }, [theme])
 
+  const closeModal = () => {
+        setIsModalOpen(false)
+  }
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
   const handleThemeChange = () => {
     if(theme == "light"){
       setTheme("dark")
@@ -36,8 +44,9 @@ function App() {
   return (
         <AuthContext value={authState}>
             <ThemeContext value={theme}>
-                <Header handleThemeChange={handleThemeChange}/>
+                <Header openModal={openModal} handleThemeChange={handleThemeChange}/>
                 <RouteManager />
+                <RoutesModal close={closeModal} isOpen={isModalOpen}/>
             </ThemeContext>
         </AuthContext>
     )
