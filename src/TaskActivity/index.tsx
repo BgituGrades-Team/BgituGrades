@@ -22,6 +22,7 @@ export default function TaskActivity() {
     const [connection, setConnection] = useState<null | HubConnection>(null)
     const [table, setTable] = useState<WorkTableSample>()
     const [isTableReady, setIsTableReady] = useState(false)
+    
 
 
 
@@ -116,6 +117,8 @@ export default function TaskActivity() {
 
         })
     }
+
+    
 
     const compClasses = {
         outerDiv: "w-full min-h-[92.5vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ",

@@ -45,7 +45,7 @@ function TopNavBar({groups, disciplines, handleSearch, tableIds, onUpdate}: Prop
                 <Button children="Создать ссылку" onClick={createStudentLink}/>
                 <Button children="Редактировать"/>
                 <Button children="Скачать в Excel"/>
-                <Button children="Поделиться"/>
+                {/*<Button children="Поделиться"/>*/}
             </div>
             <StudentLinkModal isOpen={isOpen} close={closeStudentModal} linkText={link} />
        </div> 
