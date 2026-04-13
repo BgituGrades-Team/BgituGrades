@@ -11,7 +11,7 @@ function Logo({onClick = () => {console.log("Пропс на нажатие ра
         onClick();
     }
     return (
-        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={handeleOnClick}>
+        <svg className="max-sm:w-[48px] max-sm:h-[48px]" width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={handeleOnClick}>
         <g clipPath="url(#clip0_244_2)">
         <g clipPath="url(#clip1_244_2)">
         <path d="M11.9957 17.0395C16.053 17.0395 19.3422 13.6816 19.3422 9.53947C19.3422 5.39734 16.053 2.03947 11.9957 2.03947C7.93831 2.03947 4.64917 5.39734 4.64917 9.53947C4.64917 13.6816 7.93831 17.0395 11.9957 17.0395Z" fill="white"/>

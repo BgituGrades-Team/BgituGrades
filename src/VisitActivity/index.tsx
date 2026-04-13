@@ -135,7 +135,7 @@ function VisitActivity() {
                 <div className="w-[90%] flex flex-col gap-6.25">
                     <TopNavBar handleSearch={handleSearch} disciplines={disciplines} onUpdate={setTable} groups={groups} tableIds={tableIds}/>
                     <div className="flex gap-6.25">
-                        <LeftNavBar visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
+                        <LeftNavBar className="max-sm:hidden" visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
                         <DateTableGenerator table={table} isEditMode={isEditMode} tableType="date" connection={connection} groupId={tableIds[0]} disciplineId={tableIds[1]}/>
                     </div>
                 </div> 
@@ -158,7 +158,7 @@ function VisitActivity() {
                 <div className="w-[90%] flex flex-col gap-6.25">
                     <TopNavBar handleSearch={handleSearch} disciplines={disciplines} onUpdate={() => handleInputChange} groups={groups} tableIds={tableIds}/>
                     <div className="flex gap-6.25">
-                        <LeftNavBar visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
+                        <LeftNavBar className="max-sm:hidden" visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
                         <DateTableGenerator isEditMode={isEditMode} tableType="date" connection={connection} groupId={tableIds[0]} disciplineId={tableIds[1]}/>
                     </div>
                 </div>

@@ -123,8 +123,8 @@ export default function Input({textChildren="Группа", helpText="Назва
             
 
     return(
-         <div className="flex flex-col gap-2.5">
-            <p className="text-[28px] font-bold text-tLight dark:text-tLightD">{textChildren}</p>
+         <div className="flex flex-col max-sm:flex-row gap-2.5">
+            <p className="text-[28px] max-sm:text-[18px] font-bold text-tLight dark:text-tLightD ">{textChildren}</p>
             <div className="relative ">
                 <Combobox value={selectedValue} virtual={{options: filterValues}} onChange={handleChange} onClose={() => setQuery(``)}>
                     <ComboboxInput

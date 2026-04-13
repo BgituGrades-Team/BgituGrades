@@ -119,9 +119,14 @@ export default function TaskActivity() {
         })
     }
 
+    const compClasses = {
+        outerDiv: "w-full min-h-[92.5vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ",
+
+    }
+
     if(isTableReady && connection) {
         return (
-            <div className="w-full min-h-[92.5vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
+            <div className={compClasses.outerDiv}>
                 {
                     // Пришлось сделать так, чтобы не было блика при смене роута
                     isLoading ? 
@@ -135,7 +140,7 @@ export default function TaskActivity() {
                     <div className="w-[90%] flex flex-col gap-6.25">
                         <TopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} tableIds={tableIds}/>
                         <div className="flex gap-6.25">
-                            <LeftNavBar visitsStatus={false} tasksStatus={true} reportStatus={false}  adminStatus={false}/>
+                            <LeftNavBar className="max-sm:hidden" visitsStatus={false} tasksStatus={true} reportStatus={false}  adminStatus={false}/>
                             <WorkTableGenerator table={table} isEditMode={isEditMode} tableType="work" connection={connection}/>
                         </div>
                     </div>
@@ -146,7 +151,7 @@ export default function TaskActivity() {
 
     if(connection){
         return (
-            <div className="w-full min-h-[92.5vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
+            <div className={compClasses.outerDiv} >
                 {
                     isLoading ? 
                     <div className="w-[90%] animate-pulse flex flex-col gap-6.25">
@@ -159,7 +164,7 @@ export default function TaskActivity() {
                     <div className="w-[90%] flex flex-col gap-6.25">
                         <TopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} tableIds={tableIds}/>
                         <div className="flex gap-6.25">
-                            <LeftNavBar visitsStatus={false} tasksStatus={true} reportStatus={false} adminStatus={false}/>
+                            <LeftNavBar className="max-sm:hidden" visitsStatus={false} tasksStatus={true} reportStatus={false} adminStatus={false}/>
                             <WorkTableGenerator isEditMode={isEditMode} tableType="work" connection={connection}/>
                         </div>
                     </div>
@@ -169,7 +174,7 @@ export default function TaskActivity() {
         )
     }
     return (
-        <div className="w-full min-h-[92.5vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
+        <div className={compClasses.outerDiv}>
             <div className="w-[90%] animate-pulse flex flex-col gap-6.25">
                 <TopNavBarSkeleton />
                 <div className="flex gap-6.25">
