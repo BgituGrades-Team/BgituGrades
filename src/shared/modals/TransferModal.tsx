@@ -28,6 +28,7 @@ export default function TransferNodal({oldDate, groupId, disciplineId, classId, 
     }
 
     const transferDate = async () => {
+        console.log(transferId, classId, statusCode)
         if(transferId && statusCode == 200) { await updateTranserPresenceDate(transferId, newDate) }
         if(classId && statusCode == 404) { await createTranserPresenceDate(classId, groupId, disciplineId, oldDate, newDate);}
      

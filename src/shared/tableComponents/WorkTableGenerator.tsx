@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import EmptyTableCell from "./EmptyTableCell";
 import FirstTableCell from "./FirstTableCell";
 import EditableTableCell from "./EditableTableCell";
 import StudentModal from "../modals/StudentModal";
 import WorkModal from "../modals/WorkModal";
 import { HubConnection } from "@microsoft/signalr";
-import { useSearchParams } from "react-router-dom";
+
 import type { WorkInterface, WorkTableSample } from "../types/fromRequests";
 
 
@@ -21,10 +21,8 @@ interface PropsInterface{
 export default function WorkTableGenerator({tableType, isEditMode, table, connection}: PropsInterface){
     const [studentModal, setStudentModal] = useState<boolean>(false)
     const [workModal, setWorkModal] = useState<boolean>(false)
-    const [searchParams] = useSearchParams()
+    
 
-    // Вывод информации при получении данных, УДАЛИТЬ НА ПРОДЕ
-    connection.on("ReceiveMarks", (data) => console.log(data))
 
 
     const openStudentModal = () => {
@@ -40,24 +38,15 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
         setWorkModal(false)
     }
 
+    
 
-    const changeMarkState  = (markState: string, studentId: number, workId: number, date: string, value: string, isOverdue: boolean) => {
-        console.log(
-            markState,
-            studentId,
-            workId,
-            date,
-            value,
-            isOverdue,
-            searchParams.get('disciplineid')
-        )
+    const changeMarkState  = (value: string, studentId: number, workId: number, isOverdue: boolean) => {
         connection.invoke("UpdateMarkGrade", {
-            date,
             value,
             isOverdue,
             studentId,
             workId,
-            disciplineId: Number(searchParams.get('disciplineid'))
+
         })
     }
 
@@ -74,14 +63,13 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
         if(table && table.length > 0){
             // Угловая ячейка
             const works = table[0].marks
-            console.log(works)
             // Первая строка
             cells = [
                 // Разделенная ячейка
                 <FirstTableCell
                     topTitle="Работы"
                     botTitle="ФИО"
-                    className="min-w-56.25 h-12.5"
+                    className="w-56.25 h-12.5"
                     key={"Allah"} />,
                 // Разбираем массив работ на массив ячеек
                 ...works.map((work, i) => (
@@ -113,7 +101,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                         onClick={openStudentModal}
                         cellType="student"
                         cellData={student.name}
-                        className={tableCellsClasses.long}
+                        className={tableCellsClasses.long }
                         key={`Student-${idx}`} />,
                     // Разбираем массив работ на массив ячеек
                     ...works.map((_work: WorkInterface, i) => (
@@ -121,8 +109,11 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                             connection={connection}
                             changeMarkState={changeMarkState}
                             cellType={tableType}
+                            workId={_work.workId}
+                            mark={_work.value ? _work.value : ""}
+                            overdue={_work.isOverdue ? _work.isOverdue : false}
                             studentId={student.studentId}
-                            className="min-w-12.5 h-12.5 "
+                            className="w-33.75 h-12.5 "
                             key={`Work-string-${idx}-col-${i}`} />
                     )),
                     // Заглушка
@@ -135,31 +126,31 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                 rows.push(<tr className={rowClassName} key={`Row-${idx}`}>{cells}</tr>)
             })
             // Последняя строка
-            cells = [
-                // Кнопка добавления студента
-                <EditableTableCell
-                    onClick={openStudentModal}
-                    cellType="student"
-                    cellData={'+'}
-                    className={tableCellsClasses.long + " text-center"}
-                    key={"StudentAdd"} />,
-                // Разбираем массив работ на массив ячеек
-                ...works.map((date: WorkInterface, i) => (
-                    <EmptyTableCell
-                        disabled={true}
-                        cellType={tableType}
-                        className="min-w-12.5 h-12.5 "
-                        key={String(date.name) + " " + String(i)} />
-                )),
-                // Заглушка
-                <EmptyTableCell
-                    disabled={true} 
-                    cellType={tableType}
-                    className="min-w-12.5 h-12.5 "
-                    key={"WorkPlaceholder2"} />
+            // cells = [
+            //     // Кнопка добавления студента
+            //     <EditableTableCell
+            //         onClick={openStudentModal}
+            //         cellType="student"
+            //         cellData={'+'}
+            //         className={tableCellsClasses.long + " text-center"}
+            //         key={"StudentAdd"} />,
+            //     // Разбираем массив работ на массив ячеек
+            //     ...works.map((date: WorkInterface, i) => (
+            //         <EmptyTableCell
+            //             disabled={true}
+            //             cellType={tableType}
+            //             className="min-w-12.5 h-12.5 "
+            //             key={String(date.name) + " " + String(i)} />
+            //     )),
+            //     // Заглушка
+            //     <EmptyTableCell
+            //         disabled={true} 
+            //         cellType={tableType}
+            //         className="min-w-12.5 h-12.5 "
+            //         key={"WorkPlaceholder2"} />
 
-            ]
-            rows.push(<tr className={rowClassName} key={"LastRow"}>{cells}</tr>)
+            // ]
+            //rows.push(<tr className={rowClassName} key={"LastRow"}>{cells}</tr>)
         }
     return (
         <table className="block border-separate border-spacing-0.5 max-w-full max-h-142.5 overflow-auto" key={tableIndex}>
@@ -167,10 +158,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
         </table>
     );
   };
-    useEffect(() => {
-        renderTable(1)    
-            
-    })
+
     return (
         <div key={1} className="w-full">
             {renderTable(1)}

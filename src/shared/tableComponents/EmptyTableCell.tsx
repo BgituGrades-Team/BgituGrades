@@ -1,5 +1,6 @@
 import type { HubConnection } from "@microsoft/signalr";
 import CustomSelect from "../components/CustomSelect";
+import WorkSelect from "../components/WorkSelect";
 
 interface EmptyPropsInterface{
     className?: string;
@@ -7,16 +8,19 @@ interface EmptyPropsInterface{
     presence?: "ABSENTVALID" | "ABSENTINVALID" | "PRESENT";
     studentId?: number;
     classId?: number;
+    workId?: number;
+    mark?: string;
+    overdue?: boolean;
     date?: string;
-    changeMarkState?: (markState: string, studentId: number, workId: number, date: string, value: string, isOverdue: boolean) => void;
+    changeMarkState?: (value: string, studentId: number, workId: number, isOverdue: boolean) => void;
     changePresenceState?: (presenceState: string, studentId: number, classId: number, date: string) => void;
     connection?: HubConnection
     disabled?: boolean
 }
 
 
-export default function EmptyTableCell({cellType, className = "", changePresenceState, changeMarkState, studentId, classId, date, connection, presence, disabled = false}: EmptyPropsInterface){
-    const selectDataMarks = ["2", "3", "4", "5", "+"]
+export default function EmptyTableCell({cellType, className = "", changePresenceState, changeMarkState, studentId, classId, workId, mark, overdue, date, connection, presence, disabled = false}: EmptyPropsInterface){
+    const selectDataMarks = ["5", "4", "3", "2", "+"]
     const selectDataVisit = ["Н", "У", "П"]
 
     // Проверка, работа или дата
@@ -30,7 +34,7 @@ export default function EmptyTableCell({cellType, className = "", changePresence
         case "work":
             return (
                 <td className={className}>
-                    <CustomSelect disabled={disabled} connection={connection} studentId={studentId} classId={classId} date={date} changeMarkState={changeMarkState} selectData={selectDataMarks} />
+                    <WorkSelect disabled={disabled} connection={connection} studentId={studentId}  workId={workId} mark={mark} overdue={overdue} changeMarkState={changeMarkState} selectData={selectDataMarks}/>
                 </td>
             )
         default:

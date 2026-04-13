@@ -202,9 +202,9 @@ export const getAllPeriods = async () => {
     }
 }
 
-export const checkTranserPresenceDate = async(classId: number) =>{
+export const checkTranserPresenceDate = async(classId: number, date: string) =>{
     try {
-        const res = await instance.get(`api/transfer?classId=${classId}`)
+        const res = await instance.get(`api/transfer?classId=${classId}&date=${date}`)
         console.log("Success! Prescence transfer has been got!")
         return [res.status, res.data]
     } catch(error) {
@@ -267,3 +267,47 @@ export const updateStudent = async (studentId: number, name: string, groupId: nu
 }
 
 
+export const migrate = async() => {
+    try{
+        const params = {}
+        await instance.post("api/migrations/migrate", params)
+        console.log("Data has been written successfully!")
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const sendStuddents = async (file: File) => { // Лучше использовать тип File
+    try {
+        const formData = new FormData();
+        // Первый аргумент "file" должен совпадать с тем, что ждет бэкенд (название поля)
+        formData.append("file", file);
+
+        await instance.post("api/student/import", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        
+        console.log("All students have been synchronized!");
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
+    }
+}
+
+export const sendStudyData = async(url:string) => {
+    try{
+        const params = {
+            "calendarUrl": url
+        }
+        console.log(params)
+        await instance.put("api/settings", params)
+        console.log("Calendar data has been sended!")
+    } catch (error){
+        if( error instanceof Error){
+            console.log(error.message)
+        }
+    }
+}

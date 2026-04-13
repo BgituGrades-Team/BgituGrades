@@ -13,7 +13,7 @@ interface PropsInterface{
 }    
 
 
-export default function StudentModal({isOpen, close, isEditMode, studentId = undefined}: PropsInterface) {
+export default function StudentModal({isOpen, close, studentId = undefined}: PropsInterface) {
     const [searchParams,] = useSearchParams()
     const [name, setName] = useState<string>("")
 
@@ -42,7 +42,7 @@ export default function StudentModal({isOpen, close, isEditMode, studentId = und
                 className="w-full max-w-md rounded-xl bg-bgMiddle dark:bg-bgMiddleD  border-bgLight dark:border-bgLightD border-2 p-6 backdrop-blur-2xl duration-300 ease-out data-closed:scale-95 data-closed:opacity-0"
             >
                 <DialogTitle as="h3" className="text-base/7 font-medium text-tLight dark:text-tLightD mb-5">
-                {isEditMode ? "Редактирование" : "Создание"} студента
+                    Редактирование студента
                 </DialogTitle>
                 <ModalInput onChange={handleChange} value={name}>ФИО</ModalInput>
                 <div className="mt-4 flex gap-7.5">
