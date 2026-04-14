@@ -16,6 +16,7 @@ function App() {
   useEffect(() => {
     // Устанавливаем тему в body, чтобы она была доступна из любой части проекта
     document.body.setAttribute(`data-theme`, theme)
+    document.body.style.backgroundColor = theme != "dark" ? "#ffffff" : "#101014"
 
     // Получаем тему из localStorage
     const takeTheme = getTheme();
