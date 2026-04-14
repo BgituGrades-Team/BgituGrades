@@ -70,7 +70,9 @@ export const getDisciplinesByGroups = async (groupId: number[]) => {
  */
 export const getStudentLink = async (groupId: number) => {
     try {
-        const result: Response<StudentLinkInterface> = await instance.get(`/api/key/shared?groupid=${groupId}`)
+        const result: Response<StudentLinkInterface> = await instance.get(`/api/key/shared?groupid=${groupId}`,{
+            timeout: 20000
+        })
         return result.data
     } catch (error){
         console.log(error)
