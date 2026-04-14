@@ -123,7 +123,7 @@ export default function TaskActivity() {
     
 
     const compClasses = {
-        outerDiv: "w-full min-h-[92.5vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ",
+        outerDiv: "w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ",
 
     }
 

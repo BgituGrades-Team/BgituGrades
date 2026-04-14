@@ -120,7 +120,7 @@ function VisitActivity() {
 
     if (isTableReady && connection) {
         return (
-        <div className="w-full min-h-[92.5vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
+        <div className="w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
             {
                 // Пришлось сделать так, чтобы не было блика при смене роута
                 isLoading ? 
@@ -145,7 +145,7 @@ function VisitActivity() {
     }
     if (connection) {
     return (
-        <div className="w-full min-h-[92.5vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
+        <div className="w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
             {
                 isLoading ? 
                 <div className="w-[90%] animate-pulse flex flex-col gap-6.25">
@@ -166,7 +166,7 @@ function VisitActivity() {
         </div> 
     )}
     return (
-            <div className="w-full min-h-[92.5vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
+            <div className="w-full min-h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
                 <div className="w-[90%] animate-pulse flex flex-col gap-6.25">
                     <TopNavBarSkeleton />
                     <div className="flex gap-6.25">

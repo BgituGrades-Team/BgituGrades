@@ -35,9 +35,9 @@ function TopNavBar({groups, disciplines, handleSearch, tableIds, onUpdate}: Prop
     }
 
     return (
-       <div className="h-25 max-sm:h-fit mt-13.75 flex justify-between pl-3.75 items-end max-sm:flex-col max-sm:items-center max-sm:mt-5">
+       <div className="h-25 lg:ml-34.5 max-sm:h-fit mt-13.75 flex justify-between pl-3.75 items-end max-sm:flex-col max-sm:items-center max-sm:mt-5">
             <div className="flex gap-6.25 items-end max-sm:flex-col">
-                <img className="mr-3.25 max-sm:hidden" src={Image} alt="img" />
+                <img className="mr-3.25 max-sm:hidden hidden" src={Image} alt="img" />
                 <Input handleSearch={handleSearch}  inputType="group" array={groups} textChildren="Группа" helpText="Название группы..."/>
                 <Input handleSearch={handleSearch} onUpdate={onUpdate} inputType="discipline" array={disciplines} textChildren="Дисциплина" helpText="Название дисциплины..."/>
             </div> 

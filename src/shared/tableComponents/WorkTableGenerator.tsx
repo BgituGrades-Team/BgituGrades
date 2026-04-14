@@ -162,7 +162,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
             rows.push(<tr className={rowClassName} key={"LastRow"}>{cells}</tr>)
         }
     return (
-        <table className="block border-separate border-spacing-0.5 max-w-full max-h-142.5 overflow-auto" key={tableIndex}>
+        <table className="block border-separate border-spacing-0.5 max-w-full max-h-142.5 overflow-scroll" key={tableIndex}>
             <tbody>{rows}</tbody>
         </table>
     );
@@ -172,7 +172,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
             
     })
     return (
-        <div key={1} className="w-full">
+        <div key={1} className="overflow-scroll">
             {renderTable(1)}
             <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode}/>
             <WorkModal isOpen={workModal} close={closeWorkModal} isEditMode={isEditMode}/>
