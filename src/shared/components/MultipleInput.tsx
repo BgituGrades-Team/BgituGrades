@@ -70,7 +70,7 @@ export default function MultipleInput<T extends BaseItem>({textChildren="Гру�
                         <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">                            
                             <Arrow onClick={handleClick} className="h-6 w-6 absolute top-2.5 right-2.5"/>
                         </ComboboxButton>
-                    <ComboboxOptions anchor="bottom" className=" bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg w-(--input-width) border border-bgModal dark:border-bgModalD empty:invisible">
+                    <ComboboxOptions anchor="bottom" className=" bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD  rounded-lg h-105 w-(--input-width) border border-bgModal dark:border-bgModalD empty:invisible">
                         {({option: val}) => (
                             <ComboboxOption key={val.id} id={String(val.id)}  value={val} className="bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD p-2.5">
                                 {val.name != "Выбрать все" ? <input className="w-3.5 h-3.5 mr-2.5" title="checkStatus" checked={isSelected(val)}  onChange={() => {}} onClick={(e) => {e.stopPropagation()}} type="checkbox" key={val.id}/> : ""}

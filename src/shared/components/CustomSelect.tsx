@@ -60,6 +60,7 @@ export default function CustomSelect({selectData = ["П", "Н", "У"], presence 
         setSelectedValue(e.target.value)
         onInputChange?.(e.target.value)
         setPIdor(e.target.value == "П")
+        
         if (changePresenceState){
             let presenceToSet = ""
             switch (e.target.value) {

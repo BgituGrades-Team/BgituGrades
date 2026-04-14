@@ -29,7 +29,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     const [transferModal, setTransferModal] = useState<boolean>(false)
     const [classId, setClassId] = useState<number | undefined>()
     const [classType, setClassType] = useState<string>("")
-    const [date, setDate] = useState<string>("")
+    const [origDate, setOrigDate] = useState<string>("")
     const [studentId, setStudentId] = useState<number | undefined>()
     const [statusCode, setStatusCode] = useState<number | undefined>()
     const [transferId, setTransferId] = useState<number | undefined>()
@@ -46,14 +46,17 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     }
     const openTransferModal = async (date: PresenceInterface) => {
         setClassId(date.classId)
-        setDate(date.date)
+        setOrigDate(date.date)
         setClassType(date.classType)
         if(classId){
-            const res = await checkTranserPresenceDate(classId)
+            const res = await checkTranserPresenceDate(classId, origDate)
             console.log(res)
-            if(typeof res != 'number' && typeof res != "undefined"){
+            if(typeof res != 'number' && typeof res != 'undefined'){
                 setStatusCode(res[0])
                 setTransferId(res[1].id)
+                
+            } else if (typeof res == 'number'){
+                setStatusCode(404)
             }
             
 
@@ -235,14 +238,14 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
                                 date={_date.date} 
                                 classId={_date.classId}
                                 className="min-w-12.5 h-12.5 "
-                                key={`Work-string-${idx}-col-${i}`} />
+                                key={`Date-string-${idx}-col-${i}`} />
                         )),
                         // Заглушка
                         <EmptyTableCell
                             disabled={true}
                             cellType={tableType}
                             className="min-w-12.5 h-12.5 "
-                            key={`WorkPlaceholder-${idx}`} />
+                            key={`DatePlaceholder-${idx}`} />
                     ]
                     rows.push(<tr className={rowClassName} key={`Row-${idx}`}>{cells}</tr>)
                 })
@@ -289,7 +292,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
             {renderTable(1)}
             <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={studentId}/>
             <DateModal isOpen={dateModal} close={closeDateModal} isEditMode={isEditMode}/>
-            <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={date} statusCode={statusCode} transferId={transferId} />
+            <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={origDate} statusCode={statusCode} transferId={transferId} />
         </div>
     );
 }

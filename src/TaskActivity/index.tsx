@@ -30,7 +30,7 @@ export default function TaskActivity() {
         // Подключаем сигнал
         const establishConnection = async () => {
             const con = await setupSignalRGradesConnection(localStorage.getItem("api_key"))
-            console.log(con.state)
+            // console.log(con.state)
 
             setConnection(con)
         }
@@ -45,8 +45,6 @@ export default function TaskActivity() {
             const res: DisciplineInterface[] | undefined = await getDisciplinesByGroups([tableIds[0]])
             if(res) {
                 setDisciplines(res)
-                console.log(res)
-                console.log(disciplines)
             }
         }
 

@@ -1,4 +1,4 @@
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr"
+import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr"
 
 
 const startSignalRConnection = async (connection: HubConnection) => {
@@ -20,6 +20,7 @@ const setupSignalRGradesConnection = async (key: string | null) => {
             .withUrl("https://maxim.pamagiti.site/hubs/grade?key=" + key,
                     { withCredentials: false })
             .withAutomaticReconnect()
+            .configureLogging(LogLevel.None)
             .build()
 
     // Если подключение срывается, мы пытаемся заново подключиться

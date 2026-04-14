@@ -27,7 +27,6 @@ function VisitActivity() {
         // Подключаем сигнал
         const establishConnection = async () => {
                 const con = await setupSignalRGradesConnection(localStorage.getItem("api_key"))
-                console.log(con.state)
                 setConnection(con)
             }
         if (connection == null) {
@@ -92,7 +91,6 @@ function VisitActivity() {
                 setIsTableReady(true)
             })
         }
-        console.log("srabotalo")
     }
 
 
