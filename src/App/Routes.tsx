@@ -3,9 +3,14 @@ import TaskActivity from '../TaskActivity';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ReportActivity from '../ReportActivity';
 import AdminActivity from '../AdminActivity/AdminActivity';
+import RoutesModal from '../shared/modals/RoutesModal';
 
+interface PropsInterface {
+    closeModal: () => void;
+    isModalOpen: boolean;
+}
 
-function RoutesManager() {
+function RoutesManager({closeModal, isModalOpen}: PropsInterface) {
     return (
         <Router>
             <Routes>
@@ -15,6 +20,7 @@ function RoutesManager() {
                 <Route path="/report" element={<ReportActivity></ReportActivity>}></Route>
                 <Route path="/admin" element={<AdminActivity></AdminActivity>}></Route>
             </Routes>
+            <RoutesModal close={closeModal} isOpen={isModalOpen}/>
         </Router>
     )
 }

@@ -277,7 +277,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
                 // rows.push(<tr className={rowClassName} key={"LastRow"}>{cells}</tr>)
             }
         return (
-            <table className="block border-separate border-spacing-0.5 max-w-full max-h-142.5 overflow-scroll" key={tableIndex}>
+            <table className="block border-separate border-spacing-0.5 max-w-full max-h-142.5 overflow-auto" key={tableIndex}>
                 <tbody>{rows}</tbody>
             </table>
         );
@@ -288,7 +288,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
         // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [table])
     return (
-        <div key={1} className="overflow-scroll">
+        <div key={1} className="overflow-auto">
             {renderTable(1)}
             <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={studentId}/>
             <DateModal isOpen={dateModal} close={closeDateModal} isEditMode={isEditMode}/>

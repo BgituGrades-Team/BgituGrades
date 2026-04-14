@@ -4,7 +4,7 @@ import Header from '../Header/Header'
 import RouteManager from './Routes'
 import { ThemeContext } from '../shared/utils/contexts'
 import { AuthContext } from '../shared/utils/contexts'
-import RoutesModal from '../shared/modals/RoutesModal'
+
 
 
 function App() {
@@ -41,12 +41,16 @@ function App() {
     }
     return
   }
+  
+
+
+
   return (
         <AuthContext value={authState}>
             <ThemeContext value={theme}>
                 <Header openModal={openModal} handleThemeChange={handleThemeChange}/>
-                <RouteManager />
-                <RoutesModal close={closeModal} isOpen={isModalOpen}/>
+                <RouteManager closeModal={closeModal} isModalOpen={isModalOpen}/>
+                
             </ThemeContext>
         </AuthContext>
     )

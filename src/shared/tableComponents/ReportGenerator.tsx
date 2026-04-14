@@ -34,7 +34,7 @@ export default function ReportGenerator({/*tableType="report", isEditMode,*/ tab
             
         }
     return (
-        <table className="block border-separate border-spacing-0.5 w overflow-scroll max-w-[80%]: max-h-142.5" key={tableIndex}>
+        <table className="block border-separate border-spacing-0.5 w overflow-auto max-w-[80%]: max-h-142.5" key={tableIndex}>
             <tbody>{rows}</tbody>
         </table>
     );
@@ -44,7 +44,7 @@ export default function ReportGenerator({/*tableType="report", isEditMode,*/ tab
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [table])
     return (
-        <div key={1} className="overflow-scroll">
+        <div key={1} className="overflow-auto">
             {renderTable(1)}
         </div>
     );
