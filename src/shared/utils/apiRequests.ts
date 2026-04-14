@@ -286,7 +286,8 @@ export const sendStuddents = async (file: File) => { // Лучше исполь�
         await instance.post("api/student/import", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
-            }
+            },
+            timeout: 20000
         });
         
         console.log("All students have been synchronized!");

@@ -14,6 +14,7 @@ export default function AdminTopNavBar(){
    const [isOpen, setIsOpen] = useState<boolean>(false)
    const [file, setFile] = useState<Blob | null>(null)
    const [url, setUrl] = useState<string>("")
+   const [inputKey, setInputKey] = useState(() => Date.now());
     const openKeyCreateModal = () => {
         setIsOpen(true)
     }
@@ -27,6 +28,11 @@ export default function AdminTopNavBar(){
         await sendStudyData(url)
     }
 
+    const reset = () => {
+        setInputKey(Date.now()); 
+        setFile(null);
+};
+
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
         const selectedFile = e.target.files[0];
@@ -34,6 +40,7 @@ export default function AdminTopNavBar(){
         setFile(selectedFile);
         console.log(file)
         await sendStuddents(selectedFile);
+        reset();
     }   
 }
     const handleMigrate = async() => {
@@ -52,7 +59,7 @@ export default function AdminTopNavBar(){
                 <label htmlFor="adminInput" className="cursor-pointer  p-2 bg-primaryD text-tLight dark:text-tLightD rounded-lg font-medium ">
                         Загрузить студентов .xlsx
                 </label>
-                <input type="file" id="adminInput" name="fileUpload" onChange={handleChange} placeholder="Загрузить студентов .xlsx" className="hidden"/>
+                <input type="file" id="adminInput" name="fileUpload" onChange={handleChange} placeholder="Загрузить студентов .xlsx" className="hidden" key={inputKey}/>
                 
             </div>
             <KeyCreateModal isOpen={isOpen} close={closeKeyCreateModal  } />
