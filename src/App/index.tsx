@@ -4,7 +4,7 @@ import Header from '../Header/Header'
 import RouteManager from './Routes'
 import { ThemeContext } from '../shared/utils/contexts'
 import { AuthContext } from '../shared/utils/contexts'
-import RoutesModal from '../shared/modals/RoutesModal'
+
 
 
 function App() {
@@ -16,6 +16,7 @@ function App() {
   useEffect(() => {
     // Устанавливаем тему в body, чтобы она была доступна из любой части проекта
     document.body.setAttribute(`data-theme`, theme)
+    document.body.style.backgroundColor = theme != "dark" ? "#ffffff" : "#101014"
 
     // Получаем тему из localStorage
     const takeTheme = getTheme();
@@ -41,12 +42,16 @@ function App() {
     }
     return
   }
+  
+
+
+
   return (
         <AuthContext value={authState}>
             <ThemeContext value={theme}>
                 <Header openModal={openModal} handleThemeChange={handleThemeChange}/>
-                <RouteManager />
-                <RoutesModal close={closeModal} isOpen={isModalOpen}/>
+                <RouteManager closeModal={closeModal} isModalOpen={isModalOpen}/>
+                
             </ThemeContext>
         </AuthContext>
     )

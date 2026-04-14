@@ -44,7 +44,7 @@ export default function ReportGenerator({/*tableType="report", isEditMode,*/ tab
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [table])
     return (
-        <div key={1} className="w-full">
+        <div key={1} className="overflow-auto">
             {renderTable(1)}
         </div>
     );

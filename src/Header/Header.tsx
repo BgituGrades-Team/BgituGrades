@@ -14,7 +14,7 @@ interface PropsInterface {
 
 function Header({handleThemeChange, openModal}: PropsInterface){
     return (
-        <div className={"bg-bgDarkD w-full h-[7.5vh] flex justify-center items-center"}>
+        <div className={"bg-bgDarkD w-full h-[10vh] flex justify-center items-center"}>
             <div className="w-[90%] flex justify-between items-center ">
                 <div className="h-full w-fit flex items-center gap-5">
                     <Logo onClick={openModal}/>

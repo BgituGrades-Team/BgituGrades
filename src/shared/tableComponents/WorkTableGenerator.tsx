@@ -160,7 +160,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
   };
 
     return (
-        <div key={1} className="w-full">
+        <div key={1} className="overflow-auto">
             {renderTable(1)}
             <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode}/>
             <WorkModal isOpen={workModal} close={closeWorkModal} isEditMode={isEditMode}/>

@@ -97,7 +97,7 @@ export default function PeriodsInput({textChildren="Группа", helpText="Н�
                     <ComboboxInput
                         className={"w-58 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 " + className}
                         aria-label="Assignee"
-                        displayValue={(val: PeriodsInterface) => `${val?.semester}-й Семестр ${val?.year}год`}
+                        displayValue={(val: PeriodsInterface) =>  val ? `${val.semester}-й Семестр ${val.year}год` : "Выберите семестр..."}
                         onChange={(event) => setQuery(event.target.value)}
                         placeholder={helpText} />
                         <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
