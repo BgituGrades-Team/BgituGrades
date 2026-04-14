@@ -37,7 +37,6 @@ function VisitActivity() {
 
     useEffect(() => {
         const reloadDisciplines = async () => {
-            console.log(tableIds[0])
             const res: DisciplineInterface[] | undefined = await getDisciplinesByGroups([tableIds[0]])
             if (res) {
                 setDisciplines(res)

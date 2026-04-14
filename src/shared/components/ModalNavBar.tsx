@@ -7,18 +7,19 @@ import ModalNavSection from "./ModalNavSection";
 import { useNavigate } from "react-router-dom";
 
 interface PropsInterface{
+    closeModal: () => void
     className?: string;
 }
 
-function ModalNavBar({className = ""}: PropsInterface){
+function ModalNavBar({className = "", closeModal}: PropsInterface){
     const navClass = {
-        active: "h-[100px] w-[125px] max-sm:h-[50px] max-sm:h-[40px] flex pt-2.5 flex-col cursor-pointer text-tLight dark:text-tLightD justify-center items-center gap-2.5 rounded-[8px]  transition duration-300" + " " + className,
-        inactive: "h-[100px] w-[125px] max-sm:h-[50px] max-sm:h-[40px] flex pt-2.5 flex-col cursor-pointer text-tLight dark:text-tLightD justify-center items-center gap-2.5 rounded-[8px]  transition duration-300 hover:opacity-85 hover:bg-bgModal dark:hover:bg-bgModalD" + " " + className
+        active: "h-[100px] w-[125px] max-sm:h-[50px] max-sm:h-[62px] flex pt-2.5 flex-col cursor-pointer text-tLight dark:text-tLightD justify-center items-center gap-2.5 rounded-[8px]  transition duration-300" + " " + className,
+        inactive: "h-[100px] w-[125px] max-sm:h-[50px] max-sm:h-[62px] flex pt-2.5 flex-col cursor-pointer text-tLight dark:text-tLightD justify-center items-center gap-2.5 rounded-[8px]  transition duration-300 hover:opacity-85 hover:bg-bgModal dark:hover:bg-bgModalD" + " " + className
     }
 
     const navigate = useNavigate();
   const hanleRouteClick = (data: string) => {
-    console.log(data)
+    closeModal()
     switch (data) {
       case "Посещаемость":
         navigate("/visit")
@@ -32,7 +33,7 @@ function ModalNavBar({className = ""}: PropsInterface){
       case "Админка":
         navigate("/admin")
         break
-
+    
     }
   }
     return (

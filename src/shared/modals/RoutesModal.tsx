@@ -23,7 +23,7 @@ export default function RoutesModal({isOpen, close}: PropsInterface) {
                         className="h-screen w-[80wv]  bg-bgMiddle dark:bg-bgMiddleD  border-bgLight dark:border-bgLightD border-2 p-6 backdrop-blur-2xl duration-300 ease-out data-closed:scale-95 data-closed:opacity-0"
                     >
                     
-                    <ModalNavBar></ModalNavBar>
+                    <ModalNavBar closeModal={close}></ModalNavBar>
                     </DialogPanel>
                 </div>
             </div>
