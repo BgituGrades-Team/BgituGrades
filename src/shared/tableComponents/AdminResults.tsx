@@ -66,18 +66,18 @@ export default function AdminResults() {
                 {keys?.map((key, index) => (
                     key.key == localStorage.getItem('api_key') ? 
                     <div key={index} className="grid grid-cols-10 w-full text-tLight dark:text-tLightD text-[18px]"> 
-                        <p className="col-span-5" >{key.key}</p>
+                        <p className="col-span-5 wrap-break-word" >{key.key}</p>
                         <p className="col-span-1">{key.role}</p>
                         <p className="col-span-2">{key.expiryDate}</p>
                         <p className="col-span-2">Это ваш ключ, его нельзя удалить</p>
                     </div>
                     :
-                    <div key={index} className="grid grid-cols-10 w-full text-tLight dark:text-tLightD text-[18px]"> 
-                        <p className="col-span-5" >{key.key}</p>
-                        <p className="col-span-1">{key.role}</p>
+                    <div key={index} className="grid grid-cols-10 w-full flex-wrap text-tLight dark:text-tLightD text-[18px]"> 
+                        <p className="col-span-5 wrap-break-word" >{key.key}</p>
+                        <p className="col-span-1 wrap-break-word">{key.role}</p>
                         <p className="col-span-2">{renderDate(key.expiryDate)}</p>
                         
-                        <button onClick={() => {setKeyToDelete(key)}} className="bg-red text-[14px] text-center align-middle text-tLight dark:text-tLightD font-bold h-10 w-42.5 rounded-lg hover:opacity-75 transition-all duration-300">Удалить</button>
+                        <button onClick={() => {setKeyToDelete(key)}} className="bg-red text-[14px] text-center col-span-2 align-middle text-tLight dark:text-tLightD font-bold h-10 w-42.5 rounded-lg hover:opacity-75 transition-all duration-300">Удалить</button>
                     </div>
                 ))}
             </div>

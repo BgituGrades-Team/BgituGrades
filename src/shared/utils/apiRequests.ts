@@ -6,7 +6,7 @@ import type { DisciplineInterface, GroupInterface, KeyInterface, PeriodsInterfac
 axios.defaults.baseURL = import.meta.env.VITE_DOTENV_API_URL
 const instance = axios.create({
     baseURL: import.meta.env.VITE_DOTNET_API_URL,
-    timeout: 1000,
+    timeout: 20000,
     headers: {
         'Accept': '*/*',
         'Content-Type': 'application/json',

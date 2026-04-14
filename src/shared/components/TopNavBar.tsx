@@ -28,6 +28,7 @@ function TopNavBar({groups, disciplines, handleSearch, tableIds, onUpdate}: Prop
             setLink(res.link.replace("maxim.", ""))
             setIsOpen(true);
         }
+        console.log(tableIds[0])
     };
 
     const closeStudentModal = () => {
@@ -42,9 +43,8 @@ function TopNavBar({groups, disciplines, handleSearch, tableIds, onUpdate}: Prop
                 <Input handleSearch={handleSearch} onUpdate={onUpdate} inputType="discipline" array={disciplines} textChildren="Дисциплина" helpText="Название дисциплины..."/>
             </div> 
             <div className="flex gap-6.25 max-sm:flex-col items-center justify-center max-sm:hidden">
-                <Button children="Создать ссылку" onClick={createStudentLink}/>
+                <Button children="Создать ссылку" className={tableIds[0]  == undefined ? "  hidden" : ""} onClick={createStudentLink}/>
                 <Button children="Редактировать"/>
-                <Button children="Скачать в Excel"/>
                 {/*<Button children="Поделиться"/>*/}
             </div>
             <StudentLinkModal isOpen={isOpen} close={closeStudentModal} linkText={link} />

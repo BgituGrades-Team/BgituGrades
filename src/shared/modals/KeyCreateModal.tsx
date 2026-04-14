@@ -5,6 +5,7 @@ import type { GroupInterface } from '../types/fromRequests';
 import { addKey, getGroups } from '../utils/apiRequests';
 import Cross from '../components/SVG/Cross';
 import CustomSelect from '../components/CustomSelect';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 interface PropsInterface{
@@ -28,15 +29,28 @@ export default function KeyCreateModal({isOpen, close}: PropsInterface) {
         }
     }
     const save = async (role: string, groupId: number | null) => {
-
-        console.log(role, groupId)
-        if(groupId == 0){
-            await addKey(role)
+        console.log(role, groupId, typeof role)
+        if(role === "STUDENT"){
+            if(groupId == 0){
+                const notify = () => toast('Выберите группу!!!');
+                notify()
+            } else {
+                await addKey(role, groupId)
+                close()
+                window.location.reload()
+            }
         } else {
-            await addKey(role, groupId)
+            console.log(role, groupId)
+            if(groupId == 0){
+                await addKey(role)
+            } else {
+                await addKey(role, groupId)
+            }
+            close()
+            window.location.reload()
         }
-        window.location.reload()
-        close()
+        //
+        
     }
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -49,6 +63,7 @@ export default function KeyCreateModal({isOpen, close}: PropsInterface) {
 return (
     <Dialog open={isOpen} as="div" className="relative z-10 focus:outline-none" onClose={close}>
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <Toaster />
             <DialogBackdrop transition className="fixed inset-0 backdrop-blur-md duration-300 ease-out data-closed:opacity-0" />
             <div className="flex min-h-full items-center justify-center p-4">
             <DialogPanel
@@ -80,6 +95,7 @@ return (
                 </div>
             </DialogPanel>
             </div>
+            
         </div>
     </Dialog>
 )

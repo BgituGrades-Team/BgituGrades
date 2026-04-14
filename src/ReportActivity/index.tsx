@@ -10,7 +10,7 @@ import LeftNavBarSkeleton from "../shared/components/skeletons/LeftNavBarSkeleto
 import StudentTopNavBar from "../shared/components/StudentTopNavBar"
 import ReportGenerator from "../shared/tableComponents/ReportGenerator"
 import { setupSignalRReportsConnection } from "../shared/utils/signalRService"
-import Loading from "../shared/components/SVG/Loading"
+//import Loading from "../shared/components/SVG/Loading"
 import { ReverseSearchContext,} from "../shared/utils/contexts"
 import type { pipeBombInterface } from "../shared/types/interfaces"
 
@@ -25,8 +25,8 @@ export default function ReportActivity() {
     const [disciplines, setDisciplines] = useState<DisciplineInterface[]>([])
     const [students, setStudents] = useState<StudentInterface[]>([])
     const [connection, setConnection] = useState<null | HubConnection>(null)
-    const [reportProgress, setReportProgress] = useState<number | null>(null)
-    const [reportDescription, setReportDescription] = useState<string | null>(null)
+    // const [reportProgress, setReportProgress] = useState<number | null>(null)
+    // const [reportDescription, setReportDescription] = useState<string | null>(null)
     const [table, setTable] = useState<tableFromRequest>()
     const [isTableReady, setIsTableReady] = useState(false)
     const [link, setLink] = useState<string | null>(null)
@@ -194,11 +194,11 @@ export default function ReportActivity() {
 
                 }
             })
-            connection.on("ReportProgress", (_, pisun, yaitsa) => {
-                setReportProgress(pisun)
-                setReportDescription(yaitsa)
+            // connection.on("ReportProgress", (_, pisun, yaitsa) => {
+            //     setReportProgress(pisun)
+            //     setReportDescription(yaitsa)
 
-            })
+            // })
         }
 
 
@@ -248,8 +248,8 @@ export default function ReportActivity() {
                 // Пришлось сделать так, чтобы не было блика при смене роута
                 isLoading ? 
                     <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
-                        <Loading progress={reportProgress} description={reportDescription} />
-                        <div className="w-[90%]  flex blur-md bg-bgLight dark:bg-bgModalD flex-col gap-6.25">
+                        {/* <Loading progress={reportProgress} description={reportDescription} /> */}
+                        <div className="w-[90%]  flex bg-bgLight dark:bg-bgModalD flex-col gap-6.25"> {/* тут был blur-md */}
                             <TopNavBarSkeleton />
                             <div className="flex gap-6.25">
                                 <LeftNavBarSkeleton />
@@ -272,7 +272,7 @@ export default function ReportActivity() {
 
     return (
         <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
-            <div className="w-[90%]  flex blur-md bg-bgLight dark:bg-bgModalD flex-col gap-6.25">
+            <div className="w-[90%]  flex  flex-col gap-6.25"> {/* тут был blur-md   bg-bgLight dark:bg-bgModalD*/}
                 <TopNavBarSkeleton />
                 <div className="flex gap-6.25">
                     <LeftNavBarSkeleton />
