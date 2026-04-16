@@ -4,10 +4,12 @@ import Header from '../Header/Header'
 import RouteManager from './Routes'
 import { ThemeContext } from '../shared/utils/contexts'
 import { AuthContext } from '../shared/utils/contexts'
+// import { useSearchParams } from 'react-router-dom'
 
 
 
 function App() {
+  // const [searchParams] = useSearchParams()
   const [theme, setTheme] = useState<string>("dark")
   const [authState, setAuthState] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -43,7 +45,11 @@ function App() {
     return
   }
   
-
+  // Проверка, есть ли ключ в query параметрах
+  // const key = searchParams.get("key")
+  // if (key && key != localStorage.getItem("api_key")) {
+  //     localStorage.setItem("api_key", key)
+  // }   
 
 
   return (

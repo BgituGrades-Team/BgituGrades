@@ -1,23 +1,23 @@
 import LeftNavBar from "../shared/components/LeftNavBar"
 import DateTableGenerator from "../shared/tableComponents/DateTableGenerator"
 import TopNavBar from "../shared/components/TopNavBar"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { getGroups, getDisciplines, getDisciplinesByGroups } from "../shared/utils/apiRequests"
-import { useSearchParams } from "react-router-dom"
 import type { DisciplineInterface, GroupInterface, DateTableSample } from "../shared/types/fromRequests"
 import type { HubConnection } from "@microsoft/signalr"
 import TableGeneratorSkeleton from "../shared/components/skeletons/TableGeneratorSkeleton"
 import LeftNavBarSkeleton from "../shared/components/skeletons/LeftNavBarSkeleton"
 import TopNavBarSkeleton from "../shared/components/skeletons/TopNavBarSkeleton"
 import { setupSignalRGradesConnection } from "../shared/utils/signalRService"
+import { SingleGroupAndDisciplineContext } from "../shared/utils/contexts"
 
 function VisitActivity() {
-    const [searchParams] = useSearchParams()
+    const singleGroupAndDiscipline = useContext(SingleGroupAndDisciplineContext)
+
     const [isEditMode] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [groups, setGroups] = useState<GroupInterface[]>([])
     const [disciplines, setDisciplines] = useState<DisciplineInterface[]>([])
-    const [tableIds, setTableIds] = useState<number[]>([])
     const [table, setTable] = useState<DateTableSample | undefined>()
     const [isTableReady, setIsTableReady] = useState(false)
 
@@ -34,12 +34,13 @@ function VisitActivity() {
         }
     }, [connection])
 
-
     useEffect(() => {
         const reloadDisciplines = async () => {
-            const res: DisciplineInterface[] | undefined = await getDisciplinesByGroups([tableIds[0]])
+            console.log("зашло")
+            const res: DisciplineInterface[] | undefined = await getDisciplinesByGroups([singleGroupAndDiscipline?.groupVal ? Number(singleGroupAndDiscipline?.groupVal) : 0])
             if (res) {
                 setDisciplines(res)
+                setIsLoading(false)
             }
         }
 
@@ -56,27 +57,25 @@ function VisitActivity() {
             setIsLoading(false)
         }
 
-        // Проверка, есть ли в query параметрах и дисциплина и группа
-        if (tableIds.length > 1) {
-            reloadDisciplines()   
-            connection?.invoke("GetPresenceGrade", {
-                disciplineId: tableIds[1],
-                groupId: tableIds[0]
-            })       
-        } else if (tableIds.length > 0) {
-           
-            reloadDisciplines()
-        } else {
+        if (isLoading) {
             getGroupsAndDisciplines()
         }
+        if (singleGroupAndDiscipline?.groupVal) {
+            reloadDisciplines()
+        }
+        if (singleGroupAndDiscipline?.disciplineVal && singleGroupAndDiscipline.groupVal) {
+            console.log(singleGroupAndDiscipline.disciplineVal, singleGroupAndDiscipline.groupVal)
+            connection?.invoke("GetPresenceGrade", {
+                disciplineId: Number(singleGroupAndDiscipline.disciplineVal),
+                groupId: Number(singleGroupAndDiscipline.groupVal)
+            })
+        }
+          
+    }, [singleGroupAndDiscipline?.disciplineVal, singleGroupAndDiscipline?.groupVal, connection, isLoading])
 
-        // Проверка, есть ли ключ в query параметрах
-        const key = searchParams.get("key")
-        if (key) {
-            localStorage.setItem("api_key", key)
-        }     
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [tableIds])
+    useEffect(() => {
+        
+    })
 
     //функция онуляющая состояние таблицы при изменении инпута с дисциплиной, дабы пометки посещаемости нне кочевали меж таблицами
     //проходит от index до input через topNavbar как крестоносец с одной целью форматнуть таблицу
@@ -89,20 +88,6 @@ function VisitActivity() {
                 setTable(data)
                 setIsTableReady(true)
             })
-        }
-    }
-
-
-
-    // Поиск таблицы, если оба query параметра заполены
-    const handleSearch = () => {
-        const groupid = searchParams.get("groupid")
-        const disciplineid = searchParams.get("disciplineid")
-
-        if ((groupid != 'null' && disciplineid != 'null') && disciplineid && groupid) {
-            setTableIds([Number(groupid), Number(disciplineid)])
-        } else if (groupid && groupid != 'null') {
-            setTableIds([Number(groupid)])
         }
     }
 
@@ -130,16 +115,17 @@ function VisitActivity() {
                 </div> :
 
                 <div className="w-[90%] flex flex-col gap-6.25">
-                    <TopNavBar handleSearch={handleSearch} disciplines={disciplines} onUpdate={setTable} groups={groups} tableIds={tableIds}/>
+                    <TopNavBar disciplines={disciplines} onUpdate={setTable} groups={groups}/>
                     <div className="flex gap-6.25">
                         <LeftNavBar className="max-sm:hidden" visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
-                        <DateTableGenerator table={table} isEditMode={isEditMode} tableType="date" connection={connection} groupId={tableIds[0]} disciplineId={tableIds[1]}/>
+                        <DateTableGenerator table={table} isEditMode={isEditMode} tableType="date" connection={connection} groupId={singleGroupAndDiscipline ? Number(singleGroupAndDiscipline.groupVal) : 0} disciplineId={singleGroupAndDiscipline ? Number(singleGroupAndDiscipline.disciplineVal) : 0}/>
                     </div>
                 </div> 
             }
         </div>
         )
     }
+    console.log(isLoading)
     if (connection) {
     return (
         <div className="w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
@@ -153,10 +139,10 @@ function VisitActivity() {
                     </div>
                 </div> :
                 <div className="w-[90%] flex flex-col gap-6.25">
-                    <TopNavBar handleSearch={handleSearch} disciplines={disciplines} onUpdate={() => handleInputChange} groups={groups} tableIds={tableIds}/>
+                    <TopNavBar disciplines={disciplines} onUpdate={() => handleInputChange} groups={groups}/>
                     <div className="flex gap-6.25">
                         <LeftNavBar className="max-sm:hidden" visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
-                        <DateTableGenerator isEditMode={isEditMode} tableType="date" connection={connection} groupId={tableIds[0]} disciplineId={tableIds[1]}/>
+                        <DateTableGenerator isEditMode={isEditMode} tableType="date" connection={connection} groupId={singleGroupAndDiscipline ? Number(singleGroupAndDiscipline.groupVal) : 0} disciplineId={singleGroupAndDiscipline ? Number(singleGroupAndDiscipline.disciplineVal) : 0}/>
                     </div>
                 </div>
             }

@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { ReverseSearchInterface } from "../types/interfaces";
+import type { SingleGroupAndDisciplineInterface, pipeBombInterface, ReverseSearchInterface } from "../types/interfaces";
 
 
 /**
@@ -16,3 +16,17 @@ export const AuthContext = createContext(true);
  * 
  */
 export const ReverseSearchContext = createContext<null | ReverseSearchInterface>(null)
+
+
+
+
+/**
+ * 
+ */
+export const SingleGroupAndDisciplineContext = createContext<null | SingleGroupAndDisciplineInterface>(null)
+
+
+/**
+ * 
+ */
+export const MultipleGroupAndDisciplineContext = createContext<null | pipeBombInterface>(null)
