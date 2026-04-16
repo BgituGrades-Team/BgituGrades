@@ -44,12 +44,14 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     const closeDateModal = () => {
         setDateModal(false)
     }
-    const openTransferModal = async (date: PresenceInterface) => {
-        setClassId(date.classId)
-        setOrigDate(date.date)
-        setClassType(date.classType)
+    const openTransferModal = async (classId: number, date: string, classType: string) => {
+        console.log(date)
+        setClassId(classId)
+        setOrigDate(date)
+        setClassType(classType)
         if(classId){
-            const res = await checkTranserPresenceDate(classId, origDate)
+            console.log(classId, date)
+            const res = await checkTranserPresenceDate(classId, date)
             console.log(res)
             if(typeof res != 'number' && typeof res != 'undefined'){
                 setStatusCode(res[0])
@@ -60,7 +62,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
             }
             
 
-             setTransferModal(true)
+            setTransferModal(true)
         }
        
        
@@ -197,7 +199,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
                     ...dates.map((dates, i) => (
                         
                         <EditableTableCell
-                            onClick={() => openTransferModal(dates)}
+                            onClick={() => openTransferModal(dates.classId, dates.date, dates.classType)}
                             cellType="date"
                             cellData={renderDate(dates)}
                             cellDateType={dates.classType == "PRACTICE" ? "Прак" : "Лек"}
