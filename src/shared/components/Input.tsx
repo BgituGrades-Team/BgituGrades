@@ -1,116 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Arrow from "./SVG/Arrow"
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, ComboboxButton } from '@headlessui/react'
-import { useSearchParams } from "react-router-dom";
-import type { DisciplineInterface, GroupInterface, ReportTypeInterface, StudentInterface, DateTableSample } from "../types/fromRequests";
+import type { DisciplineInterface, GroupInterface, ReportTypeInterface, StudentInterface } from "../types/fromRequests";
 import { type SetStateAction } from 'react';
 
 interface PropsInterface{
     textChildren?: string;
     helpText?: string;
     array: GroupInterface[] | DisciplineInterface[] | StudentInterface[] | ReportTypeInterface[] ; // Массивы возможных значений в инпуте
-    inputType: "group" | "discipline" | "student" | "type" | "startDate" | "endDate"
-    onChange?: () => void;
-    onInputChange? : React.Dispatch<React.SetStateAction<number>>;
-    handleSearch?: () => void;
     className?: string;
-    onUpdate?: React.Dispatch<SetStateAction<DateTableSample | undefined>> 
+    selectedId: string;
+    setSelectedId: React.Dispatch<SetStateAction<string>>
 }
 
 
-
-
-export default function Input({textChildren="Группа", helpText="Название группы", array, inputType, handleSearch, className, onInputChange, onUpdate}: PropsInterface){
-    const [selectedValue, setSelectedValue] = useState<GroupInterface | DisciplineInterface | StudentInterface | ReportTypeInterface | null>(null)
+export default function Input({textChildren="Группа", helpText="Название группы", array, className, selectedId, setSelectedId }: PropsInterface){
+    const value = array.find((arr) => String(arr.id) == selectedId)
+    const [selectedValue, setSelectedValue] = useState<GroupInterface | DisciplineInterface | StudentInterface | ReportTypeInterface | null>(value ? value : null)
     const [query, setQuery] = useState(``)
-    const [searchParams, setSearchParams] = useSearchParams()
-
-    useEffect(() => {
-        // Поиск query параметров
-        const disciplineId = searchParams.get("disciplineid")
-        const groupId = searchParams.get("groupid")
-        const studentId = searchParams.get("studentid")
-        const reportTypeId = searchParams.get("reporttype")
-
-        // Установка выбранного параметра после перезапуска страницы
-        let elementToSet: GroupInterface | DisciplineInterface | StudentInterface | ReportTypeInterface | null = null;
-        array.forEach(element => {
-            if ((element.id == Number(groupId) && inputType == "group") ||
-               (element.id == Number(disciplineId) && inputType == "discipline") ||
-               (element.id == Number(studentId) && inputType == "student") ||
-               (element.id == Number(reportTypeId) && inputType == "type" && reportTypeId != undefined) ) { // Каждый доступный тип инпута
-                elementToSet = element
-            }
-        });
-        setSelectedValue(elementToSet)
-
-        // Callback на проверку, есть ли оба элемента в query и вывод таблицы
-        if(handleSearch){
-            handleSearch()
-        }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchParams])
     const handleClick = () => {
        return filterValues
     }
 
     // Изменение выбранного элемента и добавление идентификатора в query параметры
     const handleChange = (e: GroupInterface | DisciplineInterface | StudentInterface | null) => {
-        setSelectedValue(e)
 
-        if (e){
-            const params = new URLSearchParams()
-            const groupId = searchParams.get("groupid")
-            const disciplineId = searchParams.get("disciplineid")
-            const studentId = searchParams.get("studentid")
-            const reportType = searchParams.get("reporttype")
-            const periodSem = searchParams.get("periodsem")
-            const periodYear = searchParams.get("periodyear")
-            switch(inputType){
-                case "group" : {
-                    params.append("groupid", String(e.id))
-                    onInputChange?.(e.id)
-                    break
-                }
-                case "discipline" : {
-                    params.append("disciplineid", String(e.id))
-                    break
-                }
-                case "student" : {
-                    params.append("studentid", String(e.id))
-                    break
-                }
-                case "type" : {
-                    params.append("reporttype", String(e.id))
-                    break
-                }
-            }
-            if(periodSem) { // Добавил проверки, так как параметры начинали дублироваться
-                params.append("periodsem", periodSem)
-                
-            }
-            if (periodYear) {
-                params.append("periodyear", periodYear)
-            }     
-            if(groupId && inputType != "group") { // Добавил проверки, так как параметры начинали дублироваться
-                params.append("groupid", groupId ? groupId : String(e.id))
-                
-            }
-            if (disciplineId && inputType != "discipline") {
-                params.append("disciplineid", disciplineId ? disciplineId : String(e.id))
-            }           
-            if (studentId && inputType != "student") {
-                params.append("studentid", studentId ? studentId : String(e.id))
-            }
-            if(reportType && inputType != "type"){
-                params.append("reporttype", reportType ? reportType : String(e.id))
-            }
-            setSearchParams(params)
-            onUpdate?.(undefined)
-            
-            
-        }
+        setSelectedValue(e)
+         
+        setSelectedId(e ? String(e.id) : "")
     }
 
     // Фильтрует массив по алфавиту

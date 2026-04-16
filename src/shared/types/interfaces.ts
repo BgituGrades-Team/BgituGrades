@@ -12,3 +12,10 @@ export interface pipeBombInterface {
     groups: [GroupInterface[], React.Dispatch<React.SetStateAction<GroupInterface[]>>];
     students: [StudentInterface[], React.Dispatch<React.SetStateAction<StudentInterface[]>>];
 }
+
+export interface SingleGroupAndDisciplineInterface {
+    groupVal: string,
+    groupDispatcher: React.Dispatch<React.SetStateAction<string>>,
+    disciplineVal: string,
+    disciplineDispatcher: React.Dispatch<React.SetStateAction<string>>
+}
