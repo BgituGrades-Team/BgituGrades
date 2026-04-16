@@ -1,6 +1,6 @@
 import type { HubConnection } from "@microsoft/signalr";
 import { useEffect, useRef, useState } from "react";
-
+import { createPortal } from "react-dom"
 
 interface PropsInterface{
     selectData: string[];
@@ -23,21 +23,49 @@ export default function WorkSelect({selectData = ["5", "4", "3", "2", "+"], stud
     const [optionsVisibility, setOptionsVisibility] = useState<boolean>(false)
     const [markValue, setMarkValue] = useState<string | null>(mark)
     const [isOverdue, setIsOverdue] = useState<boolean>(overdue)
- 
+    const [coords, setCoords] = useState({top: 0, left: 0, width: 0})
 
     const wrapperRef = useRef<HTMLDivElement>(null)
+    const optionsRef = useRef<HTMLDivElement>(null);
+    const updateCoords = () => {
+        if( wrapperRef.current){
+            const rect = wrapperRef.current.getBoundingClientRect();
+            setCoords({
+                top: rect.bottom + window.scrollY,
+                left: rect.left + window.scrollX,
+                width: rect.width
+            })
+        }
+    }
 
-    useEffect(() => {
+    const handleToggle = () => {
+        updateCoords()
+        setOptionsVisibility(!optionsVisibility)
+    }
+useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (
+        wrapperRef.current && !wrapperRef.current.contains(target) &&
+        optionsRef.current && !optionsRef.current.contains(target)
+      ) {
         setOptionsVisibility(false);
       }
-     
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    if (optionsVisibility) {
+      document.addEventListener("mousedown", handleClickOutside);
+      // Обновляем координаты при ресайзе или скролле, чтобы портал не "улетал"
+      window.addEventListener("resize", updateCoords);
+      window.addEventListener("scroll", updateCoords, true);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("resize", updateCoords);
+      window.removeEventListener("scroll", updateCoords, true);
+    };
+  }, [optionsVisibility]);
 
 
     const handleSelect = (val: string) => {
@@ -61,11 +89,20 @@ export default function WorkSelect({selectData = ["5", "4", "3", "2", "+"], stud
                 
                 title="showOptsBut" 
                 type="button" 
-                onClick={() => setOptionsVisibility(!optionsVisibility)} 
+                onClick={handleToggle} 
                 className={ isOverdue  ? ` block w-full h-full  text-tLight dark:text-tLightD border-dashed border-blue-300 border-2` : ` block w-full h-full  text-tLight dark:text-tLightD`}>
                     {markValue}
             </button>
-         {optionsVisibility && (<div className={`${optionsVisibility ? "block" : "hidden"} absolute left-0 w-full z-10 text-center rounded-lg bg-bgDark dark:bg-bgDarkD border-white`}>
+         {optionsVisibility && createPortal(<div 
+            ref={optionsRef}
+            style={{ 
+                    position: 'absolute', 
+                    top: coords.top, 
+                    left: coords.left, 
+                    width: coords.width,
+                    zIndex: 9999 
+                }}
+            className={`${optionsVisibility ? "block" : "hidden"} absolute left-0 w-full z-10 text-center rounded-lg bg-bgDark dark:bg-bgDarkD border-white`}>
                 {selectData.map((val) => (
                     <button 
                         type="button" 
@@ -86,8 +123,11 @@ export default function WorkSelect({selectData = ["5", "4", "3", "2", "+"], stud
                     />
                 <span className="text-xs text-tLight dark:text-tLightD">С опозданием</span>
             </label>
-            
-            </div>)}
+       
+            </div>,
+            document.body)}
         </div>
     )
 }
+
+

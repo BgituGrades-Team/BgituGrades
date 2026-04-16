@@ -119,7 +119,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                     // Заглушка
                     <EmptyTableCell
                         disabled={true}
-                        cellType={tableType}
+                        cellType={"date"}
                         className="min-w-12.5 h-12.5 "
                         key={`WorkPlaceholder-${idx}`} />
                 ]
