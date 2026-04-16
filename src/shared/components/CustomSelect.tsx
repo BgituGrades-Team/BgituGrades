@@ -11,7 +11,7 @@ interface PropsInterface {
     classId?: number;
     studentId?: number;
     date?: string;
-    originalDate: string | undefined;
+    originalDate?: string | undefined;
     changePresenceState?: (presenceState: string, studentId: number, classId: number, date: string) => void;
     changeMarkState?: (markState: string, studentId: number, workId: number, date: string, value: string, isOverdue: boolean) => void;
     connection?: HubConnection;
