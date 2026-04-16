@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Arrow from "./SVG/Arrow"
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, ComboboxButton } from '@headlessui/react'
-import type { DisciplineInterface, GroupInterface, ReportTypeInterface, StudentInterface } from "../types/fromRequests";
+import type { DateTableSample, DisciplineInterface, GroupInterface, ReportTypeInterface, StudentInterface } from "../types/fromRequests";
 import { type SetStateAction } from 'react';
 
 interface PropsInterface{
@@ -10,11 +10,12 @@ interface PropsInterface{
     array: GroupInterface[] | DisciplineInterface[] | StudentInterface[] | ReportTypeInterface[] ; // Массивы возможных значений в инпуте
     className?: string;
     selectedId: string;
-    setSelectedId: React.Dispatch<SetStateAction<string>>
+    setSelectedId: React.Dispatch<SetStateAction<string>>;
+    onUpdate?: React.Dispatch<SetStateAction<DateTableSample | undefined>> 
 }
 
 
-export default function Input({textChildren="Группа", helpText="Название группы", array, className, selectedId, setSelectedId }: PropsInterface){
+export default function Input({textChildren="Группа", helpText="Название группы", array, className, selectedId, onUpdate, setSelectedId }: PropsInterface){
     const value = array.find((arr) => String(arr.id) == selectedId)
     const [selectedValue, setSelectedValue] = useState<GroupInterface | DisciplineInterface | StudentInterface | ReportTypeInterface | null>(value ? value : null)
     const [query, setQuery] = useState(``)
@@ -28,6 +29,8 @@ export default function Input({textChildren="Группа", helpText="Назва
         setSelectedValue(e)
          
         setSelectedId(e ? String(e.id) : "")
+        onUpdate?.(undefined)
+        
     }
 
     // Фильтрует массив по алфавиту

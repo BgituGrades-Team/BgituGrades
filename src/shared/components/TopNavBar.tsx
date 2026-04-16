@@ -16,7 +16,7 @@ interface PropsInterface {
 }
 
 
-function TopNavBar({groups, disciplines,}: PropsInterface){
+function TopNavBar({groups, disciplines, onUpdate}: PropsInterface){
     const [link, setLink] = useState<string>()
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
@@ -41,7 +41,7 @@ function TopNavBar({groups, disciplines,}: PropsInterface){
             <div className="flex gap-6.25 items-end max-sm:flex-col">
                 <img className="mr-3.25 max-sm:hidden hidden" src={Image} alt="img" />
                 <Input selectedId={singleGroupAndDiscipline ? singleGroupAndDiscipline.groupVal : ""} setSelectedId={singleGroupAndDiscipline.groupDispatcher} array={groups} textChildren="Группа" helpText="Название группы..."/>
-                <Input selectedId={singleGroupAndDiscipline ? singleGroupAndDiscipline.disciplineVal : ""} setSelectedId={singleGroupAndDiscipline.disciplineDispatcher} array={disciplines} textChildren="Дисциплина" helpText="Название дисциплины..."/>
+                <Input selectedId={singleGroupAndDiscipline ? singleGroupAndDiscipline.disciplineVal : ""} onUpdate={onUpdate} setSelectedId={singleGroupAndDiscipline.disciplineDispatcher} array={disciplines} textChildren="Дисциплина" helpText="Название дисциплины..."/>
             </div> 
             <div className="flex gap-6.25 max-sm:flex-col items-center justify-center max-sm:hidden">
                 <Button children="Создать ссылку" className={singleGroupAndDiscipline?.groupVal  == undefined ? "  hidden" : ""} onClick={createStudentLink}/>

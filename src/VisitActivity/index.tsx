@@ -115,7 +115,7 @@ function VisitActivity() {
                 </div> :
 
                 <div className="w-[90%] flex flex-col gap-6.25">
-                    <TopNavBar disciplines={disciplines} onUpdate={setTable} groups={groups}/>
+                    <TopNavBar disciplines={disciplines} onUpdate={() => handleInputChange()} groups={groups}/>
                     <div className="flex gap-6.25">
                         <LeftNavBar className="max-sm:hidden" visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
                         <DateTableGenerator table={table} isEditMode={isEditMode} tableType="date" connection={connection} groupId={singleGroupAndDiscipline ? Number(singleGroupAndDiscipline.groupVal) : 0} disciplineId={singleGroupAndDiscipline ? Number(singleGroupAndDiscipline.disciplineVal) : 0}/>
@@ -139,7 +139,7 @@ function VisitActivity() {
                     </div>
                 </div> :
                 <div className="w-[90%] flex flex-col gap-6.25">
-                    <TopNavBar disciplines={disciplines} onUpdate={() => handleInputChange} groups={groups}/>
+                    <TopNavBar disciplines={disciplines} onUpdate={setTable} groups={groups}/>
                     <div className="flex gap-6.25">
                         <LeftNavBar className="max-sm:hidden" visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
                         <DateTableGenerator isEditMode={isEditMode} tableType="date" connection={connection} groupId={singleGroupAndDiscipline ? Number(singleGroupAndDiscipline.groupVal) : 0} disciplineId={singleGroupAndDiscipline ? Number(singleGroupAndDiscipline.disciplineVal) : 0}/>
