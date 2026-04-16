@@ -33,7 +33,7 @@ export default function TransferNodal({oldDate, groupId, disciplineId, classId, 
         if(classId && statusCode == 404) { await createTranserPresenceDate(classId, groupId, disciplineId, oldDate, newDate);}
      
         close()
-        //window.location.reload()
+        window.location.reload()
     }
 
     return (
