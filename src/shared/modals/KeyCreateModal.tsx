@@ -17,7 +17,7 @@ interface PropsInterface{
 
 
 export default function KeyCreateModal({isOpen, close}: PropsInterface) {
-    const [groupId, setGroupId] = useState<number>(0)
+    const [groupId, setGroupId] = useState<string>("")
     const [role, setRole] = useState<string>("STUDENT")
     const [groups, setGroups] = useState<GroupInterface[]>([])
     
@@ -75,12 +75,12 @@ return (
                 </DialogTitle>
 
                 <CustomSelect selectData={["Выберите роль","ADMIN","STUDENT", "TEACHER"]} adminSelect={true} onInputChange={setRole}/>
-                <Input textChildren="Группа" helpText="Название группы(Опционально)" className="w-full" array={groups} inputType="group" onInputChange={setGroupId} />
+                <Input selectedId={groupId} setSelectedId={setGroupId} textChildren="Группа" helpText="Название группы(Опционально)" className="w-full" array={groups} />
                
                 <div className="mt-4 flex gap-7.5">
                     <Button
                         className="inline-flex items-center gap-2 rounded-md bg-primary dark:bg-primaryD px-3 py-1.5 text-sm/6 font-semibold text-tLight dark:text-tLightD shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"
-                        onClick={() => save(role, groupId)}
+                        onClick={() => save(role, Number(groupId))}
                     >
                         Сохранить
                     </Button>

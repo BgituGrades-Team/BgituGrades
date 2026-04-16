@@ -16,13 +16,16 @@ interface PropsInterface {
 function RoutesManager({closeModal, isModalOpen}: PropsInterface) {
     const [
         groupId, setGroupId,
-        disciplineId, setDisciplineId
+        disciplineId, setDisciplineId,
+        repType, setRepType,
     ] = useSingleGroupAndDiscipline()
     const values: SingleGroupAndDisciplineInterface = {
         groupVal: groupId,
         groupDispatcher: setGroupId,
         disciplineVal: disciplineId,
-        disciplineDispatcher: setDisciplineId
+        disciplineDispatcher: setDisciplineId,
+        repTypeVal: repType,
+        repTypeDispatcher: setRepType,
     }
     return (
         <Router>
