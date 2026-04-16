@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { SingleGroupAndDisciplineInterface, pipeBombInterface, ReverseSearchInterface } from "../types/interfaces";
+import type { pipeBombInterface, ReverseSearchInterface, SingleInputValuesInterface } from "../types/interfaces";
 
 
 /**
@@ -23,7 +23,7 @@ export const ReverseSearchContext = createContext<null | ReverseSearchInterface>
 /**
  * 
  */
-export const SingleGroupAndDisciplineContext = createContext<null | SingleGroupAndDisciplineInterface>(null)
+export const SingleInputValuesContext = createContext<null | SingleInputValuesInterface>(null)
 
 
 /**

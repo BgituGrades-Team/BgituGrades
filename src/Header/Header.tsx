@@ -1,6 +1,8 @@
 //import { useEffect, useState } from "react";
 import Logo from '../shared/components/SVG/Logo'
 import DarkThemeeSwitcher from '../shared/components/SVG/DarkThemeSwitcher'
+import { useContext } from 'react'
+import { AuthContext } from '../shared/utils/contexts'
 
 
 
@@ -13,6 +15,9 @@ interface PropsInterface {
 
 
 function Header({handleThemeChange, openModal}: PropsInterface){
+    
+    const authState = useContext(AuthContext)
+    console.log(authState)
     return (
         <div className={"bg-bgDarkD w-full h-[10vh] flex justify-center items-center"}>
             <div className="w-[90%] flex justify-between items-center ">

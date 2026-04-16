@@ -6,7 +6,7 @@ import type { DateTableSample, DisciplineInterface, GroupInterface, StudentLinkI
 import { useContext, useState } from "react";
 import StudentLinkModal from "../modals/StudentLinkModal";
 import { type SetStateAction } from 'react';
-import { SingleGroupAndDisciplineContext } from "../utils/contexts";
+import { SingleInputValuesContext } from "../utils/contexts";
 
 interface PropsInterface {
     groups: GroupInterface[];
@@ -20,7 +20,7 @@ function TopNavBar({groups, disciplines,}: PropsInterface){
     const [link, setLink] = useState<string>()
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
-    const singleGroupAndDiscipline = useContext(SingleGroupAndDisciplineContext)
+    const singleGroupAndDiscipline = useContext(SingleInputValuesContext)
 
     // Нажатие на кнопку создать ссылку
     const createStudentLink = async () => {

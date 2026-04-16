@@ -5,7 +5,7 @@ import MultipleInput from "./MultipleInput";
 import type { pipeBombInterface } from "../types/interfaces";
 import PeriodsInput from "./PeriodsInput";
 import { useContext } from "react";
-import { SingleGroupAndDisciplineContext } from "../utils/contexts";
+import { SingleInputValuesContext } from "../utils/contexts";
 
 interface PropsInterface {
     groups: GroupInterface[];
@@ -20,7 +20,7 @@ interface PropsInterface {
 
 export default function StudentTopNavBar({groups, disciplines, periods, handleSearch, students, link, pipeBomb}: PropsInterface){
     const reportTypes = [{id: 0, name: "По посещению"}, {id: 1, name:"По успеваемости"}] // Типы отчетов
-    const singleGroupAndDiscipline = useContext(SingleGroupAndDisciplineContext)
+    const singleGroupAndDiscipline = useContext(SingleInputValuesContext)
     //янв - июнь 2024: это 2; сент - дек 2025: это 1; для периода
     if (singleGroupAndDiscipline) {
     return (

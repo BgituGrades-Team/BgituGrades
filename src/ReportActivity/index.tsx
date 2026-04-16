@@ -47,7 +47,7 @@ export default function ReportActivity() {
     useEffect(() => {
         // Подключаем сигнал
         const establishConnection = async () => {
-            const con = await setupSignalRReportsConnection(localStorage.getItem("api_key"))
+            const con = await setupSignalRReportsConnection(sessionStorage.getItem("api_key"))
             console.log(con.state)
 
             setConnection(con)

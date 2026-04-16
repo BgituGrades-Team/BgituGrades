@@ -9,10 +9,10 @@ import TableGeneratorSkeleton from "../shared/components/skeletons/TableGenerato
 import LeftNavBarSkeleton from "../shared/components/skeletons/LeftNavBarSkeleton"
 import TopNavBarSkeleton from "../shared/components/skeletons/TopNavBarSkeleton"
 import { setupSignalRGradesConnection } from "../shared/utils/signalRService"
-import { SingleGroupAndDisciplineContext } from "../shared/utils/contexts"
+import { SingleInputValuesContext } from "../shared/utils/contexts"
 
 function VisitActivity() {
-    const singleGroupAndDiscipline = useContext(SingleGroupAndDisciplineContext)
+    const singleGroupAndDiscipline = useContext(SingleInputValuesContext)
 
     const [isEditMode] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
@@ -26,7 +26,7 @@ function VisitActivity() {
     useEffect(() => {
         // Подключаем сигнал
         const establishConnection = async () => {
-                const con = await setupSignalRGradesConnection(localStorage.getItem("api_key"))
+                const con = await setupSignalRGradesConnection(sessionStorage.getItem("api_key"))
                 setConnection(con)
             }
         if (connection == null) {

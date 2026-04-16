@@ -5,8 +5,9 @@ import ReportActivity from '../ReportActivity';
 import AdminActivity from '../AdminActivity/AdminActivity';
 import RoutesModal from '../shared/modals/RoutesModal';
 import useSingleGroupAndDiscipline from '../shared/hooks/useSingleGroupAndDiscipline';
-import { SingleGroupAndDisciplineContext } from '../shared/utils/contexts';
-import type { SingleGroupAndDisciplineInterface } from '../shared/types/interfaces';
+import { SingleInputValuesContext } from '../shared/utils/contexts';
+import type { SingleInputValuesInterface } from '../shared/types/interfaces';
+
 
 interface PropsInterface {
     closeModal: () => void;
@@ -19,7 +20,7 @@ function RoutesManager({closeModal, isModalOpen}: PropsInterface) {
         disciplineId, setDisciplineId,
         repType, setRepType,
     ] = useSingleGroupAndDiscipline()
-    const values: SingleGroupAndDisciplineInterface = {
+    const values: SingleInputValuesInterface = {
         groupVal: groupId,
         groupDispatcher: setGroupId,
         disciplineVal: disciplineId,
@@ -29,7 +30,7 @@ function RoutesManager({closeModal, isModalOpen}: PropsInterface) {
     }
     return (
         <Router>
-            <SingleGroupAndDisciplineContext.Provider
+            <SingleInputValuesContext.Provider
                 value={values}
             >
             <Routes>
@@ -40,7 +41,7 @@ function RoutesManager({closeModal, isModalOpen}: PropsInterface) {
                 <Route path="/admin" element={<AdminActivity></AdminActivity>}></Route>
             </Routes>
             <RoutesModal close={closeModal} isOpen={isModalOpen}/>
-            </SingleGroupAndDisciplineContext.Provider>
+            </SingleInputValuesContext.Provider>
         </Router>
     )
 }

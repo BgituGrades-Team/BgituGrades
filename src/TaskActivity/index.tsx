@@ -9,11 +9,11 @@ import TableGeneratorSkeleton from "../shared/components/skeletons/TableGenerato
 import LeftNavBarSkeleton from "../shared/components/skeletons/LeftNavBarSkeleton"
 import TopNavBarSkeleton from "../shared/components/skeletons/TopNavBarSkeleton"
 import { setupSignalRGradesConnection } from "../shared/utils/signalRService"
-import { SingleGroupAndDisciplineContext } from "../shared/utils/contexts"
+import { SingleInputValuesContext } from "../shared/utils/contexts"
 
 
 export default function TaskActivity() {
-    const singleGroupAndDiscipline = useContext(SingleGroupAndDisciplineContext)
+    const singleGroupAndDiscipline = useContext(SingleInputValuesContext)
 
     const [isEditMode] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
@@ -29,7 +29,7 @@ export default function TaskActivity() {
     useEffect(() => {
         // Подключаем сигнал
         const establishConnection = async () => {
-            const con = await setupSignalRGradesConnection(localStorage.getItem("api_key"))
+            const con = await setupSignalRGradesConnection(sessionStorage.getItem("api_key"))
             // console.log(con.state)
 
             setConnection(con)

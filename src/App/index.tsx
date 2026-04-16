@@ -4,16 +4,22 @@ import Header from '../Header/Header'
 import RouteManager from './Routes'
 import { ThemeContext } from '../shared/utils/contexts'
 import { AuthContext } from '../shared/utils/contexts'
-// import { useSearchParams } from 'react-router-dom'
+
 
 
 
 function App() {
   // const [searchParams] = useSearchParams()
   const [theme, setTheme] = useState<string>("dark")
-  const [authState, setAuthState] = useState(false)
+  const [authState, /*setAuthState*/] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-
+  
+  // Получаем квери параметры йоу
+  const biba = window.location.search.slice(1).split("=")
+  if (biba[0] == "key") {
+    sessionStorage.setItem("api_key", biba[1])
+    // Получить кому принадлежит ключ и записать в authState
+  }
 
   useEffect(() => {
     // Устанавливаем тему в body, чтобы она была доступна из любой части проекта
@@ -27,7 +33,6 @@ function App() {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setTheme(takeTheme)
     }
-    setAuthState(false);
   }, [theme])
 
   const closeModal = () => {

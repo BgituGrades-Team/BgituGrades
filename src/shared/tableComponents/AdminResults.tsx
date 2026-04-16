@@ -54,7 +54,7 @@ export default function AdminResults() {
         if(keyToDelete){
             deleteKey(keyToDelete)
         }
-    }, [keyToDelete])
+    }, [keyToDelete, keys])
     if(keys){
         return (
             <div className="w-full flex flex-col gap-6.25 h-170 overflow-y-auto"> 

@@ -13,7 +13,7 @@ export interface pipeBombInterface {
     students: [StudentInterface[], React.Dispatch<React.SetStateAction<StudentInterface[]>>];
 }
 
-export interface SingleGroupAndDisciplineInterface {
+export interface SingleInputValuesInterface {
     groupVal: string,
     groupDispatcher: React.Dispatch<React.SetStateAction<string>>,
     disciplineVal: string,

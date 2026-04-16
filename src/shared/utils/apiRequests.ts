@@ -11,7 +11,7 @@ const instance = axios.create({
         'Accept': '*/*',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        'key': localStorage.getItem("api_key")
+        'key': sessionStorage.getItem("api_key")
     }
 });
 
@@ -181,7 +181,7 @@ export const addWork = async (name: string, issuedDate: string, description: str
 export const downloadFile = async (link: string):  Promise<string | undefined> => {
     try {
         const res: Response<Blob> = await axios({
-            url: link+"?key="+localStorage.getItem("api_key"),
+            url: link+"?key="+sessionStorage.getItem("api_key"),
             method: 'GET',
             responseType: 'blob',
         })

@@ -11,8 +11,6 @@ const useSingleGroupAndDiscipline = () => {
         localStorage.setItem("singleGroupId", groupId ? groupId : "")
         localStorage.setItem("singleDisciplineId", disciplineId ? disciplineId : "")
         localStorage.setItem("singleReportType", repType ? repType : "")
-        
-
     }, [groupId, disciplineId, repType])
     
     const returnFunc = (): [string, React.Dispatch<React.SetStateAction<string>>,
