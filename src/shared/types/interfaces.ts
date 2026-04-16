@@ -18,4 +18,6 @@ export interface SingleGroupAndDisciplineInterface {
     groupDispatcher: React.Dispatch<React.SetStateAction<string>>,
     disciplineVal: string,
     disciplineDispatcher: React.Dispatch<React.SetStateAction<string>>
+    repTypeVal: string,
+    repTypeDispatcher: React.Dispatch<React.SetStateAction<string>>
 }
