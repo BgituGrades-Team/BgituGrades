@@ -4,7 +4,7 @@ import FirstTableCell from "./FirstTableCell";
 import EditableTableCell from "./EditableTableCell";
 import StudentModal from "../modals/StudentModal";
 import { HubConnection } from "@microsoft/signalr";
-import { useSearchParams } from "react-router-dom";
+//import { useSearchParams } from "react-router-dom";
 import DateModal from "../modals/DateModal";
 import type { PresenceInterface, DateTableSample } from "../types/fromRequests";
 import TransferModal from "../modals/TransferModal";
@@ -24,15 +24,15 @@ interface PropsInterface{
 
 export default function DateTableGenerator({tableType, isEditMode, table, connection, groupId, disciplineId}: PropsInterface){
     const [studentModal, setStudentModal] = useState<boolean>(false)
-    const [searchParams] = useSearchParams()
+    //const [searchParams] = useSearchParams()
     const [dateModal, setDateModal] = useState<boolean>(false)
     const [transferModal, setTransferModal] = useState<boolean>(false)
     const [classId, setClassId] = useState<number | undefined>()
     const [classType, setClassType] = useState<string>("")
-    const [origDate, setOrigDate] = useState<string>("")
     const [studentId, setStudentId] = useState<number | undefined>()
     const [statusCode, setStatusCode] = useState<number | undefined>()
     const [transferId, setTransferId] = useState<number | undefined>()
+    const [currDate, setCurrDate] = useState<string>("")
     // Вывод информации при получении данных, УДАЛИТЬ НА ПРОДЕ
     //connection.on("ReceivePresence", (data) => console.log(data))
     //connection.on("ReceiveMarks", (data) => console.log(data))
@@ -44,14 +44,13 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     const closeDateModal = () => {
         setDateModal(false)
     }
-    const openTransferModal = async (classId: number, date: string, classType: string) => {
-        console.log(date)
+    const openTransferModal = async (classId: number, currDate: string,  classType: string) => {
         setClassId(classId)
-        setOrigDate(date)
         setClassType(classType)
+        setCurrDate(currDate)
         if(classId){
-            console.log(classId, date)
-            const res = await checkTranserPresenceDate(classId, date)
+            console.log(classId, currDate)
+            const res = await checkTranserPresenceDate(classId, currDate)
             console.log(res)
             if(typeof res != 'number' && typeof res != 'undefined'){
                 setStatusCode(res[0])
@@ -79,20 +78,12 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     }
 
     const changePresenceState = (presenceState: string, studentId: number, classId: number, date: string) => {
-        // console.log(
-        //     "ya blya rabotayu",
-        //     presenceState,
-        //     studentId,
-        //     classId,
-        //     date,
-        //     searchParams.get('disciplineid')
-        // )
         connection.invoke("UpdatePresenceGrade", { 
             studentId,
             classId,
             date,
             isPresent: presenceState,
-            disciplineId: Number(searchParams.get('disciplineid'))
+            disciplineId: disciplineId
         })            
 
     }
@@ -238,6 +229,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
                                 studentId={student.studentId}
                                 presence={_date.isPresent} 
                                 date={_date.date} 
+                                originalDate={_date.originalDate}
                                 classId={_date.classId}
                                 className="min-w-12.5 h-12.5 "
                                 key={`Date-string-${idx}-col-${i}`} />
@@ -294,7 +286,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
             {renderTable(1)}
             <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={studentId}/>
             <DateModal isOpen={dateModal} close={closeDateModal} isEditMode={isEditMode}/>
-            <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={origDate} statusCode={statusCode} transferId={transferId} />
+            <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={currDate} statusCode={statusCode} transferId={transferId} />
         </div>
     );
 }

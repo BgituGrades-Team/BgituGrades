@@ -24,7 +24,7 @@ function TopNavBar({groups, disciplines,}: PropsInterface){
 
     // Нажатие на кнопку создать ссылку
     const createStudentLink = async () => {
-        const res: StudentLinkInterface | undefined = await getStudentLink(Number(singleGroupAndDiscipline?.disciplineVal));
+        const res: StudentLinkInterface | undefined = await getStudentLink(Number(singleGroupAndDiscipline?.groupVal));
         console.log(res)
         if(res) {
             setLink(res.link.replace("maxim.", ""))
@@ -44,7 +44,7 @@ function TopNavBar({groups, disciplines,}: PropsInterface){
                 <Input selectedId={singleGroupAndDiscipline ? singleGroupAndDiscipline.disciplineVal : ""} setSelectedId={singleGroupAndDiscipline.disciplineDispatcher} array={disciplines} textChildren="Дисциплина" helpText="Название дисциплины..."/>
             </div> 
             <div className="flex gap-6.25 max-sm:flex-col items-center justify-center max-sm:hidden">
-                <Button children="Создать ссылку" className={singleGroupAndDiscipline?.disciplineVal  == undefined ? "  hidden" : ""} onClick={createStudentLink}/>
+                <Button children="Создать ссылку" className={singleGroupAndDiscipline?.groupVal  == undefined ? "  hidden" : ""} onClick={createStudentLink}/>
                 <Button children="Редактировать"/>
                 {/*<Button children="Поделиться"/>*/}
             </div>

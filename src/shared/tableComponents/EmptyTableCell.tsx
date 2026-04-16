@@ -12,6 +12,7 @@ interface EmptyPropsInterface{
     mark?: string;
     overdue?: boolean;
     date?: string;
+    originalDate?: string;
     changeMarkState?: (value: string, studentId: number, workId: number, isOverdue: boolean) => void;
     changePresenceState?: (presenceState: string, studentId: number, classId: number, date: string) => void;
     connection?: HubConnection
@@ -19,7 +20,7 @@ interface EmptyPropsInterface{
 }
 
 
-export default function EmptyTableCell({cellType, className = "", changePresenceState, changeMarkState, studentId, classId, workId, mark, overdue, date, connection, presence, disabled = false}: EmptyPropsInterface){
+export default function EmptyTableCell({cellType, className = "", changePresenceState, changeMarkState, studentId, classId, workId, mark, overdue, date, originalDate, connection, presence, disabled = false}: EmptyPropsInterface){
     const selectDataMarks = ["5", "4", "3", "2", "+"]
     const selectDataVisit = ["Н", "У", "П"]
 
@@ -28,7 +29,7 @@ export default function EmptyTableCell({cellType, className = "", changePresence
         case "date":
             return (
                 <td className={className}>
-                    <CustomSelect disabled={disabled} presence={presence} connection={connection} studentId={studentId} classId={classId} date={date} changePresenceState={changePresenceState} selectData={selectDataVisit} />
+                    <CustomSelect disabled={disabled} presence={presence} connection={connection} studentId={studentId} classId={classId} date={date} originalDate={originalDate} changePresenceState={changePresenceState} selectData={selectDataVisit} />
                 </td>
             )
         case "work":

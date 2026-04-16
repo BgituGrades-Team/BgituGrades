@@ -57,7 +57,8 @@ export interface PresenceInterface {
     classId: number;
     classType: "PRACTICE" | "LECTURE";
     date: string;
-    isPresent: "PRESENT" | "ABSENTVALID" | "ABSENTINVALID"
+    isPresent: "PRESENT" | "ABSENTVALID" | "ABSENTINVALID";
+    originalDate: string;
 }
 
 /**

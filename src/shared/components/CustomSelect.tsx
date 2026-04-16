@@ -11,6 +11,7 @@ interface PropsInterface {
     classId?: number;
     studentId?: number;
     date?: string;
+    originalDate: string | undefined;
     changePresenceState?: (presenceState: string, studentId: number, classId: number, date: string) => void;
     changeMarkState?: (markState: string, studentId: number, workId: number, date: string, value: string, isOverdue: boolean) => void;
     connection?: HubConnection;
@@ -24,7 +25,7 @@ interface DataInterface {
     presences: PresenceInterface[]
 }
 
-export default function CustomSelect({selectData = ["П", "Н", "У"], presence = "PRESENT", changePresenceState, studentId, classId, date, connection, disabled = false, adminSelect = false, onInputChange}: PropsInterface){ 
+export default function CustomSelect({selectData = ["П", "Н", "У"], presence = "PRESENT", changePresenceState, studentId, classId, originalDate, connection, disabled = false, adminSelect = false, onInputChange}: PropsInterface){ 
     const [selectedValue, setSelectedValue] = useState<string>(presence == "PRESENT" ? "П" : (presence == "ABSENTINVALID" ? "Н" : "У"))
     // Божественное откровение
     const [pIdor, setPIdor] = useState<boolean>(presence == "PRESENT" ? true : false)
@@ -34,7 +35,7 @@ export default function CustomSelect({selectData = ["П", "Н", "У"], presence 
         setPIdor(presence == "PRESENT" ? true : false)
     }, [presence])
     const handleUpdate = (data: DataInterface) => {
-        if (Number(data.presences[0].classId) == classId && Number(data.studentId) == studentId && data.presences[0].date == date) {
+        if (Number(data.presences[0].classId) == classId && Number(data.studentId) == studentId && data.presences[0].date == originalDate) {
             setSelectedValue(data.presences[0].isPresent == "PRESENT" ? "П" : data.presences[0].isPresent == "ABSENTINVALID" ? "Н" : "У")
             setPIdor(data.presences[0].isPresent == "PRESENT" ? true : false)
         }
@@ -76,8 +77,8 @@ export default function CustomSelect({selectData = ["П", "Н", "У"], presence 
                 default:
                     break;
             }
-            if (presenceToSet && studentId && classId && date) {
-                changePresenceState(presenceToSet, studentId, classId, date)
+            if (presenceToSet && studentId && classId && originalDate) {
+                changePresenceState(presenceToSet, studentId, classId, originalDate)
             }
         
                 
