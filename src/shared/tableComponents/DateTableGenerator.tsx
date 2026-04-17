@@ -5,7 +5,7 @@ import EditableTableCell from "./EditableTableCell";
 import StudentModal from "../modals/StudentModal";
 import { HubConnection } from "@microsoft/signalr";
 //import { useSearchParams } from "react-router-dom";
-import DateModal from "../modals/DateModal";
+//import DateModal from "../modals/DateModal";
 import type { PresenceInterface, DateTableSample } from "../types/fromRequests";
 import TransferModal from "../modals/TransferModal";
 import { checkTranserPresenceDate } from "../utils/apiRequests";
@@ -25,7 +25,7 @@ interface PropsInterface{
 export default function DateTableGenerator({tableType, isEditMode, table, connection, groupId, disciplineId}: PropsInterface){
     const [studentModal, setStudentModal] = useState<boolean>(false)
     //const [searchParams] = useSearchParams()
-    const [dateModal, setDateModal] = useState<boolean>(false)
+    //const [dateModal, setDateModal] = useState<boolean>(false)
     const [transferModal, setTransferModal] = useState<boolean>(false)
     const [classId, setClassId] = useState<number | undefined>()
     const [classType, setClassType] = useState<string>("")
@@ -38,12 +38,12 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     //connection.on("ReceiveMarks", (data) => console.log(data))
 
 
-    const openDateModal = () => {
-        setDateModal(true)
-    }
-    const closeDateModal = () => {
-        setDateModal(false)
-    }
+    // const openDateModal = () => {
+    //     setDateModal(true)
+    // }
+    // const closeDateModal = () => {
+    //     setDateModal(false)
+    // }
     const openTransferModal = async (classId: number, currDate: string,  classType: string) => {
         setClassId(classId)
         setClassType(classType)
@@ -198,12 +198,12 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
                             key={`Work-${i}`} />
                     )),
                     // Кнопка добавления занятия
-                    <EditableTableCell
-                        onClick={openDateModal}
-                        cellType="work"
-                        cellData="+"
-                        className={tableCellsClasses.short}
-                        key={`WorkAdd`} />
+                    // <EditableTableCell
+                    //     onClick={openDateModal}
+                    //     cellType="work"
+                    //     cellData="+"
+                    //     className={tableCellsClasses.short}
+                    //     key={`WorkAdd`} />
     
                 ]
                 rows.push(<tr className={rowClassName} key={"FirstRow"}>{cells}</tr>)
@@ -235,11 +235,11 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
                                 key={`Date-string-${idx}-col-${i}`} />
                         )),
                         // Заглушка
-                        <EmptyTableCell
-                            disabled={true}
-                            cellType={tableType}
-                            className="min-w-12.5 h-12.5 "
-                            key={`DatePlaceholder-${idx}`} />
+                        // <EmptyTableCell
+                        //     disabled={true}
+                        //     cellType={tableType}
+                        //     className="min-w-12.5 h-12.5 "
+                        //     key={`DatePlaceholder-${idx}`} />
                     ]
                     rows.push(<tr className={rowClassName} key={`Row-${idx}`}>{cells}</tr>)
                 })
@@ -285,7 +285,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
         <div key={1} className="overflow-auto">
             {renderTable(1)}
             <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={studentId}/>
-            <DateModal isOpen={dateModal} close={closeDateModal} isEditMode={isEditMode}/>
+            {/*<DateModal isOpen={dateModal} close={closeDateModal} isEditMode={isEditMode}/> */}
             <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={currDate} statusCode={statusCode} transferId={transferId} />
         </div>
     );

@@ -123,6 +123,17 @@ export const addKey = async (role: string, groupId?: number | null) => {
 }
 
 
+
+export const getKey = async () => {
+    try {
+        const resp: Response<KeyInterface> = await instance.get("api/key")
+        
+        return resp.data
+    } catch (error){
+        console.log(error)
+    }
+}
+
 /**
  * Удаление ключа по его имени`
  * @param key Сам непосредственно ключ

@@ -4,6 +4,8 @@ import Header from '../Header/Header'
 import RouteManager from './Routes'
 import { ThemeContext } from '../shared/utils/contexts'
 import { AuthContext } from '../shared/utils/contexts'
+import { getKey } from '../shared/utils/apiRequests'
+
 
 
 
@@ -13,13 +15,22 @@ function App() {
   const [theme, setTheme] = useState<string>("dark")
   const [authState, /*setAuthState*/] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+const initializeAuth = async () => {
+  const biba = window.location.search.slice(1).split("=");
   
-  // Получаем квери параметры йоу
-  const biba = window.location.search.slice(1).split("=")
-  if (biba[0] == "key") {
-    sessionStorage.setItem("api_key", biba[1])
-    // Получить кому принадлежит ключ и записать в authState
+  if (biba[0] === "key") {
+    const key = await getKey(); 
+    sessionStorage.setItem("api_key", biba[1]);
+
+    if (key !== undefined) {
+        sessionStorage.setItem("role", key.role);
+    }
   }
+};
+
+// Вызываем функцию
+initializeAuth();
+
 
   useEffect(() => {
     // Устанавливаем тему в body, чтобы она была доступна из любой части проекта

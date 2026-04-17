@@ -33,6 +33,7 @@ export default function ReportActivity() {
     const [downloadLink, setDownloadLink] = useState<string | null>(null)
     const [reverseSearchArray, setReverseSearchArray] = useState([false, false, false]);
     const [periods, setPeriods] = useState<PeriodsInterface[]>([])
+
     const [selectedDisciplines, setSelectedDisciplines] = useState<DisciplineInterface[]>([])
     const [selectedGroups, setSelectedGroups] = useState<GroupInterface[]>([])
     const [selectedStudents, setSelectedStudents] = useState<StudentInterface[]>([])
