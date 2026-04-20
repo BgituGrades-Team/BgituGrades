@@ -37,7 +37,7 @@ function TopNavBar({groups, disciplines, onUpdate}: PropsInterface){
     }
     if (singleGroupAndDiscipline) {
     return (
-       <div className="h-25 lg:ml-34.5 max-sm:h-fit mt-13.75 flex justify-between pl-3.75 items-end max-sm:flex-col max-sm:items-center max-sm:mt-5">
+       <div className="h-25 lg:ml-34.5 max-sm:h-fit mt-13.75 flex justify-between max-sm:pl-0 pl-3.75 items-end max-sm:flex-col max-sm:items-start max-sm:mt-5">
             <div className="flex gap-6.25 items-end max-sm:flex-col">
                 <img className="mr-3.25 max-sm:hidden hidden" src={Image} alt="img" />
                 <Input selectedId={singleGroupAndDiscipline ? singleGroupAndDiscipline.groupVal : ""} setSelectedId={singleGroupAndDiscipline.groupDispatcher} array={groups} textChildren="Группа" helpText="Название группы..."/>

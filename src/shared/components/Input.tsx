@@ -43,12 +43,12 @@ export default function Input({textChildren="Группа", helpText="Назва
             
 
     return(
-         <div className="flex flex-col max-sm:flex-row gap-2.5">
+         <div className="flex flex-col gap-2.5">
             <p className="text-[28px] max-sm:text-[18px] font-bold text-tLight dark:text-tLightD ">{textChildren}</p>
             <div className="relative ">
                 <Combobox value={selectedValue} virtual={{options: filterValues}} onChange={handleChange} onClose={() => setQuery(``)}>
                     <ComboboxInput
-                        className={"w-58 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 " + className}
+                        className={"w-58 max-sm:w-92 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 " + className}
                         aria-label="Assignee"
                         displayValue={(val: GroupInterface | DisciplineInterface | ReportTypeInterface) => val?.name}
                         onChange={(event) => setQuery(event.target.value)}
