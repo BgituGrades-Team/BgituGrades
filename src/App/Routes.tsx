@@ -28,12 +28,14 @@ function RoutesManager({closeModal, isModalOpen}: PropsInterface) {
         repTypeVal: repType,
         repTypeDispatcher: setRepType,
     }
+
     return (
+
         <Router>
             <SingleInputValuesContext.Provider
                 value={values}
             >
-            <Routes>
+            <Routes> 
                 <Route path="/" element={<VisitActivity></VisitActivity>}></Route>
                 <Route path="/visit" element={<VisitActivity></VisitActivity>}></Route>
                 <Route path="/task" element={<TaskActivity></TaskActivity>}></Route>
