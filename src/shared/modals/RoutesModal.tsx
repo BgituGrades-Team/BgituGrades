@@ -2,8 +2,6 @@ import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import ModalNavBar from "../components/ModalNavBar";
 
 
-
-
 interface PropsInterface {
     isOpen: boolean;
     close: () => void;
