@@ -86,7 +86,7 @@ useEffect(() => {
     return (
         <div ref={wrapperRef} className="relative min-w-12.5 h-12.5 ">
             <button 
-                
+                disabled={disabled}
                 title="showOptsBut" 
                 type="button" 
                 onClick={handleToggle} 
@@ -105,6 +105,7 @@ useEffect(() => {
             className={`${optionsVisibility ? "block" : "hidden"} absolute left-0 w-full z-10 text-center rounded-lg bg-bgDark dark:bg-bgDarkD border-white`}>
                 {selectData.map((val) => (
                     <button 
+                        disabled={disabled}
                         type="button" 
                         onClick={() => handleSelect(val)} 
                         className="block w-full py-2 hover:bg-gray-700 text-tLight dark:text-tLightD" 
@@ -116,6 +117,7 @@ useEffect(() => {
             
                 <label className="flex items-center gap-2 p-2 cursor-pointer border-t border-gray-600">
                     <input
+                    disabled={disabled}
                     type="checkbox"
                     checked={isOverdue}
                     onChange={(e) => setIsOverdue(e.target.checked)}

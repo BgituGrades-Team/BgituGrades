@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import EmptyTableCell from "./EmptyTableCell";
 import FirstTableCell from "./FirstTableCell";
 import EditableTableCell from "./EditableTableCell";
@@ -7,6 +7,7 @@ import WorkModal from "../modals/WorkModal";
 import { HubConnection } from "@microsoft/signalr";
 
 import type { WorkInterface, WorkTableSample } from "../types/fromRequests";
+import { AuthContext } from "../utils/contexts";
 
 
 
@@ -22,7 +23,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
     const [studentModal, setStudentModal] = useState<boolean>(false)
     const [workModal, setWorkModal] = useState<boolean>(false)
     
-
+    const role = useContext(AuthContext)
 
 
     const openStudentModal = () => {
@@ -74,19 +75,22 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                 // Разбираем массив работ на массив ячеек
                 ...works.map((work, i) => (
                     <EditableTableCell
-                        onClick={openWorkModal}
+                        onClick={role == "STUDENT" ? () => {} : openWorkModal}
                         cellType="work"
                         cellData={work.name}
                         className={tableCellsClasses.short}
-                        key={`Work-${i}`} />
+                        key={`Work-${i}`}
+                        disabled={role == "STUDENT" ? true : false} />
                 )),
                 // Кнопка добавления работы
                 <EditableTableCell
-                    onClick={openWorkModal}
+                    onClick={role == "STUDENT" ? () => {} : openWorkModal}
                     cellType="work"
                     cellData="+"
                     className={tableCellsClasses.short}
-                    key={`WorkAdd`} />
+                    key={`WorkAdd`}
+                    disabled={role == "STUDENT" ? true : false}
+                     />
 
             ]
             rows.push(<tr className={rowClassName} key={"FirstRow"}>{cells}</tr>)
@@ -98,11 +102,12 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                 cells = [
                     // Студент
                     <EditableTableCell
-                        onClick={openStudentModal}
+                        onClick={role == "STUDENT" ? () => {} : openStudentModal}
                         cellType="student"
                         cellData={student.name}
                         className={tableCellsClasses.long }
-                        key={`Student-${idx}`} />,
+                        key={`Student-${idx}`} 
+                        disabled={role == "STUDENT" ? true : false}/>,
                     // Разбираем массив работ на массив ячеек
                     ...works.map((_work: WorkInterface, i) => (
                         <EmptyTableCell
@@ -114,7 +119,8 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                             overdue={_work.isOverdue ? _work.isOverdue : false}
                             studentId={student.studentId}
                             className="w-33.75 h-12.5 "
-                            key={`Work-string-${idx}-col-${i}`} />
+                            key={`Work-string-${idx}-col-${i}`} 
+                            disabled={role == "STUDENT" ? true : false}/>
                     )),
                     // Заглушка
                     <EmptyTableCell
@@ -125,32 +131,6 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                 ]
                 rows.push(<tr className={rowClassName} key={`Row-${idx}`}>{cells}</tr>)
             })
-            // Последняя строка
-            // cells = [
-            //     // Кнопка добавления студента
-            //     <EditableTableCell
-            //         onClick={openStudentModal}
-            //         cellType="student"
-            //         cellData={'+'}
-            //         className={tableCellsClasses.long + " text-center"}
-            //         key={"StudentAdd"} />,
-            //     // Разбираем массив работ на массив ячеек
-            //     ...works.map((date: WorkInterface, i) => (
-            //         <EmptyTableCell
-            //             disabled={true}
-            //             cellType={tableType}
-            //             className="min-w-12.5 h-12.5 "
-            //             key={String(date.name) + " " + String(i)} />
-            //     )),
-            //     // Заглушка
-            //     <EmptyTableCell
-            //         disabled={true} 
-            //         cellType={tableType}
-            //         className="min-w-12.5 h-12.5 "
-            //         key={"WorkPlaceholder2"} />
-
-            // ]
-            //rows.push(<tr className={rowClassName} key={"LastRow"}>{cells}</tr>)
         }
     return (
         <table className="block border-separate border-spacing-0.5 max-w-full max-h-142.5 overflow-auto" key={tableIndex}>

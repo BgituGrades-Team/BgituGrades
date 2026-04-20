@@ -9,11 +9,12 @@ interface PropsInterface{
     cellDateType?: "Лек" | "Прак" | null;
     cellData?: string;
     onClick?: () => void;
+    disabled?: boolean
 }
 
 
 
-export default function EditableTableCell({isEditMode = false, className = "valuev", cellType = "student", /*workLink = null,*/ cellData = "inCell", cellDateType = null, onClick}: PropsInterface){
+export default function EditableTableCell({isEditMode = false, className = "valuev", cellType = "student", disabled = false, /*workLink = null,*/ cellData = "inCell", cellDateType = null, onClick}: PropsInterface){
     // Проверка, что за ячейка у нас, соответственно, какие данные в ней будут
     switch (cellType) {
         case "reportInfo":
@@ -27,7 +28,7 @@ export default function EditableTableCell({isEditMode = false, className = "valu
             return  (
                 isEditMode ? 
                 <td className={className} onClick={onClick}>
-                    <Button />
+                    <Button disabled={disabled} />
                 </td> :
                 <td className={className} onClick={onClick}>
                     <p className="pl-1.5 pr-1.5" >{cellData}</p>
@@ -36,7 +37,7 @@ export default function EditableTableCell({isEditMode = false, className = "valu
             return (
                 isEditMode ?
                 <td className={className} onClick={onClick}>
-                    <Button></Button>
+                    <Button disabled={disabled} ></Button>
                 </td> : 
                 <td className={className} onClick={onClick}>
                     <p className="pl-1.5 pr-1.5">{cellData}</p>
@@ -45,7 +46,7 @@ export default function EditableTableCell({isEditMode = false, className = "valu
             return  (
                 isEditMode ? 
                 <td className={className} onClick={onClick}>
-                    <Button />
+                    <Button disabled={disabled} />
                 </td> :
                 <td className={className} onClick={onClick}>
                     <div>{cellData}</div>
