@@ -10,7 +10,7 @@ export const ThemeContext = createContext("dark")
 /**
  * Контекст для работы с аутентификацией(TODO)
  */
-export const AuthContext = createContext(true);
+export const AuthContext = createContext<string | null>(null);
 
 /**
  * 

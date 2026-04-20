@@ -62,7 +62,7 @@ export default function MultipleInput<T extends BaseItem>({textChildren="Гру�
             <div className="relative">
                 <Combobox value={selectedValue} virtual={{options: filterValues}} onChange={handleChange} onClose={() => setQuery(``)} multiple>
                     <ComboboxInput      
-                        className="w-58 max-sm:w-92 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 "
+                        className="w-58 max-sm:w-[90vw] bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 "
                         aria-label="Assignee"
                         /*displayValue={(val: [GroupInterface] | [DisciplineInterface] | [ReportTypeInterface]) => val?.map(elem => elem.name).join(", ")}*/
                         onChange={(event) => setQuery(event.target.value)}

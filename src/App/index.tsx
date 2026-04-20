@@ -11,72 +11,76 @@ import { getKey } from '../shared/utils/apiRequests'
 
 
 function App() {
-  // const [searchParams] = useSearchParams()
-  const [theme, setTheme] = useState<string>("dark")
-  const [authState, /*setAuthState*/] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-const initializeAuth = async () => {
-  const biba = window.location.search.slice(1).split("=");
-  
-  if (biba[0] === "key") {
-    const key = await getKey(); 
-    sessionStorage.setItem("api_key", biba[1]);
+    // const [searchParams] = useSearchParams()
+    const [theme, setTheme] = useState<string>("dark")
+    const [authState, setAuthState] = useState<string | null>(null)
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const initializeAuth = async () => {
+        const biba = window.location.search.slice(1).split("=");
+      
+        if (biba[0] === "key") {
+            sessionStorage.setItem("api_key", biba[1]);
+            const key = await getKey(); 
+            
+            if (key !== undefined) {
+                setAuthState(key.role)
+                sessionStorage.setItem("role", key.role);
+            }
+        }
+        const keyFromStorage = sessionStorage.getItem("api_key")
+        if (keyFromStorage) {
+            const key = await getKey(); 
+            
+            if (key !== undefined) {
+                setAuthState(key.role)
+                sessionStorage.setItem("role", key.role);
+            }
+        }
+    };
 
-    if (key !== undefined) {
-        sessionStorage.setItem("role", key.role);
-    }
-  }
-};
-
-// Вызываем функцию
-initializeAuth();
+    // Вызываем функцию
+    initializeAuth();
 
 
-  useEffect(() => {
-    // Устанавливаем тему в body, чтобы она была доступна из любой части проекта
-    document.body.setAttribute(`data-theme`, theme)
-    document.body.style.backgroundColor = theme != "dark" ? "#ffffff" : "#101014"
+    useEffect(() => {
+        // Устанавливаем тему в body, чтобы она была доступна из любой части проекта
+        document.body.setAttribute(`data-theme`, theme)
+        document.body.style.backgroundColor = theme != "dark" ? "#ffffff" : "#101014"
 
-    // Получаем тему из localStorage
-    const takeTheme = getTheme();
-    if (takeTheme != null){
-        // Устанавливаем тему, если ее не было в localStorage
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setTheme(takeTheme)
-    }
-  }, [theme])
+        // Получаем тему из localStorage
+        const takeTheme = getTheme();
+        if (takeTheme != null){
+            // Устанавливаем тему, если ее не было в localStorage
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setTheme(takeTheme)
+        }
+    }, [theme])
 
-  const closeModal = () => {
+    const closeModal = () => {
         setIsModalOpen(false)
-  }
-  const openModal = () => {
-    setIsModalOpen(true)
-  }
-  const handleThemeChange = () => {
-    if(theme == "light"){
-      setTheme("dark")
-    } else {
-      setTheme("light")
     }
-    return
-  }
+    const openModal = () => {
+        setIsModalOpen(true)
+    }
+    const handleThemeChange = () => {
+        if(theme == "light"){
+          setTheme("dark")
+        } else {
+          setTheme("light")
+        }
+        return
+    }
   
-  // Проверка, есть ли ключ в query параметрах
-  // const key = searchParams.get("key")
-  // if (key && key != localStorage.getItem("api_key")) {
-  //     localStorage.setItem("api_key", key)
-  // }   
-
-
-  return (
+    console.log(authState)
+    return (
         <AuthContext value={authState}>
             <ThemeContext value={theme}>
                 <Header openModal={openModal} handleThemeChange={handleThemeChange}/>
                 <RouteManager closeModal={closeModal} isModalOpen={isModalOpen}/>
-                
+                    
             </ThemeContext>
         </AuthContext>
-    )
-}
+        )
+    }
 
 export default App
