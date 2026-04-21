@@ -189,6 +189,32 @@ export const addWork = async (name: string, issuedDate: string, description: str
     }
 }
 
+export const editWork = async(id: number, name: string, issuedDate: string, description: string, disciplineId: number, groupId: number) =>{
+    try{
+        const params = {
+            "id": id,
+            "name": name,
+            "issuedDate": issuedDate,
+            "description": description,
+            "disciplineId": disciplineId,
+            "groupId": groupId
+        }
+        await instance.put("api/work", params)
+    } catch (error){
+        console.log(error)
+    }
+}
+
+
+export const deleteWork =  async(id: number) => {
+    try{
+        await instance.delete(`api/work?id=${id}`)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
 export const downloadFile = async (link: string):  Promise<string | undefined> => {
     try {
         const res: Response<Blob> = await axios({

@@ -67,7 +67,8 @@ export interface PresenceInterface {
 export interface WorkInterface {
     workId: number;
     name: string;
-    issuedDate: string;
+    issuedDate: string; 
+    description: string;
     value: null | string;
     isOverdue: boolean;
 }

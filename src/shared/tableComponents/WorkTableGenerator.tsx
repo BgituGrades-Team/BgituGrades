@@ -22,7 +22,10 @@ interface PropsInterface{
 export default function WorkTableGenerator({tableType, isEditMode, table, connection}: PropsInterface){
     const [studentModal, setStudentModal] = useState<boolean>(false)
     const [workModal, setWorkModal] = useState<boolean>(false)
-    
+    const [currWorkId, setCurrWorkId] = useState<number | undefined>(undefined)
+    const [currName, setCurrName] = useState<string | undefined>("")
+    const [currDate, setCurrDate] = useState<string | undefined>("")
+    const [currDescription, setCurrDescription] = useState<string | undefined>("")
     const role = useContext(AuthContext)
 
 
@@ -32,7 +35,12 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
     const closeStudentModal = () => {
         setStudentModal(false)
     }
-    const openWorkModal = () => {
+    const openWorkModal = (workId?: number, name?: string, date?:string, description?: string ) => {
+        console.log(description)
+        setCurrWorkId(workId)
+        setCurrName(name)
+        setCurrDate(date)
+        setCurrDescription(description)
         setWorkModal(true)
     }
     const closeWorkModal = () => {
@@ -74,8 +82,9 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                     key={"Allah"} />,
                 // Разбираем массив работ на массив ячеек
                 ...works.map((work, i) => (
+                    
                     <EditableTableCell
-                        onClick={role == "STUDENT" ? () => {} : openWorkModal}
+                        onClick={isEditMode ?() => openWorkModal(work.workId, work.name, work.issuedDate, work.description) : () => {}}
                         cellType="work"
                         cellData={work.name}
                         className={tableCellsClasses.short}
@@ -84,7 +93,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                 )),
                 // Кнопка добавления работы
                 <EditableTableCell
-                    onClick={role == "STUDENT" ? () => {} : openWorkModal}
+                    onClick={isEditMode || role == "STUDENT" ? () => {} : openWorkModal}
                     cellType="work"
                     cellData="+"
                     className={tableCellsClasses.short}
@@ -142,8 +151,9 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
     return (
         <div key={1} className="overflow-auto">
             {renderTable(1)}
+            
             <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode}/>
-            <WorkModal isOpen={workModal} close={closeWorkModal} isEditMode={isEditMode}/>
+            <WorkModal isOpen={workModal} close={closeWorkModal} isEditMode={isEditMode} currWorkId={currWorkId} currName={currName} currDate={currDate} currDescription={currDescription}/>
         </div>
     );
 }

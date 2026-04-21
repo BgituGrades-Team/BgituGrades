@@ -15,7 +15,7 @@ import { SingleInputValuesContext } from "../shared/utils/contexts"
 export default function TaskActivity() {
     const singleGroupAndDiscipline = useContext(SingleInputValuesContext)
 
-    const [isEditMode] = useState(false)
+    const [isEditMode, setIsEditMode] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [groups, setGroups] = useState<GroupInterface[]>([])
     const [disciplines, setDisciplines] = useState<DisciplineInterface[]>([])
@@ -89,8 +89,10 @@ export default function TaskActivity() {
 
         })
     }
-
-    
+    //обработчик нажатия на кнопку "редактировать" переводит нас в режим редактирования и обратно
+    const handleEditModeChange = () => {
+        setIsEditMode(!isEditMode)
+    }
 
     const compClasses = {
         outerDiv: "w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ",
@@ -111,7 +113,7 @@ export default function TaskActivity() {
                         </div>
                     </div> :
                     <div className="w-[90%] flex flex-col gap-6.25">
-                        <TopNavBar groups={groups} disciplines={disciplines}/>
+                        <TopNavBar groups={groups} disciplines={disciplines} handleEditModeChange={handleEditModeChange}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar className="max-sm:hidden" visitsStatus={false} tasksStatus={true} reportStatus={false}  adminStatus={false}/>
                             <WorkTableGenerator table={table} isEditMode={isEditMode} tableType="work" connection={connection}/>
@@ -135,7 +137,7 @@ export default function TaskActivity() {
                         </div>
                     </div> :
                     <div className="w-[90%] flex flex-col gap-6.25">
-                        <TopNavBar groups={groups} disciplines={disciplines}/>
+                        <TopNavBar groups={groups} disciplines={disciplines} handleEditModeChange={handleEditModeChange}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar className="max-sm:hidden" visitsStatus={false} tasksStatus={true} reportStatus={false} adminStatus={false}/>
                             <WorkTableGenerator isEditMode={isEditMode} tableType="work" connection={connection}/>

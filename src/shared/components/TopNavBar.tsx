@@ -6,22 +6,23 @@ import type { DateTableSample, DisciplineInterface, GroupInterface, StudentLinkI
 import { useContext, useState } from "react";
 import StudentLinkModal from "../modals/StudentLinkModal";
 import { type SetStateAction } from 'react';
-import { SingleInputValuesContext } from "../utils/contexts";
+import { AuthContext, SingleInputValuesContext } from "../utils/contexts";
 
 interface PropsInterface {
     groups: GroupInterface[];
     disciplines: DisciplineInterface[];
     tableIds?:  number[];
     onUpdate?: React.Dispatch<SetStateAction<DateTableSample | undefined>> 
+    handleEditModeChange: () => void;
 }
 
 
-function TopNavBar({groups, disciplines, onUpdate}: PropsInterface){
+function TopNavBar({groups, disciplines, handleEditModeChange, onUpdate}: PropsInterface){
     const [link, setLink] = useState<string>()
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
     const singleGroupAndDiscipline = useContext(SingleInputValuesContext)
-
+    const role = useContext(AuthContext)
     // Нажатие на кнопку создать ссылку
     const createStudentLink = async () => {
         const res: StudentLinkInterface | undefined = await getStudentLink(Number(singleGroupAndDiscipline?.groupVal));
@@ -45,7 +46,7 @@ function TopNavBar({groups, disciplines, onUpdate}: PropsInterface){
             </div> 
             <div className="flex gap-6.25 max-sm:flex-col items-center justify-center max-sm:hidden">
                 <Button children="Создать ссылку" className={singleGroupAndDiscipline?.groupVal  == undefined ? "  hidden" : ""} onClick={createStudentLink}/>
-                <Button children="Редактировать"/>
+                <Button children="Редактировать" onClick={handleEditModeChange} className={role == "STUDENT" ? " hidden " : ""}/>
                 {/*<Button children="Поделиться"/>*/}
             </div>
             <StudentLinkModal isOpen={isOpen} close={closeStudentModal} linkText={link} />
