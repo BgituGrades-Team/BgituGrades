@@ -22,6 +22,9 @@ interface PropsInterface{
 export default function WorkTableGenerator({tableType, isEditMode, table, connection}: PropsInterface){
     const [studentModal, setStudentModal] = useState<boolean>(false)
     const [workModal, setWorkModal] = useState<boolean>(false)
+    const [clickedStudentId, setStudentId] = useState<number>()
+    const [clickedStudentName, setStudentName] = useState<string>()
+    
     const [currWorkId, setCurrWorkId] = useState<number | undefined>(undefined)
     const [currName, setCurrName] = useState<string | undefined>("")
     const [currDate, setCurrDate] = useState<string | undefined>("")
@@ -29,7 +32,9 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
     const role = useContext(AuthContext)
 
 
-    const openStudentModal = () => {
+    const openStudentModal = (e: React.MouseEvent<HTMLElement>, studentId: number) => {
+        setStudentName(e.currentTarget.textContent)
+        setStudentId(studentId)
         setStudentModal(true)
     }
     const closeStudentModal = () => {
@@ -111,7 +116,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                 cells = [
                     // Студент
                     <EditableTableCell
-                        onClick={role == "STUDENT" ? () => {} : openStudentModal}
+                        onClick={role == "STUDENT" ? () => {} : (e) => openStudentModal(e, student.studentId)}
                         cellType="student"
                         cellData={student.name}
                         className={tableCellsClasses.long }
@@ -147,10 +152,11 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
         </table>
     );
   };
-
     return (
         <div key={1} className="overflow-auto">
             {renderTable(1)}
+            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={clickedStudentId} studentName={clickedStudentName} />
+            <WorkModal isOpen={workModal} close={closeWorkModal} isEditMode={isEditMode}/>
             
             <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode}/>
             <WorkModal isOpen={workModal} close={closeWorkModal} isEditMode={isEditMode} currWorkId={currWorkId} currName={currName} currDate={currDate} currDescription={currDescription}/>

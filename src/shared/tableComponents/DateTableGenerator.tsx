@@ -26,10 +26,12 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     const [transferModal, setTransferModal] = useState<boolean>(false)
     const [classId, setClassId] = useState<number | undefined>()
     const [classType, setClassType] = useState<string>("")
-    const [studentId, setStudentId] = useState<number | undefined>()
     const [statusCode, setStatusCode] = useState<number | undefined>()
     const [transferId, setTransferId] = useState<number | undefined>()
     const [currDate, setCurrDate] = useState<string>("")
+
+    const [clickedStudentId, setClickedStudentId] = useState<number>()
+    const [clickedStudentName, setStudentName] = useState<string>()
 
     const openTransferModal = async (classId: number, currDate: string,  classType: string) => {
         setClassId(classId)
@@ -54,8 +56,9 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     const closeTransferModal = () => {
         setTransferModal(false)
     }
-    const openStudentModal = (studentId: number) => {
-        setStudentId(studentId)
+    const openStudentModal = (e: React.MouseEvent<HTMLElement>, studentId: number) => {
+        setStudentName(e.currentTarget.textContent)
+        setClickedStudentId(studentId)
         setStudentModal(true)
     }
     const closeStudentModal = () => {
@@ -135,7 +138,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
                     cells = [
                         // Студент
                         <EditableTableCell
-                            onClick={role == "STUDENT" ? () => {} : () => openStudentModal(student.studentId)}
+                            onClick={role == "STUDENT" ? () => {} : (e) => openStudentModal(e, student.studentId)}
                             cellType="student"
                             cellData={student.name}
                             className={tableCellsClasses.long}
@@ -206,7 +209,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     return (
         <div key={1} className="overflow-auto">
             {renderTable(1)}
-            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={studentId}/>
+            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={clickedStudentId} studentName={clickedStudentName}/>
             {/*<DateModal isOpen={dateModal} close={closeDateModal} isEditMode={isEditMode}/> */}
             <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={currDate} statusCode={statusCode} transferId={transferId} />
         </div>

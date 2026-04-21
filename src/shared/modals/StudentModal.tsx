@@ -1,21 +1,31 @@
 import { Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import ModalInput from './ModalInput';
 import Cross from '../components/SVG/Cross';
-import { useState, type ChangeEvent } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useContext, useEffect, useState, type ChangeEvent } from 'react';
 import { updateStudent } from '../utils/apiRequests';
+import { SingleInputValuesContext } from '../utils/contexts';
 
 interface PropsInterface{
     isOpen: boolean;
     close: () => void;
     isEditMode: boolean;
     studentId?: number | undefined;
+    studentName?: string;
 }    
 
 
-export default function StudentModal({isOpen, close, studentId = undefined}: PropsInterface) {
-    const [searchParams,] = useSearchParams()
-    const [name, setName] = useState<string>("")
+export default function StudentModal({isOpen, close, studentId = -1, studentName = ""}: PropsInterface) {
+    const info = useContext(SingleInputValuesContext)
+
+    const [name, setName] = useState<string>(studentName)
+    const [id, setId] = useState<number>(studentId)
+
+    useEffect(() => {
+        setName(studentName)
+    }, [studentName])
+    useEffect(() => {
+        setId(studentId)
+    }, [studentId])
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value)
@@ -23,11 +33,13 @@ export default function StudentModal({isOpen, close, studentId = undefined}: Pro
 
 
     const updateAndSave = async () => {
-        const groupId = searchParams.get('groupid')
-        console.log(studentId, name, groupId)
-        if (groupId && studentId) {
-            console.log(studentId, name, groupId)
-            await updateStudent(studentId, name, Number(groupId))
+        const groupId = info?.groupVal
+        if (groupId && id) {
+            const res = await updateStudent(id, name, Number(groupId))
+            if (res) {
+                close()
+                window.location.reload()
+            }
         }
     }
 

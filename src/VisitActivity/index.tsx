@@ -36,7 +36,6 @@ function VisitActivity() {
 
     useEffect(() => {
         const reloadDisciplines = async () => {
-            console.log("зашло")
             const res: DisciplineInterface[] | undefined = await getDisciplinesByGroups([singleGroupAndDiscipline?.groupVal ? Number(singleGroupAndDiscipline?.groupVal) : 0])
             if (res) {
                 setDisciplines(res)
@@ -125,7 +124,6 @@ function VisitActivity() {
         </div>
         )
     }
-    console.log(isLoading)
     if (connection) {
     return (
         <div className="w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">

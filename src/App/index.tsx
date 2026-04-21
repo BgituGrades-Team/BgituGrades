@@ -17,7 +17,7 @@ function App() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const initializeAuth = async () => {
         const biba = window.location.search.slice(1).split("=");
-      
+        
         if (biba[0] === "key") {
             sessionStorage.setItem("api_key", biba[1]);
             const key = await getKey(biba[1]); 
@@ -37,10 +37,6 @@ function App() {
             }
         }
     };
-
-    // Вызываем функцию
-    
-
 
     useEffect(() => {
         // Устанавливаем тему в body, чтобы она была доступна из любой части проекта
@@ -65,9 +61,9 @@ function App() {
     }
     const handleThemeChange = () => {
         if(theme == "light"){
-          setTheme("dark")
+            setTheme("dark")
         } else {
-          setTheme("light")
+            setTheme("light")
         }
         return
     }
