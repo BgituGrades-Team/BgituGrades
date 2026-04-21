@@ -12,10 +12,11 @@ interface PropsInterface{
     selectedId: string;
     setSelectedId: React.Dispatch<SetStateAction<string>>;
     onUpdate?: React.Dispatch<SetStateAction<DateTableSample | undefined>> 
+    isGroupSelected?: boolean;
 }
 
 
-export default function Input({textChildren="Группа", helpText="Название группы", array, className, selectedId, onUpdate, setSelectedId }: PropsInterface){
+export default function Input({textChildren="Группа", helpText="Название группы", array, className, selectedId, onUpdate, setSelectedId , isGroupSelected}: PropsInterface){
     const value = array.find((arr) => String(arr.id) == selectedId)
     const [selectedValue, setSelectedValue] = useState<GroupInterface | DisciplineInterface | StudentInterface | ReportTypeInterface | null>(value ? value : null)
     const [query, setQuery] = useState(``)
@@ -46,7 +47,7 @@ export default function Input({textChildren="Группа", helpText="Назва
          <div className="flex flex-col gap-2.5">
             <p className="text-[28px] max-sm:text-[18px] font-bold text-tLight dark:text-tLightD ">{textChildren}</p>
             <div className="relative ">
-                <Combobox value={selectedValue} virtual={{options: filterValues}} onChange={handleChange} onClose={() => setQuery(``)}>
+                <Combobox value={selectedValue} virtual={{options: filterValues}} onChange={handleChange} disabled={isGroupSelected || isGroupSelected == undefined ? false : true} onClose={() => setQuery(``)}>
                     <ComboboxInput
                         className={"w-58 max-sm:w-[90vw] bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 " + className}
                         aria-label="Assignee"
