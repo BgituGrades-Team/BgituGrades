@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import ModalInput from './ModalInput';
 import Cross from '../components/SVG/Cross';
-import { useContext, useState, type ChangeEvent } from 'react';
+import { useContext, useEffect, useState, type ChangeEvent } from 'react';
 import { addWork, deleteWork, editWork } from '../utils/apiRequests';
 import { SingleInputValuesContext } from '../utils/contexts';
 
@@ -12,16 +12,25 @@ interface PropsInterface{
     currWorkId?: number;
     currName?: string;
     currDate?: string;
-    currDescription?: string | null;
+    currDescription?: string;
 }    
 
 //отредактировать ее до правильного варианта
 
-export default function WorkModal({isOpen, close, currWorkId, currName, currDate, currDescription, isEditMode}: PropsInterface) {
+export default function WorkModal({isOpen, close, currWorkId, currName = "", currDate = "", currDescription = "", isEditMode}: PropsInterface) {
     const [name, setName] = useState<string>("")
     const [date, setDate] = useState<string>("")
     const [description, setDescription] = useState<string>("")
     const singleGroupAndDiscipline = useContext(SingleInputValuesContext)
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setName(currName)
+        setDate(currDate)
+        setDescription(currDescription)
+    }, [currDate, currDescription, currName])
+
+
 
     const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value)
@@ -64,9 +73,9 @@ export default function WorkModal({isOpen, close, currWorkId, currName, currDate
                 <DialogTitle as="h3" className="text-base/7 font-medium text-tLight dark:text-tLightD mb-5">
                 {isEditMode ? "Редактирование" : "Добавление"} работы
                 </DialogTitle>
-                <ModalInput onChange={handleNameChange} value={isEditMode && currName ? currName : name} >Название</ModalInput>
-                {isEditMode ? <ModalInput onChange={handleDateChange} value={isEditMode && currDate ? currDate : date} type='date'>Дата</ModalInput> : ""}
-                <ModalInput onChange={handleDescriptionChange} value={isEditMode && currDescription ? currDescription : description} type='text' >Описание</ModalInput>
+                <ModalInput onChange={handleNameChange} value={name} >Название</ModalInput>
+                {isEditMode ? <ModalInput onChange={handleDateChange} value={date} type='date'>Дата</ModalInput> : ""}
+                <ModalInput onChange={handleDescriptionChange} value={description} type='text' >Описание</ModalInput>
                 <div className="mt-4 flex gap-7.5">
                      { isEditMode ?
                         <div>

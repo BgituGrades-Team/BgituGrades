@@ -96,7 +96,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                 )),
                 // Кнопка добавления работы
                 <EditableTableCell
-                    onClick={isEditMode || role == "STUDENT" ? () => {} : () => openWorkModal}
+                    onClick={role == "STUDENT" ? () => {} : () => openWorkModal()}
                     cellType="work"
                     cellData="+"
                     className={tableCellsClasses.short}
