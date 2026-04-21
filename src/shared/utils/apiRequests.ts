@@ -273,7 +273,7 @@ export const updateStudent = async (studentId: number, name: string, groupId: nu
         }
     try {
         await instance.put("api/student", params)
-        console.log("Success! Student's name has been updated!")
+        return true
     } catch(error) {
         console.log(error, params)
     }

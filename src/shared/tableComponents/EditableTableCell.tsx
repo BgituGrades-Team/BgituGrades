@@ -8,7 +8,7 @@ interface PropsInterface{
     workLink?: string | null;
     cellDateType?: "Лек" | "Прак" | null;
     cellData?: string;
-    onClick?: () => void;
+    onClick?: (e: React.MouseEvent<HTMLElement>) => void;
     disabled?: boolean
 }
 
