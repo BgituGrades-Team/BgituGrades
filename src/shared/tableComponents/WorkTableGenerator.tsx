@@ -22,10 +22,8 @@ interface PropsInterface{
 export default function WorkTableGenerator({tableType, isEditMode, table, connection}: PropsInterface){
     const [studentModal, setStudentModal] = useState<boolean>(false)
     const [workModal, setWorkModal] = useState<boolean>(false)
-    const [clickedStudentId, setStudentId] = useState<number>()
-    const [clickedStudentName, setStudentName] = useState<string>()
-    
     const [currWorkId, setCurrWorkId] = useState<number | undefined>(undefined)
+    const [currStudId, setCurrStudId] = useState<number>(-1)
     const [currName, setCurrName] = useState<string | undefined>("")
     const [currDate, setCurrDate] = useState<string | undefined>("")
     const [currDescription, setCurrDescription] = useState<string | undefined>("")
@@ -33,8 +31,8 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
 
 
     const openStudentModal = (e: React.MouseEvent<HTMLElement>, studentId: number) => {
-        setStudentName(e.currentTarget.textContent)
-        setStudentId(studentId)
+        setCurrName(e.currentTarget.textContent)
+        setCurrStudId(studentId)
         setStudentModal(true)
     }
     const closeStudentModal = () => {
@@ -155,10 +153,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
     return (
         <div key={1} className="overflow-auto">
             {renderTable(1)}
-            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={clickedStudentId} studentName={clickedStudentName} />
-            <WorkModal isOpen={workModal} close={closeWorkModal} isEditMode={isEditMode}/>
-            
-            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode}/>
+            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={currStudId} studentName={currName} />
             <WorkModal isOpen={workModal} close={closeWorkModal} isEditMode={isEditMode} currWorkId={currWorkId} currName={currName} currDate={currDate} currDescription={currDescription}/>
         </div>
     );

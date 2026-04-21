@@ -30,8 +30,8 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     const [transferId, setTransferId] = useState<number | undefined>()
     const [currDate, setCurrDate] = useState<string>("")
 
-    const [clickedStudentId, setClickedStudentId] = useState<number>()
-    const [clickedStudentName, setStudentName] = useState<string>()
+    const [currStudId, setCurrStudId] = useState<number>()
+    const [currName, setCurrName] = useState<string>()
 
     const openTransferModal = async (classId: number, currDate: string,  classType: string) => {
         setClassId(classId)
@@ -57,8 +57,8 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
         setTransferModal(false)
     }
     const openStudentModal = (e: React.MouseEvent<HTMLElement>, studentId: number) => {
-        setStudentName(e.currentTarget.textContent)
-        setClickedStudentId(studentId)
+        setCurrName(e.currentTarget.textContent)
+        setCurrStudId(studentId)
         setStudentModal(true)
     }
     const closeStudentModal = () => {
@@ -209,7 +209,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     return (
         <div key={1} className="overflow-auto">
             {renderTable(1)}
-            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={clickedStudentId} studentName={clickedStudentName}/>
+            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={currStudId} studentName={currName}/>
             {/*<DateModal isOpen={dateModal} close={closeDateModal} isEditMode={isEditMode}/> */}
             <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={currDate} statusCode={statusCode} transferId={transferId} />
         </div>
