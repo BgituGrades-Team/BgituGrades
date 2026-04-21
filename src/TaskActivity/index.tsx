@@ -43,7 +43,7 @@ export default function TaskActivity() {
     const handleInputChange = () => {
         setTable(undefined)
         if (connection) {
-            connection.on("ReceivePresences", (data) => {
+            connection.on("ReceiveMarks", (data) => {
                 setTable(data)
                 setIsTableReady(true)
             })

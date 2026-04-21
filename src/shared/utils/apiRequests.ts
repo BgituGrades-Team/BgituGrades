@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { DisciplineInterface, GroupInterface, KeyInterface, PeriodsInterface, StudentInterface, StudentLinkInterface } from '../types/fromRequests';
-
+import toast from "react-hot-toast";
 
 // Наш бекендер ебень
 axios.defaults.baseURL = import.meta.env.VITE_DOTENV_API_URL
@@ -310,9 +310,21 @@ export const migrate = async() => {
     try{
         const params = {}
         await instance.post("api/migrations/migrate", params)
+        return toast.success("Данные заархивированы")
         console.log("Data has been written successfully!")
     } catch (error) {
         console.log(error)
+        return toast.error("Данные не заархивированы")
+    }
+}
+
+export const loadShcedule = async() => {
+    try{
+        await instance.post("api/migrations/sync")
+        return toast.success("Расписание загружено!")
+    } catch (error) {
+        console.log(error)
+        return toast.error("Расписание не загружено!")
     }
 }
 
@@ -328,11 +340,13 @@ export const sendStuddents = async (file: File) => { // Лучше исполь�
             },
             timeout: 20000
         });
-        
+        return toast.success("Студенты синхронизированы!")
         console.log("All students have been synchronized!");
     } catch (error) {
+        
         if (error instanceof Error) {
             console.log(error.message);
+            return toast.error(`Ошибка синхронизации студентов! ${error.message}`)
         }
     }
 }

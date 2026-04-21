@@ -1,7 +1,8 @@
 import { useState } from "react";
 import KeyCreateModal from "../modals/KeyCreateModal";
 import Button from "./Button";
-import { migrate, sendStuddents, sendStudyData } from "../utils/apiRequests";
+import { loadShcedule, migrate, sendStuddents, sendStudyData } from "../utils/apiRequests";
+import { Toaster } from "react-hot-toast";
 
 
 
@@ -15,6 +16,9 @@ export default function AdminTopNavBar(){
    const [file, setFile] = useState<Blob | null>(null)
    const [url, setUrl] = useState<string>("")
    const [inputKey, setInputKey] = useState(() => Date.now());
+
+
+   
     const openKeyCreateModal = () => {
         setIsOpen(true)
     }
@@ -44,7 +48,13 @@ export default function AdminTopNavBar(){
     }   
 }
     const handleMigrate = async() => {
+        
         await migrate();
+    }
+
+    const handleShedule = async() => {
+        //toast.success("Расписание загружено")
+        await loadShcedule();
     }
 
     return (
@@ -56,6 +66,7 @@ export default function AdminTopNavBar(){
             <div className="w-full flex  gap-6.25">
                 <Button onClick={openKeyCreateModal} children="Создать ключ"/>
                 <Button onClick={() => handleMigrate()} children="Миграция" />
+                <Button onClick={() => handleShedule()} children="Загрузить Расписание" />
                 <label htmlFor="adminInput" className="cursor-pointer  p-2 bg-primaryD text-tLight dark:text-tLightD rounded-lg font-medium ">
                         Загрузить студентов .xlsx
                 </label>
@@ -63,6 +74,7 @@ export default function AdminTopNavBar(){
                 
             </div>
             <KeyCreateModal isOpen={isOpen} close={closeKeyCreateModal  } />
+            <Toaster />
        </div> 
     )
 

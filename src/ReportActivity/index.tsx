@@ -229,6 +229,7 @@ export default function ReportActivity() {
                         disciplines={disciplines}
                         students={students}
                         pipeBomb={pipeBomb}
+                        isTableReady={isTableReady}
                         />
                     <div className="flex gap-6.25">
                         <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false} className="max-sm:hidden"/>
@@ -260,7 +261,7 @@ export default function ReportActivity() {
                         </div>
                     </div> :
                     <div className="w-[90%] flex flex-col gap-6.25">
-                        <StudentTopNavBar pipeBomb={pipeBomb} link={downloadLink != null ? downloadLink : ""} handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students} periods={periods}/>
+                        <StudentTopNavBar pipeBomb={pipeBomb} link={downloadLink != null ? downloadLink : ""} handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students} periods={periods} isTableReady={isTableReady}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false} className="max-sm:hidden"/>
                         </div>
