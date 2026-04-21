@@ -22,7 +22,6 @@ function VisitActivity() {
     const [isTableReady, setIsTableReady] = useState(false)
 
     const [connection, setConnection] = useState<null | HubConnection>(null)
-
     useEffect(() => {
         // Подключаем сигнал
         const establishConnection = async () => {

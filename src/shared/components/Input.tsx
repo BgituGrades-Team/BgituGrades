@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Arrow from "./SVG/Arrow"
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, ComboboxButton } from '@headlessui/react'
 import type { DateTableSample, DisciplineInterface, GroupInterface, ReportTypeInterface, StudentInterface } from "../types/fromRequests";
 import { type SetStateAction } from 'react';
+import { AuthContext } from "../utils/contexts";
 
 interface PropsInterface{
     textChildren?: string;
@@ -23,6 +24,16 @@ export default function Input({textChildren="Группа", helpText="Назва
     const handleClick = () => {
        return filterValues
     }
+
+    const role = useContext(AuthContext)
+    
+    useEffect(() => {
+        if (role == "STUDENT") {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setSelectedValue(array[0])
+            setSelectedId(String(array[0].id))
+        }
+    }, [array, role, setSelectedId])
 
     // Изменение выбранного элемента и добавление идентификатора в query параметры
     const handleChange = (e: GroupInterface | DisciplineInterface | StudentInterface | null) => {
@@ -47,7 +58,7 @@ export default function Input({textChildren="Группа", helpText="Назва
          <div className="flex flex-col gap-2.5">
             <p className="text-[28px] max-sm:text-[18px] font-bold text-tLight dark:text-tLightD ">{textChildren}</p>
             <div className="relative ">
-                <Combobox value={selectedValue} virtual={{options: filterValues}} onChange={handleChange} disabled={isGroupSelected || isGroupSelected == undefined ? false : true} onClose={() => setQuery(``)}>
+                <Combobox value={selectedValue} virtual={{options: filterValues}} onChange={handleChange} disabled={((isGroupSelected || isGroupSelected == undefined) && role != "STUDENT") ? false : true} onClose={() => setQuery(``)}>
                     <ComboboxInput
                         className={"w-58 max-sm:w-[90vw] bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 " + className}
                         aria-label="Assignee"
