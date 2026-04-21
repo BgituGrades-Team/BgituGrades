@@ -40,6 +40,16 @@ export default function TaskActivity() {
     }, [connection])
 
 
+    const handleInputChange = () => {
+        setTable(undefined)
+        if (connection) {
+            connection.on("ReceivePresences", (data) => {
+                setTable(data)
+                setIsTableReady(true)
+            })
+        }
+    }
+
     useEffect(() => {
         const reloadDisciplines = async () => {
             console.log("зашло")
@@ -113,7 +123,7 @@ export default function TaskActivity() {
                         </div>
                     </div> :
                     <div className="w-[90%] flex flex-col gap-6.25">
-                        <TopNavBar groups={groups} disciplines={disciplines} handleEditModeChange={handleEditModeChange}/>
+                        <TopNavBar groups={groups} disciplines={disciplines} onUpdate={() => handleInputChange()} handleEditModeChange={handleEditModeChange} isEditMode={isEditMode}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar className="max-sm:hidden" visitsStatus={false} tasksStatus={true} reportStatus={false}  adminStatus={false}/>
                             <WorkTableGenerator table={table} isEditMode={isEditMode} tableType="work" connection={connection}/>
@@ -137,7 +147,7 @@ export default function TaskActivity() {
                         </div>
                     </div> :
                     <div className="w-[90%] flex flex-col gap-6.25">
-                        <TopNavBar groups={groups} disciplines={disciplines} handleEditModeChange={() => handleEditModeChange}/>
+                        <TopNavBar groups={groups} disciplines={disciplines} onUpdate={() => handleInputChange()} handleEditModeChange={() => handleEditModeChange} isEditMode={isEditMode}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar className="max-sm:hidden" visitsStatus={false} tasksStatus={true} reportStatus={false} adminStatus={false}/>
                             <WorkTableGenerator isEditMode={isEditMode} tableType="work" connection={connection}/>

@@ -114,7 +114,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                 cells = [
                     // Студент
                     <EditableTableCell
-                        onClick={role == "STUDENT" ? () => {} : (e) => openStudentModal(e, student.studentId)}
+                        onClick={isEditMode? (e) => openStudentModal(e, student.studentId) : () => {}  }
                         cellType="student"
                         cellData={student.name}
                         className={tableCellsClasses.long }
