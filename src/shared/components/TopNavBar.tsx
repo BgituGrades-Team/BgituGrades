@@ -13,7 +13,7 @@ interface PropsInterface {
     disciplines: DisciplineInterface[];
     tableIds?:  number[];
     onUpdate?: React.Dispatch<SetStateAction<DateTableSample | undefined>> 
-    handleEditModeChange: () => void;
+    handleEditModeChange?: () => void;
 }
 
 

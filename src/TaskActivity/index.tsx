@@ -137,7 +137,7 @@ export default function TaskActivity() {
                         </div>
                     </div> :
                     <div className="w-[90%] flex flex-col gap-6.25">
-                        <TopNavBar groups={groups} disciplines={disciplines} handleEditModeChange={handleEditModeChange}/>
+                        <TopNavBar groups={groups} disciplines={disciplines} handleEditModeChange={() => handleEditModeChange}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar className="max-sm:hidden" visitsStatus={false} tasksStatus={true} reportStatus={false} adminStatus={false}/>
                             <WorkTableGenerator isEditMode={isEditMode} tableType="work" connection={connection}/>
