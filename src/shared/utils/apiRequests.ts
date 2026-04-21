@@ -124,8 +124,9 @@ export const addKey = async (role: string, groupId?: number | null) => {
 
 
 
-export const getKey = async () => {
+export const getKey = async (newKey = sessionStorage.getItem("api_key")) => {
     try {
+        instance.defaults.headers.key = newKey
         const resp: Response<KeyInterface> = await instance.get("api/key")
         
         return resp.data
@@ -143,7 +144,6 @@ export const deleteKeyByName = async (key: string) => {
     try {
         const res  = await instance.delete(`api/key?deleteKey=${key}`)
         return(res)
-        console.log("pizda cluchu")
     } catch (error) {
         console.log(error)
     }

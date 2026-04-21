@@ -20,7 +20,7 @@ function App() {
       
         if (biba[0] === "key") {
             sessionStorage.setItem("api_key", biba[1]);
-            const key = await getKey(); 
+            const key = await getKey(biba[1]); 
             
             if (key !== undefined) {
                 setAuthState(key.role)
@@ -29,7 +29,7 @@ function App() {
         }
         const keyFromStorage = sessionStorage.getItem("api_key")
         if (keyFromStorage) {
-            const key = await getKey(); 
+            const key = await getKey(keyFromStorage); 
             
             if (key !== undefined) {
                 setAuthState(key.role)
@@ -39,7 +39,7 @@ function App() {
     };
 
     // Вызываем функцию
-    initializeAuth();
+    
 
 
     useEffect(() => {
@@ -54,7 +54,8 @@ function App() {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setTheme(takeTheme)
         }
-    }, [theme])
+        initializeAuth();
+    }, [theme, authState])
 
     const closeModal = () => {
         setIsModalOpen(false)
@@ -71,7 +72,6 @@ function App() {
         return
     }
   
-    console.log(authState)
     return (
         <AuthContext value={authState}>
             <ThemeContext value={theme}>
