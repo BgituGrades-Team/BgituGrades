@@ -42,8 +42,8 @@ function TopNavBar({groups, disciplines, handleEditModeChange, onUpdate, isEditM
        <div className="h-25 lg:ml-34.5 max-sm:h-fit mt-13.75 flex justify-between max-sm:pl-0 pl-3.75 items-end max-sm:flex-col max-sm:items-start max-sm:mt-5">
             <div className="flex gap-6.25 items-end max-sm:flex-col">
                 <img className="mr-3.25 max-sm:hidden hidden" src={Image} alt="img" />
-                <Input selectedId={singleGroupAndDiscipline ? singleGroupAndDiscipline.groupVal : ""} setSelectedId={singleGroupAndDiscipline.groupDispatcher} array={groups} textChildren="Группа" helpText="Название группы..."/>
-                <Input selectedId={singleGroupAndDiscipline ? singleGroupAndDiscipline.disciplineVal : ""} onUpdate={onUpdate} setSelectedId={singleGroupAndDiscipline.disciplineDispatcher} isGroupSelected={singleGroupAndDiscipline.groupVal ? true : false} array={disciplines} textChildren="Дисциплина" helpText="Название дисциплины..."/>
+                <Input selectedId={singleGroupAndDiscipline ? singleGroupAndDiscipline.groupVal : ""} setSelectedId={singleGroupAndDiscipline.groupDispatcher} array={groups} textChildren="Группа" helpText="Название группы..."  isGroupSelected={singleGroupAndDiscipline.groupVal ? true : false}/>
+                <Input selectedId={singleGroupAndDiscipline ? singleGroupAndDiscipline.disciplineVal : ""} selectType="discipline" onUpdate={onUpdate} setSelectedId={singleGroupAndDiscipline.disciplineDispatcher} isGroupSelected={singleGroupAndDiscipline.groupVal ? true : false} array={disciplines} textChildren="Дисциплина" helpText="Название дисциплины..."/>
             </div> 
             <div className="flex gap-6.25 max-sm:flex-col items-center justify-center max-sm:hidden">
                 <Button children="Создать ссылку" className={singleGroupAndDiscipline?.groupVal  == undefined ? "  hidden" : role == "STUDENT" ? " hidden " : ""}  onClick={createStudentLink}/>

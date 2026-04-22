@@ -210,8 +210,8 @@ export default function ReportActivity() {
                 {
                 // Пришлось сделать так, чтобы не было блика при смене роута
                 isLoading ? 
-                <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
-                    <div className="w-[90%]  flex blur-md bg-bgLight dark:bg-bgModalD flex-col gap-6.25">
+                <div className="w-full h-[90vh]  d scroll-none  flex justify-center items-center">
+                    <div className="w-[90%]  flex flex-col gap-6.25">
                         <TopNavBarSkeleton />
                         <div className="flex gap-6.25">
                             <LeftNavBarSkeleton />
@@ -245,13 +245,13 @@ export default function ReportActivity() {
     if(connection) {
         return (
             <ReverseSearchContext value={{reverseSearchArray, setReverseSearchArray}}>
-            <div className="w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
+            <div className="w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
                 {
                 // Пришлось сделать так, чтобы не было блика при смене роута
                 isLoading ? 
-                    <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
+                    <div className="w-full h-[90vh]   bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
                         {/* <Loading progress={reportProgress} description={reportDescription} /> */}
-                        <div className="w-[90%]  flex bg-bgLight dark:bg-bgModalD flex-col gap-6.25"> {/* тут был blur-md */}
+                        <div className="w-[90%]  flex  flex-col gap-6.25"> {/* тут был blur-md */}
                             <TopNavBarSkeleton />
                             <div className="flex gap-6.25">
                                 <LeftNavBarSkeleton />
@@ -273,7 +273,7 @@ export default function ReportActivity() {
     }
 
     return (
-        <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
+        <div className="w-full h-[90vh]  bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
             <div className="w-[90%]  flex  flex-col gap-6.25"> {/* тут был blur-md   bg-bgLight dark:bg-bgModalD*/}
                 <TopNavBarSkeleton />
                 <div className="flex gap-6.25">

@@ -104,7 +104,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
                 cells = [
                     // Разделенная ячейка
                     <FirstTableCell
-                        topTitle="Работы"
+                        topTitle="Даты занятий"
                         botTitle="ФИО"
                         className="min-w-56.25 h-12.5"
                         key={"Allah"} />,
