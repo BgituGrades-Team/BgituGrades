@@ -13,7 +13,7 @@ import { getKey } from '../shared/utils/apiRequests'
 function App() {
     // const [searchParams] = useSearchParams()
     const [theme, setTheme] = useState<string>("dark")
-    const [authState, setAuthState] = useState<string | null>(null)
+    const [authState, setAuthState] = useState<string | null>("Unauthorized")
     const [isModalOpen, setIsModalOpen] = useState(false)
     const initializeAuth = async () => {
         const biba = window.location.search.slice(1).split("=");
