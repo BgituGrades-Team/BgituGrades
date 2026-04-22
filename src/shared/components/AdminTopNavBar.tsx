@@ -66,8 +66,8 @@ export default function AdminTopNavBar(){
             <div className="w-full flex  gap-6.25">
                 <Button onClick={openKeyCreateModal} children="Создать ключ"/>
                 <Button onClick={() => handleMigrate()} children="Миграция" />
-                <Button onClick={() => handleShedule()} children="Загрузить Расписание" />
-                <label htmlFor="adminInput" className="cursor-pointer  p-2 bg-primaryD text-tLight dark:text-tLightD rounded-lg font-medium ">
+                <Button onClick={() => handleShedule()} children="Загрузить расписание" />
+                <label htmlFor="adminInput" className="cursor-pointer  p-2 bg-primaryD text-[14px] text-center align-middle text-tLight dark:text-tLightD font-bold rounded-lg ">
                         Загрузить студентов .xlsx
                 </label>
                 <input type="file" id="adminInput" name="fileUpload" onChange={handleChange} placeholder="Загрузить студентов .xlsx" className="hidden" key={inputKey}/>

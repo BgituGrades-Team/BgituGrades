@@ -79,7 +79,7 @@ export default function Input({textChildren="Группа", helpText="Назва
                         value={(selectType === "discipline" && !isGroupSelected) ? null : selectedValue} 
                         virtual={{options: filterValues}} 
                         onChange={handleChange} 
-                        disabled={((isGroupSelected || isGroupSelected == undefined) && role != "STUDENT") ? false : true} 
+                        disabled={role == "STUDENT" && selectType == "discipline" ? false :((isGroupSelected || isGroupSelected == undefined) && role != "STUDENT") ? false : true } 
                         onClose={() => setQuery(``)}
                     >
                     <ComboboxInput

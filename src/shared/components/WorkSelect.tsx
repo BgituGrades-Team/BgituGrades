@@ -24,7 +24,7 @@ export default function WorkSelect({selectData = ["5", "4", "3", "2", "+"], stud
     const [markValue, setMarkValue] = useState<string | null>(mark)
     const [isOverdue, setIsOverdue] = useState<boolean>(overdue)
     const [coords, setCoords] = useState({top: 0, left: 0, width: 0})
-
+    //const [currVal, setCurrVal] = useState<string>("")
     const wrapperRef = useRef<HTMLDivElement>(null)
     const optionsRef = useRef<HTMLDivElement>(null);
     const updateCoords = () => {
@@ -82,6 +82,26 @@ useEffect(() => {
 
   };
 
+    // 1. Убедимся, что стейт всегда актуален при смене пропсов
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setMarkValue(mark);
+        setIsOverdue(!!overdue);
+    }, [mark, overdue]);
+
+    // 2. Единый обработчик для чекбокса
+    const handleOverdueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (disabled) return;
+        
+        const newOverdueStatus = e.target.checked;
+        setIsOverdue(newOverdueStatus); // Сначала обновляем локальный стейт для UI
+
+        // Отправляем запрос
+        if (changeMarkState && studentId && workId) {
+            // Используем markValue (текущую оценку) и новый статус просрочки
+            changeMarkState(markValue || "", studentId, workId, newOverdueStatus);
+        }
+    };
 
     return (
         <div ref={wrapperRef} className="relative min-w-12.5 h-12.5 ">
@@ -120,7 +140,7 @@ useEffect(() => {
                     disabled={disabled}
                     type="checkbox"
                     checked={isOverdue}
-                    onChange={(e) => setIsOverdue(e.target.checked)}
+                    onChange={handleOverdueChange}
                     className="cursor-pointer"
                     />
                 <span className="text-xs text-tLight dark:text-tLightD">С опозданием</span>

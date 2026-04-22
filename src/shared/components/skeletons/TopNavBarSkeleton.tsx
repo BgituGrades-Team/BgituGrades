@@ -2,7 +2,7 @@ import { useContext } from "react";
 import ButtonSkeleton from "./ButtonSkeleton";
 import InputSkeleton from "./InputSkeleton";
 import { AuthContext } from "../../utils/contexts";
-
+import FullSkeleton from "./FullSkeleton";
 
 
 
@@ -21,7 +21,7 @@ export default function TopNavBarSkeleton(){
                 <ButtonSkeleton />
                 <ButtonSkeleton />
             </div>
-            : "" }
+            : <FullSkeleton /> }
        </div> 
     )
 }

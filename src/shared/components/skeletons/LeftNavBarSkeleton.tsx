@@ -15,7 +15,8 @@ export default function LeftNavBarSkeleton() {
             <NavSectionSkeleton />
             {role == "STUDENT"  ?
                 ""
-            : role=="ADMIN" || role == "TEACHER" ? <div className="flex  flex-col items-center gap-12.5">
+            : role=="ADMIN" || role == "TEACHER" ? 
+            <div className="flex  flex-col items-center gap-12.5">
                     <NavSectionSkeleton />
                     <NavSectionSkeleton />
                 </div> : 

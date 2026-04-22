@@ -365,3 +365,15 @@ export const sendStudyData = async(url:string) => {
         }
     }
 }
+
+
+
+export const deleteStudent = async(studentId: number) => {
+    try{
+        await instance.delete(`api/student?id=${studentId}`)
+        return toast.success("Студент успешно удален! Изменения отобразятся после перезагрузки страницы!")
+    } catch (error) {
+        console.log(error)
+        return toast.error("Студент не удален!")
+    }
+}

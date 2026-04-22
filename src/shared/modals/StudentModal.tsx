@@ -2,8 +2,9 @@ import { Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headl
 import ModalInput from './ModalInput';
 import Cross from '../components/SVG/Cross';
 import { useContext, useEffect, useState, type ChangeEvent } from 'react';
-import { updateStudent } from '../utils/apiRequests';
+import { deleteStudent, updateStudent } from '../utils/apiRequests';
 import { SingleInputValuesContext } from '../utils/contexts';
+import { Toaster } from 'react-hot-toast';
 
 interface PropsInterface{
     isOpen: boolean;
@@ -42,6 +43,9 @@ export default function StudentModal({isOpen, close, studentId = -1, studentName
             }
         }
     }
+    const handleDeleteClick = async (studentId: number) => {
+            await  deleteStudent(studentId)
+    }
 
 
     return (
@@ -64,6 +68,12 @@ export default function StudentModal({isOpen, close, studentId = -1, studentName
                     >
                         Сохранить
                     </Button>
+                     <Button
+                        className="inline-flex items-center gap-2 rounded-md bg-red dark:bg-red px-3 py-1.5 text-sm/6 font-semibold text-tLightD shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"
+                        onClick={() => handleDeleteClick(studentId)}
+                    >
+                        Удалить
+                    </Button>
                     <Button
                         className="inline-flex items-center gap-2 rounded-md bg-bgModal dark:bg-bgModalD px-3 py-1.5 text-sm/6 font-semibold text-tDark dark:text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"
                         onClick={close}
@@ -74,6 +84,7 @@ export default function StudentModal({isOpen, close, studentId = -1, studentName
 
                 </div>
             </DialogPanel>
+            <Toaster />
             </div>
         </div>
         </Dialog>
