@@ -30,7 +30,7 @@ export default function Input({textChildren="Группа", helpText="Назва
     
     useEffect(() => {
         if (role == "STUDENT") {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
+             
             setSelectedValue(array[0])
             setSelectedId(String(array[0].id))
         }
@@ -41,11 +41,12 @@ export default function Input({textChildren="Группа", helpText="Назва
         // Сбрасываем только если мы в режиме выбора дисциплины
         // И группа была целенаправленно снята (стала false)
         if (selectType === "discipline" && isGroupSelected === false) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
+             
             setSelectedValue(null);
             setSelectedId("");
             onUpdate?.(undefined);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isGroupSelected, selectType]);
 
 
