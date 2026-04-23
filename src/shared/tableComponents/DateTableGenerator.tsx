@@ -73,7 +73,8 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
             classId,
             date,
             isPresent: presenceState,
-            disciplineId: disciplineId
+            disciplineId: disciplineId,
+            groupId: groupId
         })            
 
     }

@@ -93,7 +93,6 @@ export default function TaskActivity() {
 
 
     const rerenderTable = (connection: HubConnection | null) => {
-        console.log("rerender")
         if (connection) {
             connection.on("ReceiveMarks", (data) => {
                 setTable(data)

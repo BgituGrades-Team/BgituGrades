@@ -1,12 +1,13 @@
 import type { HubConnection } from "@microsoft/signalr";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom"
+import { SingleInputValuesContext } from "../utils/contexts";
 
 interface PropsInterface{
     selectData: string[];
     studentId?: number;
     workId?: number;
-    changeMarkState?: (value: string, studentId: number, workId: number, isOverdue: boolean) => void;
+    changeMarkState?: (value: string, studentId: number, workId: number, isOverdue: boolean, groupId: number, disciplineId: number) => void;
     connection?: HubConnection;
     disabled?: boolean;
     mark?: string;
@@ -67,8 +68,11 @@ useEffect(() => {
     };
   }, [optionsVisibility]);
 
-
+    const info = useContext(SingleInputValuesContext)
     const handleSelect = (val: string) => {
+        
+        const groupId = info?.groupVal;
+        const disciplineId = info?.disciplineVal;
         if (disabled) return;
         setMarkValue(val);
         setOptionsVisibility(false);
@@ -76,7 +80,7 @@ useEffect(() => {
         
         onInputChange?.(val);
         if(changeMarkState && studentId &&  workId){
-            changeMarkState(val, studentId, workId, isOverdue)
+            changeMarkState(val, studentId, workId, isOverdue, Number(groupId), Number(disciplineId))
             console.log(val, studentId, workId, isOverdue)
         }
 
@@ -98,8 +102,10 @@ useEffect(() => {
 
         // Отправляем запрос
         if (changeMarkState && studentId && workId) {
+            const groupId = info?.groupVal;
+            const disciplineId = info?.disciplineVal;
             // Используем markValue (текущую оценку) и новый статус просрочки
-            changeMarkState(markValue || "", studentId, workId, newOverdueStatus);
+            changeMarkState(markValue || "", studentId, workId, newOverdueStatus, Number(groupId), Number(disciplineId));
         }
     };
 

@@ -51,7 +51,7 @@ export default function ReportActivity() {
         // Подключаем сигнал
         const establishConnection = async () => {
             const con = await setupSignalRReportsConnection(sessionStorage.getItem("api_key"))
-            console.log(con.state)
+            //console.log(con.state)
 
             setConnection(con)
         }
@@ -144,6 +144,7 @@ export default function ReportActivity() {
                 // Группа, дисциплина, студент
                 isReverse: reverseSearchArray
             })
+            
         }
         else if((selectedDisciplines.length != 0 && selectedGroups.length != 0)){
             reloadStudents()
@@ -180,25 +181,17 @@ export default function ReportActivity() {
         //     setTableIds([groupid.map(val => Number(val))])
         // }
     }
-        if (connection) {
-            // if (link == null && tableIds.length > 3) {
-            //     setIsLoading(true)
-            // }
-            connection.on("ReportReady", (_, link, sperm) => {
-                setTable(sperm)
-                if(link != null){
-                    setIsTableReady(true)
-                    setLink(link)
+   
+    if (connection) {
+                connection.on("ReportReady", (_, link, data) => {
+                    setTable(data)
+                    if(link != null){
+                        setIsTableReady(true)
+                        setLink(link)
 
-                }
-            })
-            // connection.on("ReportProgress", (_, pisun, yaitsa) => {
-            //     setReportProgress(pisun)
-            //     setReportDescription(yaitsa)
-
-            // })
+                    }
+                })
         }
-
 
     if(isTableReady && connection && table) {
         return (
@@ -207,8 +200,8 @@ export default function ReportActivity() {
                 {
                 // Пришлось сделать так, чтобы не было блика при смене роута
                 isLoading ? 
-                <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
-                    <div className="w-[90%]  flex blur-md bg-bgLight dark:bg-bgModalD flex-col gap-6.25">
+                <div className="w-full h-[90vh]   scroll-none  flex justify-center items-center">
+                    <div className="w-[90%]  flex-col gap-6.25">
                         <TopNavBarSkeleton />
                         <div className="flex gap-6.25">
                             <LeftNavBarSkeleton />
@@ -226,6 +219,7 @@ export default function ReportActivity() {
                         disciplines={disciplines}
                         students={students}
                         pipeBomb={pipeBomb}
+                        isTableReady={isTableReady}
                         />
                     <div className="flex gap-6.25">
                         <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false} className="max-sm:hidden"/>
@@ -245,9 +239,9 @@ export default function ReportActivity() {
                 {
                 // Пришлось сделать так, чтобы не было блика при смене роута
                 isLoading ? 
-                    <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
+                    <div className="w-full h-[90vh]  scroll-none  flex justify-center items-center">
                         {/* <Loading progress={reportProgress} description={reportDescription} /> */}
-                        <div className="w-[90%]  flex bg-bgLight dark:bg-bgModalD flex-col gap-6.25"> {/* тут был blur-md */}
+                        <div className="w-[90%]  flex  flex-col gap-6.25"> {/* тут был blur-md */}
                             <TopNavBarSkeleton />
                             <div className="flex gap-6.25">
                                 <LeftNavBarSkeleton />
@@ -257,7 +251,7 @@ export default function ReportActivity() {
                         </div>
                     </div> :
                     <div className="w-[90%] flex flex-col gap-6.25">
-                        <StudentTopNavBar pipeBomb={pipeBomb} link={downloadLink != null ? downloadLink : ""} handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students} periods={periods}/>
+                        <StudentTopNavBar pipeBomb={pipeBomb} link={downloadLink != null ? downloadLink : ""} handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students} periods={periods} isTableReady={isTableReady}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false} className="max-sm:hidden"/>
                         </div>
@@ -269,7 +263,7 @@ export default function ReportActivity() {
     }
 
     return (
-        <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
+        <div className="w-full h-[90vh]   scroll-none  flex justify-center items-center">
             <div className="w-[90%]  flex  flex-col gap-6.25"> {/* тут был blur-md   bg-bgLight dark:bg-bgModalD*/}
                 <TopNavBarSkeleton />
                 <div className="flex gap-6.25">

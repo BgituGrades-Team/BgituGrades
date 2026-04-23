@@ -13,7 +13,7 @@ interface EmptyPropsInterface{
     overdue?: boolean;
     date?: string;
     originalDate?: string;
-    changeMarkState?: (value: string, studentId: number, workId: number, isOverdue: boolean) => void;
+    changeMarkState?: (value: string, studentId: number, workId: number, isOverdue: boolean, groupId: number, disciplineId: number) => void;
     changePresenceState?: (presenceState: string, studentId: number, classId: number, date: string) => void;
     connection?: HubConnection
     disabled?: boolean

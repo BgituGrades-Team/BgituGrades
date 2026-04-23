@@ -238,7 +238,7 @@ export const downloadFile = async (link: string):  Promise<string | undefined> =
 export const getAllPeriods = async () => {
     try {
         const res: Response<PeriodsInterface[]> = await instance.get(`api/migrations/periods/all`)
-        console.log(res.data);
+        //console.log(res.data);
         return res.data;
     } catch(error) {
         console.log(error)

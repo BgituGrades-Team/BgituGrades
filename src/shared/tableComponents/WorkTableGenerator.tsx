@@ -53,13 +53,14 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
 
     
 
-    const changeMarkState  = (value: string, studentId: number, workId: number, isOverdue: boolean) => {
+    const changeMarkState  = (value: string, studentId: number, workId: number, isOverdue: boolean, groupId: number, disciplineId: number) => {
         connection.invoke("UpdateMarkGrade", {
             value,
             isOverdue,
             studentId,
             workId,
-
+            groupId,
+            disciplineId,
         })
     }
 
