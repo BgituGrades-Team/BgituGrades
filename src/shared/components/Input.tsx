@@ -28,15 +28,14 @@ export default function Input({textChildren="Группа", helpText="Назва
 
     const role = useContext(AuthContext)
     
-    useEffect(() => {
-        if (role == "STUDENT") {
-             
-            setSelectedValue(array[0])
-            setSelectedId(String(array[0].id))
-        }
+    // useEffect(() => {
+    //     if (role == "STUDENT") {
+    //         setSelectedValue(array[0])
+    //         setSelectedId(String(array[0].id))
+    //     }
 
-    }, [array, role, setSelectedId])
-    console.log(isGroupSelected)
+    // }, [array, role, setSelectedId])
+    
     useEffect(() => {
         // Сбрасываем только если мы в режиме выбора дисциплины
         // И группа была целенаправленно снята (стала false)

@@ -3,6 +3,7 @@ import Button from '../components/Button';
 import { useState, type ChangeEvent } from "react";
 import Cross from "../components/SVG/Cross"
 import {createTranserPresenceDate, updateTranserPresenceDate} from "../utils/apiRequests"
+import type { HubConnection } from '@microsoft/signalr';
 
 interface PropsInterface{
     isOpen: boolean;
@@ -14,11 +15,12 @@ interface PropsInterface{
     disciplineId: number;
     statusCode: number | undefined;
     transferId?: number | undefined;
+    connection: HubConnection | null;
 }
 
 
 
-export default function TransferNodal({oldDate, groupId, disciplineId, classId, isOpen, statusCode, transferId,  close}: PropsInterface){
+export default function TransferNodal({oldDate, groupId, disciplineId, classId, isOpen, statusCode, transferId,  connection, close}: PropsInterface){
     const [newDate, setNewDate] = useState<string>('')
 
 
@@ -29,11 +31,27 @@ export default function TransferNodal({oldDate, groupId, disciplineId, classId, 
 
     const transferDate = async () => {
         console.log(transferId, classId, statusCode)
-        if(transferId && statusCode == 200) { await updateTranserPresenceDate(transferId, newDate) }
-        if(classId && statusCode == 404) { await createTranserPresenceDate(classId, groupId, disciplineId, oldDate, newDate);}
+        if(transferId && statusCode == 200) { 
+            const  res =  await updateTranserPresenceDate(transferId, newDate) 
+            if(res  && connection) {
+                connection.invoke("GetPresenceGrade",{
+                    disciplineId: Number(disciplineId),
+                    groupId: Number(groupId)
+                })
+            }
+        }
+        if(classId && statusCode == 404) { 
+            const res = await createTranserPresenceDate(classId, groupId, disciplineId, oldDate, newDate);
+            if( res && connection) {
+                connection.invoke("GetPresenceGrade",{
+                    disciplineId: Number(disciplineId),
+                    groupId: Number(groupId)
+                })
+            }
+        }
+
      
         close()
-        window.location.reload()
     }
 
     return (

@@ -91,6 +91,20 @@ export default function TaskActivity() {
 
     }, [connection, isLoading, singleGroupAndDiscipline?.disciplineVal, singleGroupAndDiscipline?.groupVal])
 
+
+    const rerenderTable = (connection: HubConnection | null) => {
+        console.log("rerender")
+        if (connection) {
+            connection.on("ReceiveMarks", (data) => {
+                setTable(data)
+                setIsTableReady(true)
+
+            })
+    }
+    }
+
+
+
     // Делаем слушатели событий из сигнала, если подключение активно
     if (connection) {
         connection.on("ReceiveMarks", (data) => {
@@ -126,7 +140,7 @@ export default function TaskActivity() {
                         <TopNavBar groups={groups} disciplines={disciplines} onUpdate={() => handleInputChange()} handleEditModeChange={handleEditModeChange} isEditMode={isEditMode}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar className="max-sm:hidden" visitsStatus={false} tasksStatus={true} reportStatus={false}  adminStatus={false}/>
-                            <WorkTableGenerator table={table} isEditMode={isEditMode} tableType="work" connection={connection}/>
+                            <WorkTableGenerator table={table} isEditMode={isEditMode} tableType="work" connection={connection} onUpdate={() => rerenderTable(connection)}/>
                         </div>
                     </div>
                 }
@@ -150,7 +164,7 @@ export default function TaskActivity() {
                         <TopNavBar groups={groups} disciplines={disciplines} onUpdate={() => handleInputChange()} handleEditModeChange={() => handleEditModeChange} isEditMode={isEditMode}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar className="max-sm:hidden" visitsStatus={false} tasksStatus={true} reportStatus={false} adminStatus={false}/>
-                            <WorkTableGenerator isEditMode={isEditMode} tableType="work" connection={connection}/>
+                            <WorkTableGenerator isEditMode={isEditMode} tableType="work" connection={connection} onUpdate={() => rerenderTable(connection)}/>
                         </div>
                     </div>
                 }

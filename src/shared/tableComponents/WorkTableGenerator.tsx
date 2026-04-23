@@ -16,10 +16,11 @@ interface PropsInterface{
     isEditMode: boolean;
     table?: WorkTableSample;
     connection: HubConnection
+    onUpdate: () => void;
 }
 
 
-export default function WorkTableGenerator({tableType, isEditMode, table, connection}: PropsInterface){
+export default function WorkTableGenerator({tableType, isEditMode, table, connection, onUpdate}: PropsInterface){
     const [studentModal, setStudentModal] = useState<boolean>(false)
     const [workModal, setWorkModal] = useState<boolean>(false)
     const [currWorkId, setCurrWorkId] = useState<number | undefined>(undefined)
@@ -64,6 +65,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
 
 
     const renderTable = (tableIndex:number) => {
+        onUpdate()
         const rows = [];
         let cells = [];
         const tableCellsClasses = {
@@ -114,7 +116,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                 cells = [
                     // Студент
                     <EditableTableCell
-                        onClick={isEditMode? (e) => openStudentModal(e, student.studentId) : () => {}  }
+                        onClick={isEditMode? (e) => openStudentModal(e, student.studentId) :  () => {}  }
                         cellType="student"
                         cellData={student.name}
                         className={tableCellsClasses.long }
@@ -153,8 +155,8 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
     return (
         <div key={1} className="overflow-auto">
             {renderTable(1)}
-            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={currStudId} studentName={currName} />
-            <WorkModal isOpen={workModal} close={closeWorkModal} isEditMode={isEditMode} currWorkId={currWorkId} currName={currName} currDate={currDate} currDescription={currDescription}/>
+            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={currStudId} studentName={currName} connection={connection} tableType={tableType} />
+            <WorkModal isOpen={workModal} close={closeWorkModal} isEditMode={isEditMode} currWorkId={currWorkId} currName={currName} currDate={currDate} connection={connection} currDescription={currDescription}/>
         </div>
     );
 }

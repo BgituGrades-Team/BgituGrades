@@ -200,6 +200,8 @@ export const editWork = async(id: number, name: string, issuedDate: string, desc
             "groupId": groupId
         }
         await instance.put("api/work", params)
+        return toast.success("Работа успешно изменена!")
+
     } catch (error){
         console.log(error)
     }
@@ -209,6 +211,8 @@ export const editWork = async(id: number, name: string, issuedDate: string, desc
 export const deleteWork =  async(id: number) => {
     try{
         await instance.delete(`api/work?id=${id}`)
+                return toast.success("Работа успешно удалена!")
+
     } catch (error) {
         console.log(error)
     }
@@ -271,7 +275,7 @@ export const createTranserPresenceDate = async(classId: number, groupId: number,
         }
         console.log(params)
         await instance.post("api/transfer", params)
-        console.log("Success! Date has been created!")
+        return toast.success("Success! Date has been created!")
     } catch(error) {
         console.log(error)
     }
@@ -285,7 +289,7 @@ export const updateTranserPresenceDate = async(transferId: number, newDate: stri
         }
         console.log(params)
         await instance.put("api/transfer", params)
-        console.log("Success! Date has been updated!")
+        return toast.success("Success! Date has been updated!")
     } catch(error) {
         console.log(error)
     }
@@ -371,7 +375,7 @@ export const sendStudyData = async(url:string) => {
 export const deleteStudent = async(studentId: number) => {
     try{
         await instance.delete(`api/student?id=${studentId}`)
-        return toast.success("Студент успешно удален! Изменения отобразятся после перезагрузки страницы!")
+        return toast.success("Студент успешно удален!")
     } catch (error) {
         console.log(error)
         return toast.error("Студент не удален!")

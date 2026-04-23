@@ -209,9 +209,9 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     return (
         <div key={1} className="overflow-auto">
             {renderTable(1)}
-            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={currStudId} studentName={currName}/>
+            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={currStudId} studentName={currName} connection={connection} tableType={tableType}/>
             {/*<DateModal isOpen={dateModal} close={closeDateModal} isEditMode={isEditMode}/> */}
-            <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={currDate} statusCode={statusCode} transferId={transferId} />
+            <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={currDate} statusCode={statusCode} transferId={transferId} connection={connection} />
         </div>
     );
 }

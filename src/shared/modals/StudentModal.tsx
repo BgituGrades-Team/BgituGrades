@@ -5,6 +5,7 @@ import { useContext, useEffect, useState, type ChangeEvent } from 'react';
 import { deleteStudent, updateStudent } from '../utils/apiRequests';
 import { SingleInputValuesContext } from '../utils/contexts';
 import { Toaster } from 'react-hot-toast';
+import type { HubConnection } from '@microsoft/signalr';
 
 interface PropsInterface{
     isOpen: boolean;
@@ -12,10 +13,12 @@ interface PropsInterface{
     isEditMode: boolean;
     studentId?: number | undefined;
     studentName?: string;
+    connection: HubConnection | null;
+    tableType: "work" | "date"
 }    
 
 
-export default function StudentModal({isOpen, close, studentId = -1, studentName = ""}: PropsInterface) {
+export default function StudentModal({isOpen, close, studentId = -1, studentName = "", connection, tableType}: PropsInterface) {
     const info = useContext(SingleInputValuesContext)
 
     const [name, setName] = useState<string>(studentName)
@@ -34,17 +37,50 @@ export default function StudentModal({isOpen, close, studentId = -1, studentName
 
 
     const updateAndSave = async () => {
-        const groupId = info?.groupVal
+        const groupId = info?.groupVal;
+        const disciplineId = info?.disciplineVal;
         if (groupId && id) {
             const res = await updateStudent(id, name, Number(groupId))
-            if (res) {
-                close()
-                window.location.reload()
+            if(tableType == "work"){
+                if (res && connection) {
+                    connection.invoke("GetMarkGrade", {
+                        disciplineId: Number(disciplineId),
+                        groupId: Number(groupId)
+                    });
+                }
             }
+            if(tableType=="date"){
+                if(res && connection) {
+                    connection.invoke("GetPresenceGrade",{
+                        disciplineId: Number(disciplineId),
+                        groupId: Number(groupId)
+                    })
+                }
+            }
+                close()
         }
     }
     const handleDeleteClick = async (studentId: number) => {
-            await  deleteStudent(studentId)
+        const groupId = info?.groupVal;
+        const disciplineId = info?.disciplineVal;
+        const res =   await  deleteStudent(studentId)
+        if(tableType == "work"){
+                if (res && connection) {
+                    connection.invoke("GetMarkGrade", {
+                        disciplineId: Number(disciplineId),
+                        groupId: Number(groupId)
+                    });
+                }
+            }
+            if(tableType=="date"){
+                if(res && connection) {
+                    connection.invoke("GetPresenceGrade",{
+                        disciplineId: Number(disciplineId),
+                        groupId: Number(groupId)
+                    })
+                }
+            }
+         close()
     }
 
 

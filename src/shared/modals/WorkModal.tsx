@@ -4,6 +4,7 @@ import Cross from '../components/SVG/Cross';
 import { useContext, useEffect, useState, type ChangeEvent } from 'react';
 import { addWork, deleteWork, editWork } from '../utils/apiRequests';
 import { SingleInputValuesContext } from '../utils/contexts';
+import type { HubConnection } from '@microsoft/signalr';
 
 interface PropsInterface{
     isOpen: boolean;
@@ -13,16 +14,19 @@ interface PropsInterface{
     currName?: string;
     currDate?: string;
     currDescription?: string;
+    connection: HubConnection | null;
 }    
 
 //отредактировать ее до правильного варианта
 
-export default function WorkModal({isOpen, close, currWorkId, currName = "", currDate = "", currDescription = "", isEditMode}: PropsInterface) {
+export default function WorkModal({isOpen, close, currWorkId, currName = "", currDate = "", currDescription = "", isEditMode, connection}: PropsInterface) {
     const [name, setName] = useState<string>("")
     const [date, setDate] = useState<string>("")
     const [description, setDescription] = useState<string>("")
     const singleGroupAndDiscipline = useContext(SingleInputValuesContext)
-
+    const info = useContext(SingleInputValuesContext)
+    const groupId = info?.groupVal;
+    const disciplineId = info?.disciplineVal;
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setName(currName)
@@ -43,22 +47,39 @@ export default function WorkModal({isOpen, close, currWorkId, currName = "", cur
     }
     
     const handleCreateClick = async () => {
-       
-        await addWork(name, date, description, undefined, Number(singleGroupAndDiscipline?.disciplineVal), Number(singleGroupAndDiscipline?.groupVal)) // Нужно будет убрать undefined, когда обновится API
-        close()
-        window.location.reload()
+    
+        const  res = await addWork(name, date, description, undefined, Number(singleGroupAndDiscipline?.disciplineVal), Number(singleGroupAndDiscipline?.groupVal)) // Нужно будет убрать undefined, когда обновится API
+         if (res && connection) {
+                connection.invoke("GetMarkGrade", {
+                    disciplineId: Number(disciplineId),
+                    groupId: Number(groupId)
+                });
+            }
+            close()
     }
     const handleEditClick = async () => {
-        if(currWorkId)
-        await editWork(currWorkId, name, date, description, Number(singleGroupAndDiscipline?.disciplineVal), Number(singleGroupAndDiscipline?.groupVal)) // Нужно будет убрать undefined, когда обновится API
-        close()
-        window.location.reload()
+        if(currWorkId){
+        const  res = await editWork(currWorkId, name, date, description, Number(singleGroupAndDiscipline?.disciplineVal), Number(singleGroupAndDiscipline?.groupVal)) // Нужно будет убрать undefined, когда обновится API
+        if (res && connection) {
+                connection.invoke("GetMarkGrade", {
+                    disciplineId: Number(disciplineId),
+                    groupId: Number(groupId)
+                });
+            }
+            close()
+        }
     }
     const handleDeleteClick = async () => {
-        if(currWorkId)
-        await deleteWork(currWorkId)
-        close()
-        window.location.reload()
+        if(currWorkId){
+        const res = await deleteWork(currWorkId)
+         if (res && connection) {
+                connection.invoke("GetMarkGrade", {
+                    disciplineId: Number(disciplineId),
+                    groupId: Number(groupId)
+                });
+            }
+            close()
+        }
     }
 
     return (
