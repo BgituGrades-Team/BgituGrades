@@ -36,7 +36,7 @@ export default function Input({textChildren="Группа", helpText="Назва
         }
 
     }, [array, role, setSelectedId])
-
+    console.log(isGroupSelected)
     useEffect(() => {
         // Сбрасываем только если мы в режиме выбора дисциплины
         // И группа была целенаправленно снята (стала false)
@@ -49,7 +49,18 @@ export default function Input({textChildren="Группа", helpText="Назва
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isGroupSelected, selectType]);
 
+    const setDisabled = (role: string | null, selectType: string | undefined) => {
 
+        if(role == "STUDENT" && selectType == "group" && isGroupSelected)  {
+            return true
+        }
+        if(role == "STUDENT" && selectType == "discipline" && !isGroupSelected){
+            return true
+        }
+        if(!isGroupSelected && selectType == "discipline") {
+            return true
+        }
+    }
 
     // Изменение выбранного элемента и добавление идентификатора в query параметры
     const handleChange = (e: GroupInterface | DisciplineInterface | StudentInterface | null) => {
@@ -61,7 +72,7 @@ export default function Input({textChildren="Группа", helpText="Назва
         
         
     }
-
+    // role == "STUDENT" && selectType == "discipline" ? false :((isGroupSelected || isGroupSelected == undefined) && role != "STUDENT") ? false : true 
     // Фильтрует массив по алфавиту
     const filterValues = 
         query === ``
@@ -80,7 +91,7 @@ export default function Input({textChildren="Группа", helpText="Назва
                         value={(selectType === "discipline" && !isGroupSelected) ? null : selectedValue} 
                         virtual={{options: filterValues}} 
                         onChange={handleChange} 
-                        disabled={role == "STUDENT" && selectType == "discipline" ? false :((isGroupSelected || isGroupSelected == undefined) && role != "STUDENT") ? false : true } 
+                        disabled={setDisabled(role, selectType)} 
                         onClose={() => setQuery(``)}
                     >
                     <ComboboxInput
