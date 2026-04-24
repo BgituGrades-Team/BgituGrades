@@ -4,7 +4,7 @@ import Cross from '../components/SVG/Cross';
 import { useContext, useEffect, useState, type ChangeEvent } from 'react';
 import { deleteStudent, updateStudent } from '../utils/apiRequests';
 import { SingleInputValuesContext } from '../utils/contexts';
-import { Toaster } from 'react-hot-toast';
+//import { Toaster } from 'react-hot-toast';
 import type { HubConnection } from '@microsoft/signalr';
 
 interface PropsInterface{
@@ -120,7 +120,7 @@ export default function StudentModal({isOpen, close, studentId = -1, studentName
 
                 </div>
             </DialogPanel>
-            <Toaster />
+            {/*<Toaster />*/}
             </div>
         </div>
         </Dialog>

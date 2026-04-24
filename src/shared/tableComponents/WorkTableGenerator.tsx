@@ -102,7 +102,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                     onClick={role == "STUDENT" ? () => {} : () => openWorkModal()}
                     cellType="work"
                     cellData="+"
-                    className={tableCellsClasses.short}
+                    className={role == "STUDENT" ? " hidden " : tableCellsClasses.short}
                     key={`WorkAdd`}
                     disabled={role == "STUDENT" ? true : false}
                      />
@@ -141,7 +141,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                     <EmptyTableCell
                         disabled={true}
                         cellType={"date"}
-                        className="min-w-12.5 h-12.5 "
+                        className={role == "STUDENT" ? " hidden " : "min-w-12.5 h-12.5 "}
                         key={`WorkPlaceholder-${idx}`} />
                 ]
                 rows.push(<tr className={rowClassName} key={`Row-${idx}`}>{cells}</tr>)
