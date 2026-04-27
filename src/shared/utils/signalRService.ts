@@ -1,6 +1,6 @@
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr"
 
-const baseURL = import.meta.env.VITE_DOTENV_API_URL
+const baseURL = import.meta.env.VITE_DOTNET_API_URL
 
 const startSignalRConnection = async (connection: HubConnection) => {
     try {
