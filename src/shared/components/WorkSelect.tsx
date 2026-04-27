@@ -1,12 +1,13 @@
 import type { HubConnection } from "@microsoft/signalr";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom"
+import { SingleInputValuesContext } from "../utils/contexts";
 
 interface PropsInterface{
     selectData: string[];
     studentId?: number;
     workId?: number;
-    changeMarkState?: (value: string, studentId: number, workId: number, isOverdue: boolean) => void;
+    changeMarkState?: (value: string, studentId: number, workId: number, isOverdue: boolean, groupId: number, disciplineId: number) => void;
     connection?: HubConnection;
     disabled?: boolean;
     mark?: string;
@@ -24,7 +25,7 @@ export default function WorkSelect({selectData = ["5", "4", "3", "2", "+"], stud
     const [markValue, setMarkValue] = useState<string | null>(mark)
     const [isOverdue, setIsOverdue] = useState<boolean>(overdue)
     const [coords, setCoords] = useState({top: 0, left: 0, width: 0})
-
+    //const [currVal, setCurrVal] = useState<string>("")
     const wrapperRef = useRef<HTMLDivElement>(null)
     const optionsRef = useRef<HTMLDivElement>(null);
     const updateCoords = () => {
@@ -67,8 +68,11 @@ useEffect(() => {
     };
   }, [optionsVisibility]);
 
-
+    const info = useContext(SingleInputValuesContext)
     const handleSelect = (val: string) => {
+        
+        const groupId = info?.groupVal;
+        const disciplineId = info?.disciplineVal;
         if (disabled) return;
         setMarkValue(val);
         setOptionsVisibility(false);
@@ -76,12 +80,34 @@ useEffect(() => {
         
         onInputChange?.(val);
         if(changeMarkState && studentId &&  workId){
-            changeMarkState(val, studentId, workId, isOverdue)
+            changeMarkState(val, studentId, workId, isOverdue, Number(groupId), Number(disciplineId))
             console.log(val, studentId, workId, isOverdue)
         }
 
   };
 
+    // 1. Убедимся, что стейт всегда актуален при смене пропсов
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setMarkValue(mark);
+        setIsOverdue(!!overdue);
+    }, [mark, overdue]);
+
+    // 2. Единый обработчик для чекбокса
+    const handleOverdueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (disabled) return;
+        
+        const newOverdueStatus = e.target.checked;
+        setIsOverdue(newOverdueStatus); // Сначала обновляем локальный стейт для UI
+
+        // Отправляем запрос
+        if (changeMarkState && studentId && workId) {
+            const groupId = info?.groupVal;
+            const disciplineId = info?.disciplineVal;
+            // Используем markValue (текущую оценку) и новый статус просрочки
+            changeMarkState(markValue || "", studentId, workId, newOverdueStatus, Number(groupId), Number(disciplineId));
+        }
+    };
 
     return (
         <div ref={wrapperRef} className="relative min-w-12.5 h-12.5 ">
@@ -120,7 +146,7 @@ useEffect(() => {
                     disabled={disabled}
                     type="checkbox"
                     checked={isOverdue}
-                    onChange={(e) => setIsOverdue(e.target.checked)}
+                    onChange={handleOverdueChange}
                     className="cursor-pointer"
                     />
                 <span className="text-xs text-tLight dark:text-tLightD">С опозданием</span>

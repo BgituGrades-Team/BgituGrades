@@ -16,27 +16,35 @@ interface PropsInterface{
     isEditMode: boolean;
     table?: WorkTableSample;
     connection: HubConnection
+    onUpdate: () => void;
 }
 
 
-export default function WorkTableGenerator({tableType, isEditMode, table, connection}: PropsInterface){
+export default function WorkTableGenerator({tableType, isEditMode, table, connection, onUpdate}: PropsInterface){
     const [studentModal, setStudentModal] = useState<boolean>(false)
     const [workModal, setWorkModal] = useState<boolean>(false)
-    const [clickedStudentId, setStudentId] = useState<number>()
-    const [clickedStudentName, setStudentName] = useState<string>()
-    
+    const [currWorkId, setCurrWorkId] = useState<number | undefined>(undefined)
+    const [currStudId, setCurrStudId] = useState<number>(-1)
+    const [currName, setCurrName] = useState<string | undefined>("")
+    const [currDate, setCurrDate] = useState<string | undefined>("")
+    const [currDescription, setCurrDescription] = useState<string | undefined>("")
     const role = useContext(AuthContext)
 
 
     const openStudentModal = (e: React.MouseEvent<HTMLElement>, studentId: number) => {
-        setStudentName(e.currentTarget.textContent)
-        setStudentId(studentId)
+        setCurrName(e.currentTarget.textContent)
+        setCurrStudId(studentId)
         setStudentModal(true)
     }
     const closeStudentModal = () => {
         setStudentModal(false)
     }
-    const openWorkModal = () => {
+    const openWorkModal = (workId?: number, name?: string, date?:string, description?: string ) => {
+        console.log(description)
+        setCurrWorkId(workId)
+        setCurrName(name)
+        setCurrDate(date)
+        setCurrDescription(description)
         setWorkModal(true)
     }
     const closeWorkModal = () => {
@@ -45,18 +53,20 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
 
     
 
-    const changeMarkState  = (value: string, studentId: number, workId: number, isOverdue: boolean) => {
+    const changeMarkState  = (value: string, studentId: number, workId: number, isOverdue: boolean, groupId: number, disciplineId: number) => {
         connection.invoke("UpdateMarkGrade", {
             value,
             isOverdue,
             studentId,
             workId,
-
+            groupId,
+            disciplineId,
         })
     }
 
 
     const renderTable = (tableIndex:number) => {
+        onUpdate()
         const rows = [];
         let cells = [];
         const tableCellsClasses = {
@@ -78,8 +88,9 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                     key={"Allah"} />,
                 // Разбираем массив работ на массив ячеек
                 ...works.map((work, i) => (
+                    
                     <EditableTableCell
-                        onClick={role == "STUDENT" ? () => {} : openWorkModal}
+                        onClick={isEditMode ?() => openWorkModal(work.workId, work.name, work.issuedDate, work.description) : () => {}}
                         cellType="work"
                         cellData={work.name}
                         className={tableCellsClasses.short}
@@ -88,10 +99,10 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                 )),
                 // Кнопка добавления работы
                 <EditableTableCell
-                    onClick={role == "STUDENT" ? () => {} : openWorkModal}
+                    onClick={role == "STUDENT" ? () => {} : () => openWorkModal()}
                     cellType="work"
                     cellData="+"
-                    className={tableCellsClasses.short}
+                    className={role == "STUDENT" ? " hidden " : tableCellsClasses.short}
                     key={`WorkAdd`}
                     disabled={role == "STUDENT" ? true : false}
                      />
@@ -106,7 +117,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                 cells = [
                     // Студент
                     <EditableTableCell
-                        onClick={role == "STUDENT" ? () => {} : (e) => openStudentModal(e, student.studentId)}
+                        onClick={isEditMode? (e) => openStudentModal(e, student.studentId) :  () => {}  }
                         cellType="student"
                         cellData={student.name}
                         className={tableCellsClasses.long }
@@ -130,7 +141,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                     <EmptyTableCell
                         disabled={true}
                         cellType={"date"}
-                        className="min-w-12.5 h-12.5 "
+                        className={role == "STUDENT" ? " hidden " : "min-w-12.5 h-12.5 "}
                         key={`WorkPlaceholder-${idx}`} />
                 ]
                 rows.push(<tr className={rowClassName} key={`Row-${idx}`}>{cells}</tr>)
@@ -145,8 +156,8 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
     return (
         <div key={1} className="overflow-auto">
             {renderTable(1)}
-            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={clickedStudentId} studentName={clickedStudentName} />
-            <WorkModal isOpen={workModal} close={closeWorkModal} isEditMode={isEditMode}/>
+            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={currStudId} studentName={currName} connection={connection} tableType={tableType} />
+            <WorkModal isOpen={workModal} close={closeWorkModal} isEditMode={isEditMode} currWorkId={currWorkId} currName={currName} currDate={currDate} connection={connection} currDescription={currDescription}/>
         </div>
     );
 }

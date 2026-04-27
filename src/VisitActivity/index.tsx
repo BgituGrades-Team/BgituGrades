@@ -14,7 +14,7 @@ import { SingleInputValuesContext } from "../shared/utils/contexts"
 function VisitActivity() {
     const singleGroupAndDiscipline = useContext(SingleInputValuesContext)
 
-    const [isEditMode] = useState(false)
+    const [isEditMode, setIsEditMode] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [groups, setGroups] = useState<GroupInterface[]>([])
     const [disciplines, setDisciplines] = useState<DisciplineInterface[]>([])
@@ -22,7 +22,6 @@ function VisitActivity() {
     const [isTableReady, setIsTableReady] = useState(false)
 
     const [connection, setConnection] = useState<null | HubConnection>(null)
-
     useEffect(() => {
         // Подключаем сигнал
         const establishConnection = async () => {
@@ -76,6 +75,12 @@ function VisitActivity() {
         
     })
 
+
+    const handleEditModeChange = () => {
+        setIsEditMode(!isEditMode)
+    }
+
+
     //функция онуляющая состояние таблицы при изменении инпута с дисциплиной, дабы пометки посещаемости нне кочевали меж таблицами
     //проходит от index до input через topNavbar как крестоносец с одной целью форматнуть таблицу
     //появился баг с пропажей таблицы при повторном выборе
@@ -114,7 +119,7 @@ function VisitActivity() {
                 </div> :
 
                 <div className="w-[90%] flex flex-col gap-6.25">
-                    <TopNavBar disciplines={disciplines} onUpdate={() => handleInputChange()} groups={groups}/>
+                    <TopNavBar disciplines={disciplines} onUpdate={() => handleInputChange()} groups={groups} handleEditModeChange={handleEditModeChange} isEditMode={isEditMode}/>
                     <div className="flex gap-6.25">
                         <LeftNavBar className="max-sm:hidden" visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
                         <DateTableGenerator table={table} isEditMode={isEditMode} tableType="date" connection={connection} groupId={singleGroupAndDiscipline ? Number(singleGroupAndDiscipline.groupVal) : 0} disciplineId={singleGroupAndDiscipline ? Number(singleGroupAndDiscipline.disciplineVal) : 0}/>
@@ -137,7 +142,7 @@ function VisitActivity() {
                     </div>
                 </div> :
                 <div className="w-[90%] flex flex-col gap-6.25">
-                    <TopNavBar disciplines={disciplines} onUpdate={setTable} groups={groups}/>
+                    <TopNavBar disciplines={disciplines} onUpdate={setTable}  handleEditModeChange={handleEditModeChange} isEditMode={isEditMode} groups={groups}/>
                     <div className="flex gap-6.25">
                         <LeftNavBar className="max-sm:hidden" visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
                         <DateTableGenerator isEditMode={isEditMode} tableType="date" connection={connection} groupId={singleGroupAndDiscipline ? Number(singleGroupAndDiscipline.groupVal) : 0} disciplineId={singleGroupAndDiscipline ? Number(singleGroupAndDiscipline.disciplineVal) : 0}/>

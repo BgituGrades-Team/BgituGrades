@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { DisciplineInterface, GroupInterface, KeyInterface, PeriodsInterface, StudentInterface, StudentLinkInterface } from '../types/fromRequests';
-
+import toast from "react-hot-toast";
 
 // Наш бекендер ебень
 axios.defaults.baseURL = import.meta.env.VITE_DOTENV_API_URL
@@ -189,6 +189,36 @@ export const addWork = async (name: string, issuedDate: string, description: str
     }
 }
 
+export const editWork = async(id: number, name: string, issuedDate: string, description: string, disciplineId: number, groupId: number) =>{
+    try{
+        const params = {
+            "id": id,
+            "name": name,
+            "issuedDate": issuedDate,
+            "description": description,
+            "disciplineId": disciplineId,
+            "groupId": groupId
+        }
+        await instance.put("api/work", params)
+        return toast.success("Работа успешно изменена!")
+
+    } catch (error){
+        console.log(error)
+    }
+}
+
+
+export const deleteWork =  async(id: number) => {
+    try{
+        await instance.delete(`api/work?id=${id}`)
+                return toast.success("Работа успешно удалена!")
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
 export const downloadFile = async (link: string):  Promise<string | undefined> => {
     try {
         const res: Response<Blob> = await axios({
@@ -208,7 +238,7 @@ export const downloadFile = async (link: string):  Promise<string | undefined> =
 export const getAllPeriods = async () => {
     try {
         const res: Response<PeriodsInterface[]> = await instance.get(`api/migrations/periods/all`)
-        console.log(res.data);
+        //console.log(res.data);
         return res.data;
     } catch(error) {
         console.log(error)
@@ -245,7 +275,7 @@ export const createTranserPresenceDate = async(classId: number, groupId: number,
         }
         console.log(params)
         await instance.post("api/transfer", params)
-        console.log("Success! Date has been created!")
+        return toast.success("Success! Date has been created!")
     } catch(error) {
         console.log(error)
     }
@@ -259,7 +289,7 @@ export const updateTranserPresenceDate = async(transferId: number, newDate: stri
         }
         console.log(params)
         await instance.put("api/transfer", params)
-        console.log("Success! Date has been updated!")
+        return toast.success("Success! Date has been updated!")
     } catch(error) {
         console.log(error)
     }
@@ -284,9 +314,21 @@ export const migrate = async() => {
     try{
         const params = {}
         await instance.post("api/migrations/migrate", params)
+        return toast.success("Данные заархивированы")
         console.log("Data has been written successfully!")
     } catch (error) {
         console.log(error)
+        return toast.error("Данные не заархивированы")
+    }
+}
+
+export const loadShcedule = async() => {
+    try{
+        await instance.post("api/migrations/sync")
+        return toast.success("Расписание загружено!")
+    } catch (error) {
+        console.log(error)
+        return toast.error("Расписание не загружено!")
     }
 }
 
@@ -302,11 +344,13 @@ export const sendStuddents = async (file: File) => { // Лучше исполь�
             },
             timeout: 20000
         });
-        
+        return toast.success("Студенты синхронизированы!")
         console.log("All students have been synchronized!");
     } catch (error) {
+        
         if (error instanceof Error) {
             console.log(error.message);
+            return toast.error(`Ошибка синхронизации студентов! ${error.message}`)
         }
     }
 }
@@ -323,5 +367,17 @@ export const sendStudyData = async(url:string) => {
         if( error instanceof Error){
             console.log(error.message)
         }
+    }
+}
+
+
+
+export const deleteStudent = async(studentId: number) => {
+    try{
+        await instance.delete(`api/student?id=${studentId}`)
+        return toast.success("Студент успешно удален!")
+    } catch (error) {
+        console.log(error)
+        return toast.error("Студент не удален!")
     }
 }

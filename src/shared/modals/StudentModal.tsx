@@ -2,8 +2,10 @@ import { Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headl
 import ModalInput from './ModalInput';
 import Cross from '../components/SVG/Cross';
 import { useContext, useEffect, useState, type ChangeEvent } from 'react';
-import { updateStudent } from '../utils/apiRequests';
+import { deleteStudent, updateStudent } from '../utils/apiRequests';
 import { SingleInputValuesContext } from '../utils/contexts';
+//import { Toaster } from 'react-hot-toast';
+import type { HubConnection } from '@microsoft/signalr';
 
 interface PropsInterface{
     isOpen: boolean;
@@ -11,10 +13,12 @@ interface PropsInterface{
     isEditMode: boolean;
     studentId?: number | undefined;
     studentName?: string;
+    connection: HubConnection | null;
+    tableType: "work" | "date"
 }    
 
 
-export default function StudentModal({isOpen, close, studentId = -1, studentName = ""}: PropsInterface) {
+export default function StudentModal({isOpen, close, studentId = -1, studentName = "", connection, tableType}: PropsInterface) {
     const info = useContext(SingleInputValuesContext)
 
     const [name, setName] = useState<string>(studentName)
@@ -33,14 +37,50 @@ export default function StudentModal({isOpen, close, studentId = -1, studentName
 
 
     const updateAndSave = async () => {
-        const groupId = info?.groupVal
+        const groupId = info?.groupVal;
+        const disciplineId = info?.disciplineVal;
         if (groupId && id) {
             const res = await updateStudent(id, name, Number(groupId))
-            if (res) {
-                close()
-                window.location.reload()
+            if(tableType == "work"){
+                if (res && connection) {
+                    connection.invoke("GetMarkGrade", {
+                        disciplineId: Number(disciplineId),
+                        groupId: Number(groupId)
+                    });
+                }
             }
+            if(tableType=="date"){
+                if(res && connection) {
+                    connection.invoke("GetPresenceGrade",{
+                        disciplineId: Number(disciplineId),
+                        groupId: Number(groupId)
+                    })
+                }
+            }
+                close()
         }
+    }
+    const handleDeleteClick = async (studentId: number) => {
+        const groupId = info?.groupVal;
+        const disciplineId = info?.disciplineVal;
+        const res =   await  deleteStudent(studentId)
+        if(tableType == "work"){
+                if (res && connection) {
+                    connection.invoke("GetMarkGrade", {
+                        disciplineId: Number(disciplineId),
+                        groupId: Number(groupId)
+                    });
+                }
+            }
+            if(tableType=="date"){
+                if(res && connection) {
+                    connection.invoke("GetPresenceGrade",{
+                        disciplineId: Number(disciplineId),
+                        groupId: Number(groupId)
+                    })
+                }
+            }
+         close()
     }
 
 
@@ -64,6 +104,12 @@ export default function StudentModal({isOpen, close, studentId = -1, studentName
                     >
                         Сохранить
                     </Button>
+                     <Button
+                        className="inline-flex items-center gap-2 rounded-md bg-red dark:bg-red px-3 py-1.5 text-sm/6 font-semibold text-tLightD shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"
+                        onClick={() => handleDeleteClick(studentId)}
+                    >
+                        Удалить
+                    </Button>
                     <Button
                         className="inline-flex items-center gap-2 rounded-md bg-bgModal dark:bg-bgModalD px-3 py-1.5 text-sm/6 font-semibold text-tDark dark:text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"
                         onClick={close}
@@ -74,6 +120,7 @@ export default function StudentModal({isOpen, close, studentId = -1, studentName
 
                 </div>
             </DialogPanel>
+            {/*<Toaster />*/}
             </div>
         </div>
         </Dialog>

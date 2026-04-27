@@ -15,7 +15,7 @@ import { SingleInputValuesContext } from "../shared/utils/contexts"
 export default function TaskActivity() {
     const singleGroupAndDiscipline = useContext(SingleInputValuesContext)
 
-    const [isEditMode] = useState(false)
+    const [isEditMode, setIsEditMode] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [groups, setGroups] = useState<GroupInterface[]>([])
     const [disciplines, setDisciplines] = useState<DisciplineInterface[]>([])
@@ -39,6 +39,16 @@ export default function TaskActivity() {
         }
     }, [connection])
 
+
+    const handleInputChange = () => {
+        setTable(undefined)
+        if (connection) {
+            connection.on("ReceiveMarks", (data) => {
+                setTable(data)
+                setIsTableReady(true)
+            })
+        }
+    }
 
     useEffect(() => {
         const reloadDisciplines = async () => {
@@ -81,6 +91,19 @@ export default function TaskActivity() {
 
     }, [connection, isLoading, singleGroupAndDiscipline?.disciplineVal, singleGroupAndDiscipline?.groupVal])
 
+
+    const rerenderTable = (connection: HubConnection | null) => {
+        if (connection) {
+            connection.on("ReceiveMarks", (data) => {
+                setTable(data)
+                setIsTableReady(true)
+
+            })
+    }
+    }
+
+
+
     // Делаем слушатели событий из сигнала, если подключение активно
     if (connection) {
         connection.on("ReceiveMarks", (data) => {
@@ -89,8 +112,10 @@ export default function TaskActivity() {
 
         })
     }
-
-    
+    //обработчик нажатия на кнопку "редактировать" переводит нас в режим редактирования и обратно
+    const handleEditModeChange = () => {
+        setIsEditMode(!isEditMode)
+    }
 
     const compClasses = {
         outerDiv: "w-full min-h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ",
@@ -111,10 +136,10 @@ export default function TaskActivity() {
                         </div>
                     </div> :
                     <div className="w-[90%] flex flex-col gap-6.25">
-                        <TopNavBar groups={groups} disciplines={disciplines}/>
+                        <TopNavBar groups={groups} disciplines={disciplines} onUpdate={() => handleInputChange()} handleEditModeChange={handleEditModeChange} isEditMode={isEditMode}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar className="max-sm:hidden" visitsStatus={false} tasksStatus={true} reportStatus={false}  adminStatus={false}/>
-                            <WorkTableGenerator table={table} isEditMode={isEditMode} tableType="work" connection={connection}/>
+                            <WorkTableGenerator table={table} isEditMode={isEditMode} tableType="work" connection={connection} onUpdate={() => rerenderTable(connection)}/>
                         </div>
                     </div>
                 }
@@ -135,10 +160,10 @@ export default function TaskActivity() {
                         </div>
                     </div> :
                     <div className="w-[90%] flex flex-col gap-6.25">
-                        <TopNavBar groups={groups} disciplines={disciplines}/>
+                        <TopNavBar groups={groups} disciplines={disciplines} onUpdate={() => handleInputChange()} handleEditModeChange={() => handleEditModeChange} isEditMode={isEditMode}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar className="max-sm:hidden" visitsStatus={false} tasksStatus={true} reportStatus={false} adminStatus={false}/>
-                            <WorkTableGenerator isEditMode={isEditMode} tableType="work" connection={connection}/>
+                            <WorkTableGenerator isEditMode={isEditMode} tableType="work" connection={connection} onUpdate={() => rerenderTable(connection)}/>
                         </div>
                     </div>
                 }

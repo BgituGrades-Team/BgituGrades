@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom"
 import LeftNavBar from "../shared/components/LeftNavBar"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import type {  DisciplineInterface, GroupInterface, PeriodsInterface, ReportTableSample, StudentInterface } from "../shared/types/fromRequests"
 import { downloadFile, getAllPeriods, getDisciplines, getDisciplinesByGroups, getGroups, getStudents } from "../shared/utils/apiRequests"
 import { HubConnection } from "@microsoft/signalr"
@@ -11,7 +11,7 @@ import StudentTopNavBar from "../shared/components/StudentTopNavBar"
 import ReportGenerator from "../shared/tableComponents/ReportGenerator"
 import { setupSignalRReportsConnection } from "../shared/utils/signalRService"
 //import Loading from "../shared/components/SVG/Loading"
-import { ReverseSearchContext,} from "../shared/utils/contexts"
+import { ReverseSearchContext, SingleInputValuesContext,} from "../shared/utils/contexts"
 import type { pipeBombInterface } from "../shared/types/interfaces"
 
 interface tableFromRequest {
@@ -38,6 +38,8 @@ export default function ReportActivity() {
     const [selectedGroups, setSelectedGroups] = useState<GroupInterface[]>([])
     const [selectedStudents, setSelectedStudents] = useState<StudentInterface[]>([])
     //const [selectedPeriod] = useState<PeriodsInterface>()
+
+    const repType = useContext(SingleInputValuesContext)?.repTypeVal
     
     const pipeBomb: pipeBombInterface = {
         "disciplines": [selectedDisciplines, setSelectedDisciplines],
@@ -49,7 +51,7 @@ export default function ReportActivity() {
         // Подключаем сигнал
         const establishConnection = async () => {
             const con = await setupSignalRReportsConnection(sessionStorage.getItem("api_key"))
-            console.log(con.state)
+            //console.log(con.state)
 
             setConnection(con)
         }
@@ -94,14 +96,8 @@ export default function ReportActivity() {
             const respPeriods: PeriodsInterface[] | undefined = await getAllPeriods()
             let respStudents: StudentInterface[] | undefined 
 
-            const groupId = searchParams.get("groupid")?.split(",")
-
             if(periods.length == 0 && respPeriods){
                 setPeriods(respPeriods)
-            }
-
-            if(groupId != undefined ){
-                respStudents = await getStudents(groupId.map(elem => Number(elem)))
             }
 
             if(respGroups && groups.length == 0){
@@ -120,8 +116,7 @@ export default function ReportActivity() {
         // Проверка, есть ли в query параметрах и дисциплина и группа и студент
         if((selectedDisciplines.length != 0 && selectedGroups.length != 0 && selectedStudents.length != 0)){
             let reporttype
-            const params = searchParams.get(`reporttype`)
-            console.log(params)
+            const params = repType
             switch (Number(params)){
                 case 0 : {
                     reporttype = "PRESENCE"
@@ -138,15 +133,18 @@ export default function ReportActivity() {
             //     disciplineIds: selectedDisciplines,
             //     groupIds: selectedGroups,
             // })
+            console.log("Делаю запрос в 1С")
+            console.log(selectedStudents.length == students.length ? null : selectedStudents.map(val => val.id))
             connection?.invoke("GenerateReport", {
                 periods,
                 reporttype,
-                studentIds: selectedStudents.map(val => val.id),
-                disciplineIds: selectedDisciplines.map(val => val.id),
-                groupIds: selectedGroups.map(val => val.id),
+                studentIds: selectedStudents.length == students.length ? null : selectedStudents.map(val => val.id),
+                disciplineIds: selectedDisciplines.length == disciplines.length ? null : selectedDisciplines.map(val => val.id),
+                groupIds: selectedGroups.length == groups.length ? null : selectedGroups.map(val => val.id),
                 // Группа, дисциплина, студент
                 isReverse: reverseSearchArray
             })
+            
         }
         else if((selectedDisciplines.length != 0 && selectedGroups.length != 0)){
             reloadStudents()
@@ -164,7 +162,7 @@ export default function ReportActivity() {
         }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [connection, searchParams, selectedDisciplines, selectedGroups, selectedStudents])
+    }, [connection, searchParams, selectedDisciplines, selectedGroups, selectedStudents, repType])
 
     // Поиск таблицы, если все query параметра заполены
     const handleSearch = () => {
@@ -183,25 +181,17 @@ export default function ReportActivity() {
         //     setTableIds([groupid.map(val => Number(val))])
         // }
     }
-        if (connection) {
-            // if (link == null && tableIds.length > 3) {
-            //     setIsLoading(true)
-            // }
-            connection.on("ReportReady", (_, link, sperm) => {
-                setTable(sperm)
-                if(link != null){
-                    setIsTableReady(true)
-                    setLink(link)
+   
+    if (connection) {
+                connection.on("ReportReady", (_, link, data) => {
+                    setTable(data)
+                    if(link != null){
+                        setIsTableReady(true)
+                        setLink(link)
 
-                }
-            })
-            // connection.on("ReportProgress", (_, pisun, yaitsa) => {
-            //     setReportProgress(pisun)
-            //     setReportDescription(yaitsa)
-
-            // })
+                    }
+                })
         }
-
 
     if(isTableReady && connection && table) {
         return (
@@ -210,8 +200,8 @@ export default function ReportActivity() {
                 {
                 // Пришлось сделать так, чтобы не было блика при смене роута
                 isLoading ? 
-                <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
-                    <div className="w-[90%]  flex blur-md bg-bgLight dark:bg-bgModalD flex-col gap-6.25">
+                <div className="w-full h-[90vh]   scroll-none  flex justify-center items-center">
+                    <div className="w-[90%]  flex-col gap-6.25">
                         <TopNavBarSkeleton />
                         <div className="flex gap-6.25">
                             <LeftNavBarSkeleton />
@@ -229,6 +219,7 @@ export default function ReportActivity() {
                         disciplines={disciplines}
                         students={students}
                         pipeBomb={pipeBomb}
+                        isTableReady={isTableReady}
                         />
                     <div className="flex gap-6.25">
                         <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false} className="max-sm:hidden"/>
@@ -248,9 +239,9 @@ export default function ReportActivity() {
                 {
                 // Пришлось сделать так, чтобы не было блика при смене роута
                 isLoading ? 
-                    <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
+                    <div className="w-full h-[90vh]  scroll-none  flex justify-center items-center">
                         {/* <Loading progress={reportProgress} description={reportDescription} /> */}
-                        <div className="w-[90%]  flex bg-bgLight dark:bg-bgModalD flex-col gap-6.25"> {/* тут был blur-md */}
+                        <div className="w-[90%]  flex  flex-col gap-6.25"> {/* тут был blur-md */}
                             <TopNavBarSkeleton />
                             <div className="flex gap-6.25">
                                 <LeftNavBarSkeleton />
@@ -260,7 +251,7 @@ export default function ReportActivity() {
                         </div>
                     </div> :
                     <div className="w-[90%] flex flex-col gap-6.25">
-                        <StudentTopNavBar pipeBomb={pipeBomb} link={downloadLink != null ? downloadLink : ""} handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students} periods={periods}/>
+                        <StudentTopNavBar pipeBomb={pipeBomb} link={downloadLink != null ? downloadLink : ""} handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students} periods={periods} isTableReady={isTableReady}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false} className="max-sm:hidden"/>
                         </div>
@@ -272,7 +263,7 @@ export default function ReportActivity() {
     }
 
     return (
-        <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
+        <div className="w-full h-[90vh]   scroll-none  flex justify-center items-center">
             <div className="w-[90%]  flex  flex-col gap-6.25"> {/* тут был blur-md   bg-bgLight dark:bg-bgModalD*/}
                 <TopNavBarSkeleton />
                 <div className="flex gap-6.25">

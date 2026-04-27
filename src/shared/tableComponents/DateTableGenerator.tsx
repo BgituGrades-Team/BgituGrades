@@ -30,8 +30,8 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     const [transferId, setTransferId] = useState<number | undefined>()
     const [currDate, setCurrDate] = useState<string>("")
 
-    const [clickedStudentId, setClickedStudentId] = useState<number>()
-    const [clickedStudentName, setStudentName] = useState<string>()
+    const [currStudId, setCurrStudId] = useState<number>()
+    const [currName, setCurrName] = useState<string>()
 
     const openTransferModal = async (classId: number, currDate: string,  classType: string) => {
         setClassId(classId)
@@ -57,8 +57,8 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
         setTransferModal(false)
     }
     const openStudentModal = (e: React.MouseEvent<HTMLElement>, studentId: number) => {
-        setStudentName(e.currentTarget.textContent)
-        setClickedStudentId(studentId)
+        setCurrName(e.currentTarget.textContent)
+        setCurrStudId(studentId)
         setStudentModal(true)
     }
     const closeStudentModal = () => {
@@ -73,7 +73,8 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
             classId,
             date,
             isPresent: presenceState,
-            disciplineId: disciplineId
+            disciplineId: disciplineId,
+            groupId: groupId
         })            
 
     }
@@ -104,7 +105,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
                 cells = [
                     // Разделенная ячейка
                     <FirstTableCell
-                        topTitle="Работы"
+                        topTitle="Даты занятий"
                         botTitle="ФИО"
                         className="min-w-56.25 h-12.5"
                         key={"Allah"} />,
@@ -138,7 +139,7 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
                     cells = [
                         // Студент
                         <EditableTableCell
-                            onClick={role == "STUDENT" ? () => {} : (e) => openStudentModal(e, student.studentId)}
+                            onClick={isEditMode ? (e) => openStudentModal(e, student.studentId) : () => {} }
                             cellType="student"
                             cellData={student.name}
                             className={tableCellsClasses.long}
@@ -209,9 +210,9 @@ export default function DateTableGenerator({tableType, isEditMode, table, connec
     return (
         <div key={1} className="overflow-auto">
             {renderTable(1)}
-            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={clickedStudentId} studentName={clickedStudentName}/>
+            <StudentModal isOpen={studentModal} close={closeStudentModal} isEditMode={isEditMode} studentId={currStudId} studentName={currName} connection={connection} tableType={tableType}/>
             {/*<DateModal isOpen={dateModal} close={closeDateModal} isEditMode={isEditMode}/> */}
-            <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={currDate} statusCode={statusCode} transferId={transferId} />
+            <TransferModal isOpen={transferModal} close={closeTransferModal} classId={classId}  groupId={groupId} classType={classType} disciplineId={disciplineId} oldDate={currDate} statusCode={statusCode} transferId={transferId} connection={connection} />
         </div>
     );
 }

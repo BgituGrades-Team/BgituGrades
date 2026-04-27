@@ -14,13 +14,18 @@ interface PropsInterface {
     periods: PeriodsInterface[];
     link: string;
     handleSearch: () => void;
-    pipeBomb: pipeBombInterface
+    pipeBomb: pipeBombInterface;
+    isTableReady?: boolean
 }
 
 
-export default function StudentTopNavBar({groups, disciplines, periods, handleSearch, students, link, pipeBomb}: PropsInterface){
-    const reportTypes = [{id: 0, name: "По посещению"}, {id: 1, name:"По успеваемости"}] // Типы отчетов
+export default function StudentTopNavBar({groups, disciplines, periods, handleSearch, students, link, pipeBomb, isTableReady = false}: PropsInterface){
+    const reportTypes = [{id: 0, name: "По посещению"}, {id: 1, name:"По успеваемости"}]
     const singleGroupAndDiscipline = useContext(SingleInputValuesContext)
+
+   
+
+    if (!singleGroupAndDiscipline) return null;
     //янв - июнь 2024: это 2; сент - дек 2025: это 1; для периода
     if (singleGroupAndDiscipline) {
     return (
@@ -33,11 +38,15 @@ export default function StudentTopNavBar({groups, disciplines, periods, handleSe
                 <Input selectedId={singleGroupAndDiscipline ? singleGroupAndDiscipline?.repTypeVal : ""} setSelectedId={singleGroupAndDiscipline.repTypeDispatcher}  array={reportTypes} textChildren="Тип отчетности" helpText="Тип отчетности..."/>
             </div> 
             <div className="flex gap-6.25 max-sm:flex-col items-center justify-center max-sm:hidden">
-                <a title="downloadLink" href={link} download={"report.xlsx"}>
-                <Button children="Скачать в Excel"/>
-                </a>
+                {isTableReady && (
+                    <a title="downloadLink" href={link} download="report.xlsx">
+                        <Button children="Скачать в Excel"/>
+                    </a>
+                )}
             </div>
        </div> 
     )
 }}
+
+
 
