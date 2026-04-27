@@ -1,0 +1,41 @@
+name: Build & Push Frontend
+
+on:
+  push:
+    branches: [newMain]
+
+env:
+  OWNER: bgitugrades-team
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & push Frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ghcr.io/${{ env.OWNER }}/bgitu-grades-frontend:latest
+          build-args: |
+            VITE_API_URL=${{ secrets.VITE_DOTNET_API_URL }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
