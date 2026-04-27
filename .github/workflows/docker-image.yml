@@ -36,6 +36,6 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.OWNER }}/bgitu-grades-frontend:latest
           build-args: |
-            VITE_API_URL=${{ secrets.VITE_DOTNET_API_URL }}
+            VITE_DOTNET_API_URL=${{ secrets.VITE_DOTNET_API_URL }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
