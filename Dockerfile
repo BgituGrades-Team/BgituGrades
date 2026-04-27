@@ -4,8 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-ARG VITE_DOTNET_API_URL
-ENV VITE_DOTNET_API_URL=$VITE_DOTNET_API_URL
+ENV VITE_DOTNET_API_URL=__VITE_DOTNET_API_URL__
 RUN npm run build
 
 FROM nginx:alpine
