@@ -1,5 +1,6 @@
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr"
 
+const baseURL = import.meta.env.VITE_DOTENV_API_URL
 
 const startSignalRConnection = async (connection: HubConnection) => {
     try {
@@ -17,7 +18,7 @@ const startSignalRConnection = async (connection: HubConnection) => {
  */
 const setupSignalRGradesConnection = async (key: string | null) => {
     const connection = new HubConnectionBuilder()
-            .withUrl("https://maxim.pamagiti.site/hubs/grade?key=" + key,
+            .withUrl(baseURL + "hubs/grade?key=" + key,
                     { withCredentials: false })
             .withAutomaticReconnect()
             .configureLogging(LogLevel.None)
@@ -40,7 +41,7 @@ const setupSignalRGradesConnection = async (key: string | null) => {
  */
 const setupSignalRReportsConnection = async (key: string | null) => {
     const connection = new HubConnectionBuilder()
-            .withUrl("https://maxim.pamagiti.site/hubs/report?key=" + key,
+            .withUrl(baseURL + "hubs/report?key=" + key,
                     { withCredentials: false })
             .withAutomaticReconnect()
             .build()
