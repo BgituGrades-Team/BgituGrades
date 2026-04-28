@@ -36,7 +36,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ghcr.io/${{ env.OWNER }}/bgitu-grades-frontend:latest
+          tags: ghcr.io/${{ env.OWNER }}/bgitu-grades-frontend:release
           build-args: |
             VITE_DOTNET_API_URL=${{ secrets.VITE_DOTNET_API_URL }}
           cache-from: type=gha
