@@ -46,10 +46,10 @@ function VisitActivity() {
         const getGroupsAndDisciplines = async () => {
             const respGroups: GroupInterface[] | undefined = await getGroups()
             const respDisciplines: DisciplineInterface[] | undefined = await getDisciplines()
-            if (respGroups) {
+            if (Array.isArray(respGroups)) {
                 setGroups(respGroups)
             }
-            if (respDisciplines) {
+            if (Array.isArray(respDisciplines)) {
                 setDisciplines(respDisciplines)
             }
             setIsLoading(false)
