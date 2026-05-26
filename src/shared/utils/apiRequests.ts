@@ -2,10 +2,9 @@ import axios from 'axios';
 import type { DisciplineInterface, GroupInterface, KeyInterface, PeriodsInterface, StudentInterface, StudentLinkInterface } from '../types/fromRequests';
 import toast from "react-hot-toast";
 
-// Наш бекендер ебень
-axios.defaults.baseURL = import.meta.env.VITE_DOTENV_API_URL
+axios.defaults.baseURL = '/'
 const instance = axios.create({
-    baseURL: import.meta.env.VITE_DOTNET_API_URL,
+    baseURL: '/',
     timeout: 20000,
     headers: {
         'Accept': '*/*',
